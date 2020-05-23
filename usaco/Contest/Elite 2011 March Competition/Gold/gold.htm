@@ -1,0 +1,570 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<meta http-equiv="Pragma" content="no-cache">
+<script language="javascript">
+<!--
+    var endtime;
+    
+    function initcount(secondsleft) {
+        var now = new Date();
+        return now.getTime() + secondsleft*1000;
+    }
+    function count1(i) { i = i - i%1; return i; } 
+    function count2(i) { i = i - i%1; if (i < 10) return "0"+i; return i; }
+    function updateclock(head, word, endtime) {
+        var now = new Date();
+        var delta = (endtime - now.getTime())/1000;
+        var s, x;
+        if(delta < 1)
+            s = head + " has ended";
+        else{
+            s = head + " ends: ";
+            s = head + ": ";
+            if(delta >= 24*3600)
+                s = s + count1(delta/86400) + "d";
+            if(delta >= 3600)
+                s = s + count2((delta/3600)%24) + "h";
+            if(delta >= 60)
+                s = s + count2((delta/60)%60) + "m";
+            s = s + count2(delta%60) + "s";
+            setTimeout("updateclock('"+head+"','"+word+"',"+endtime+")", 500);
+        }
+
+        var slot = document.getElementById(word);
+        slot.innerHTML = s;
+    }
+-->
+</script>
+
+<title>USACO Problems</title>
+<style type="text/css"><!--
+table,td,body {
+font-family: Helvetica, Verdana, Arial, SunSans-Regular, Sans-Serif;
+}
+--></style>
+</head><body onload="" background="gold_files/bg9silver.jpg">
+
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans">
+<table><tbody><tr>
+<td><img src="gold_files/cowhead2.gif">
+</td>
+<td valign="top">
+<table cellpadding="0" cellspacing="0">
+    <tbody><tr><td>Contest: MAR11 <b>SILVER</b> Division</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    
+</tbody></table>
+</td></tr>
+</tbody></table>
+<font color="red"><b>
+</b></font>
+
+<br><font size="6"><b>ANALYSIS MODE</b></font><br>
+Submit solutions for your own enjoyment.
+
+</font><pre>**********************************************************************
+                           GOLD PROBLEMS
+**********************************************************************
+                  Three problems numbered 1 through 3
+**********************************************************************
+
+Problem 1: Brownie Slicing [Haitao Mao, Jacob Steinhardt, and Paul Christiano, 2011]
+
+Bessie has baked a rectangular brownie that can be thought of as
+an RxC grid (1 &lt;= R &lt;= 500; 1 &lt;= C &lt;= 500) of little brownie squares.
+The square at row i, column j contains N_ij (0 &lt;= N_ij &lt;= 4,000)
+chocolate chips.
+
+Bessie wants to partition the brownie up into A*B chunks (1 &lt;= A
+&lt;= R; 1 &lt;= B &lt;= C): one for each of the A*B cows. The brownie is
+cut by first making A-1 horizontal cuts (always along integer
+coordinates) to divide the brownie into A strips.  Then cut each
+strip *independently* with B-1 vertical cuts, also on integer
+boundaries. The other A*B-1 cows then each choose a brownie piece,
+leaving the last chunk for Bessie. Being greedy, they leave Bessie
+the brownie that has the least number of chocolate chips on it.
+
+Determine the maximum number of chocolate chips Bessie can receive,
+assuming she cuts the brownies optimally.
+
+As an example, consider a 5 row x 4 column brownie with chips
+distributed like this:
+
+         1 2 2 1
+         3 1 1 1
+         2 0 1 3
+         1 1 1 1
+         1 1 1 1
+
+Bessie must partition the brownie into 4 horizontal strips, each
+with two pieces. Bessie can cut the brownie like this:
+
+       1 2 | 2 1
+       ---------
+       3 | 1 1 1
+       ---------
+       2 0 1 | 3
+       ---------
+       1 1 | 1 1
+       1 1 | 1 1
+
+Thus, when the other greedy cows take their brownie piece, Bessie
+still gets 3 chocolate chips.
+
+PROBLEM NAME: brownie
+
+INPUT FORMAT:
+
+* Line 1: Four space-separated integers: R, C, A, and B
+
+* Lines 2..R+1: Line i+1 contains C space-separated integers: N_i1,
+        ..., N_iC
+
+SAMPLE INPUT (file brownie.in):
+
+5 4 4 2
+1 2 2 1
+3 1 1 1
+2 0 1 3
+1 1 1 1
+1 1 1 1
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer: the maximum number of chocolate chips that
+        Bessie guarantee on her brownie
+
+SAMPLE OUTPUT (file brownie.out):
+
+3
+
+**********************************************************************
+
+Problem 2: Graph Discovery [Paul Christiano, 2011]
+
+Bessie has a created a puzzle for Farmer John. In front of him there
+is a lake with N (1 &lt;= N &lt;= 40) small islands, with bridges between
+some pairs of islands. Bessie has agreed to tell FJ if it is possible
+to safely get from any island to any other island *without* using
+a specified set of bridges.
+
+That is, if we think of the islands as a graph, with bridges
+corresponding to edges, then Bessie will tell FJ if all N vertices
+are connected *after removing a specified subset of the edges*. (It
+is guaranteed that the initial graph is connected.)
+
+FJ would like to determine exactly which bridges exist. Help FJ
+figure this out using as few questions as possible (see below for
+a detailed description of the scoring procedure).
+
+An example dialogue between Bessie and FJ might be as follows,
+assuming that the collection of islands corresponds to the graph
+on 4 vertices consisting of edges {{1,2}, {1,3}, {1,4}, {2,3}}
+(depicted below):
+
+1--2
+|\ |
+| \|
+4  3
+
+
+FJ's query      |  Bessie's response   |  Comments
+------------------------------------------------------------------------
+{{1,2}}         |     Yes              |
+{{3,4}}         |     Yes              |
+{{1,4}, {4,3}}  |     No               | {1,4} must be an edge
+{{1,2}, {2,3}}  |     No               | {2,3} must be an edge
+{{1,2}, {3,1}}  |     No               | {1,3} must be an edge
+{{1,3}}         |     Yes              | {1,2} must be an edge
+{{1,4}}         |     No               | {2,4} and {3,4} are not edges
+
+FJ can then conclude that the graph has edges {{1,2}, {1,3}, {1,4},
+{2,3}}, and no others.
+
+This problem is a reactive problem, meaning that instead of reading
+and writing to a file you will use stdin and stdout (in other words,
+console input and output) to interact with a grader program. See
+the input description for important information about interactive
+problems.
+
+At the beginning of execution, the grader program will write a
+single integer, N, the number of vertices. You will then write lines
+with one of the following three forms:
+
+R i j
+U i j
+Q
+
+where R, U, and Q are the characters 'R', 'U', and 'Q', and i and
+j are integers in the range 1..N. The first sort of query removes
+the edge between vertices i and j (if it exists). The second undoes
+the previous removal of an edge between i and j. The third asks
+whether the graph is connected; after you output Q, the grader will
+output either 0 (for not connected) or 1 (for connected).
+
+When your program is ready to output the graph, you should output
+a line with the single character 'A', then N lines, each with N
+characters. The jth number on the ith of these lines should be 1
+if vertices i and j are adjacent, and 0 otherwise (a vertex is never
+adjacent to itself).
+
+If you output an incorrect graph at the end, you will receive 0
+points.  Otherwise, you will receive points based on the number of
+times you output 'Q'. If you output 'Q' at most 900 times then you
+will receive 100% of the points. If you output 'Q' K times for some
+900 &lt; K &lt;= 5000, then you will receive a percentage of the points
+equal to 20+80*(900/K). If you output 'Q' more than 5000 times, you
+will receive 0 points.
+
+A dialogue corresponding to the example above is as follows (&lt;
+indicates the grader's output, &gt; indicates your program's output;
+these symbols are for clarity only and not part of the actual
+output).
+
+I/O        | Set of removed edges
+----------------------------------
+&lt; 4        |
+&gt; R 1 2    | {{1,2}}
+&gt; Q        |
+&lt; 1        |
+&gt; U 1 2    | {}
+&gt; R 3 4    | {{3,4}}
+&gt; Q        |
+&lt; 1        |
+&gt; R 4 1    | {{3,4}, {4,1}}
+&gt; Q        |
+&lt; 0        |
+&gt; U 3 4    | {{4,1}}
+&gt; U 1 4    | {}
+&gt; R 1 2    | {{1,2}}
+&gt; R 2 3    | {{1,2}, {2,3}}
+&gt; Q        |
+&lt; 0        |
+&gt; U 3 2    | {{1,2}}
+&gt; R 3 1    | {{1,2}, {3,1}}
+&gt; Q        |
+&lt; 0        |
+&gt; U 1 2    | {{3,1}}
+&gt; Q        |
+&lt; 1        |
+&gt; U 3 1    | {}
+&gt; R 1 4    | {{1,4}}
+&gt; Q        |
+&lt; 0        |
+&gt; A        |
+&gt; 0111     |
+&gt; 1010     |
+&gt; 1100     |
+&gt; 1000     |
+
+TIME LIMIT: 2 seconds
+
+Interactive programs usually require extra code that causes output
+to be unbuffered -- to be written in real time instead of buffering
+for faster (but later) output.
+
+Those C/C++ users who use #include &lt;stdio.h&gt; should execute this
+line before any input or output:
+
+    setlinebuf (stdout);
+
+Users of &lt;stdio.h&gt; should also use fgets () to read from stdin.
+Use of scanf is not recommended; do something like this to parse
+input data:
+
+    char line[1000];
+    setlinebuf (stdout);
+
+    fgets (line, 1000, stdin);
+    sscanf (line, "..format..", &amp;var1, ...);
+    /* if the line contents need to be interpreted */
+
+Those C++ users who use iostream should cout &lt;&lt; flush after each
+line (and also use cin in the normal manner):
+
+    cout &lt;&lt; foo &lt;&lt; endl;
+    cout &lt;&lt; flush;
+
+Be sure when you read the response from the computer that you read
+*all* the letters, not just the first one. The response will never
+be more than one letter + one newline + one string terminator ('\0').
+
+Java users should use the following output scheme for output:
+
+    import java.io.*;
+    ...
+    PrintStream out = new PrintStream (System.out, true); // 'unbuffers' output
+    ...
+    // sample integer print:
+    out.println (foo);
+
+For Pascal, use the following scheme for writing:
+
+    writeln (stdout, ...your output here...); flush(stdout);
+
+Be sure to read in the entire reply -- make room for the letter,
+the newline, and the string terminator.
+
+Despite the references to gdisc.in and gdisc.out here and below, no files are
+used for input or output.
+
+PROBLEM NAME: gdisc
+
+INPUT FORMAT:
+
+SAMPLE INPUT (file gdisc.in):
+
+
+OUTPUT FORMAT:
+
+SAMPLE OUTPUT (file gdisc.out):
+
+**********************************************************************
+
+Problem 3: Tree Decoration [Jacob Steinhardt, 2011]
+
+Farmer John is decorating his Spring Equinox Tree (like a Christmas
+tree but popular about three months later). It can be modeled as a
+rooted mathematical tree with N (1 &lt;= N &lt;= 100,000) elements, labeled
+1...N, with element 1 as the root of the tree. Each tree element e
+&gt; 1 has a parent, P_e (1 &lt;= P_e &lt;= N). Element 1 has no parent
+(denoted '-1' in the input), of course, because it is the root of
+the tree.
+
+Each element i has a corresponding subtree (potentially of size 1)
+rooted there. FJ would like to make sure that the subtree corresponding
+to element i has a total of at least C_i (0 &lt;= C_i &lt;= 10,000,000)
+ornaments scattered among its members. He would also like to minimize
+the total amount of time it takes him to place all the ornaments
+(it takes time K*T_i to place K ornaments at element i (1 &lt;= T_i
+&lt;= 100)).
+
+Help FJ determine the minimum amount of time it takes to place
+ornaments that satisfy the constraints.  Note that this answer might
+not fit into a 32-bit integer, but it will fit into a signed 64-bit
+integer.
+
+For example, consider the tree below where nodes located higher on
+the display are parents of connected lower nodes (1 is the root):
+
+               1 
+               |
+               2
+               |
+               5
+              / \
+             4   3
+
+Suppose that FJ has the following subtree constraints:
+
+                  Minimum ornaments the subtree requires
+                    |     Time to install an ornament
+       Subtree      |       |
+        root   |   C_i  |  T_i
+       --------+--------+-------
+          1    |    9   |   3
+          2    |    2   |   2
+          3    |    3   |   2
+          4    |    1   |   4
+          5    |    3   |   3
+ 
+Then FJ can place all the ornaments as shown below, for a total
+cost of 20:
+
+            1 [0/9(0)]     legend: element# [ornaments here/
+            |                      total ornaments in subtree(node install time)]
+            2 [3/9(6)]
+            |
+            5 [0/6(0)]
+           / \
+ [1/1(4)] 4   3 [5/5(10)]
+
+PROBLEM NAME: tdec
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Line i+1 contains three space-separated integers: P_i,
+        C_i, and T_i
+
+SAMPLE INPUT (file tdec.in):
+
+5
+-1 9 3
+1 2 2
+5 3 2
+5 1 4
+2 3 3
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer: The minimum time to place all the
+        ornaments
+
+SAMPLE OUTPUT (file tdec.out):
+
+20
+
+**********************************************************************
+
+</pre><hr>
+<form action="/ioiupload" enctype="multipart/form-data" method="POST">
+<input name="a" value="89Are9bjPrE" type="hidden">
+
+<table>
+<tbody><tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+  <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill
+ Sans">
+  <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+  <tbody><tr><td><b>Submit a program  for grading:&nbsp;<b><input 
+name="filename" type="file">
+  &nbsp;&nbsp;
+  <input value="Submit" name="submit" type="submit"></b></b></td></tr>
+  </tbody></table>
+
+</font></td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+   <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+   <tbody><tr><td colspan="2">
+   <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+   <b>To run your program with your own test data, enter the program<br>
+   file name and input file name then click 'Test':</b></font></td></tr>
+
+  <tr><td>
+
+   <table>
+   <tbody><tr><td>
+     <table>
+     <tbody><tr><td>
+     <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+     <b>Program&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testprogramname" type="file"></td></tr>
+     <tr><td align="right">
+         <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+         <b>Input&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testfilename" type="file"></td></tr>
+     </tbody></table>
+   </td>
+   <td>&nbsp;&nbsp;</td>
+   <td><input value="Test" name="submit" type="submit"></td>
+   </tr>
+   </tbody></table>
+
+   </td></tr></tbody></table>
+
+</td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+  <table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+    <tbody><tr><td height="1"></td></tr>
+    <tr><td width="1"></td><td>
+
+    <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+      <tbody><tr><td>
+      <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+      <b>Backup a file:&nbsp;</b><input name="backupfilename" 
+type="file">
+      &nbsp;&nbsp;&nbsp;<input value="Backup" name="submit" 
+type="submit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input value="See Backups" name="submit" type="submit">
+      </font></td></tr>
+    </tbody></table>
+
+    </td><td width="1"></td></tr>
+    <tr><td height="1"></td><td></td></tr>
+  </tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+</tbody></table>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> The following solution files are saved for grading:<br>
+<table cellspacing="3">
+<tbody><tr><th>Name</th><th>Size</th><th>When</th><th>Age</th></tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=meetplace.p">meetplace.p</a></td>
+<td align="right">1003</td>
+<td align="center">22h05:51</td>
+<td align="center">676h09:10</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=packdel.p">packdel.p</a></td>
+<td align="right">3206</td>
+<td align="center">23h47:32</td>
+<td align="center">674h27:29</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=rotsym.p">rotsym.p</a></td>
+<td align="right">843</td>
+<td align="center"> 0h08:00</td>
+<td align="center">674h07:01</td>
+</tr>
+</tbody></table>
+</font><hr>
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a href="http://ace.delos.com/ioiedit?a=89Are9bjPrE">Edit your 
+database record</a>&nbsp;|&nbsp;
+
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;logout=1"> 
+Logout </a>
+<!--<a href="https://ace.delos.com/rules.html" target="_blank"> Rules </a>-->
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?init=1&amp;a=89Are9bjPrE">Main 
+contest index</a>
+</font></center>
+<!--&nbsp;|&nbsp;-->
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;showsubmit">See 
+submitted solutions</a>
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;suggestionbox">Send
+ message
+to operations staff</a>
+&nbsp;|&nbsp;
+Phone: +1 719-321-7333
+<br>
+Director is not online<br>
+This page was generated at 9:15:01 GMT.
+</font></center>
+</form></body></html>

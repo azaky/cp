@@ -1,0 +1,80 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 9: Network of Schools</title> </head><body 
+background="schlnet_files/bg3.jpg">
+<img src="schlnet_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Network of Schools</font></b><br>
+<b>IOI '96 Day 1 Problem 3</b>
+</center>
+
+<p>A number of schools are connected to a computer network. Agreements 
+have
+been developed among those schools: each school maintains a list of 
+schools
+to which it distributes software (the "receiving schools"). Note that if
+B is in the distribution list of school A, then A does not necessarily
+appear in the list of school B.
+
+</p><p>You are to write a program that computes the minimal number of 
+schools
+that must receive a copy of the new software in order for the software 
+to
+reach all schools in the network according to the agreement (Subtask A).
+As a further task, we want to ensure that by sending the copy of new
+software to an arbitrary school, this software will reach all schools in
+the network. To achieve this goal we may have to extend the lists of
+receivers by new members. Compute the minimal number of extensions that
+have to be made so that whatever school we send the new software to, it
+will reach all other schools (Subtask B). One extension means 
+introducing
+one new member into the list of receivers of one school.
+
+</p><h3>PROGRAM NAME: schlnet</h3>
+
+
+<h3>INPUT FORMAT</h3>
+
+The first line of the input file contains an integer N: the number of
+schools in the network (2&lt;=N&lt;=100). The schools are identified
+by the first N positive integers. Each of the next N lines describes
+a list of receivers. The line i+1 contains the identifiers of the
+receivers of school i. Each list ends with a 0. An empty list contains
+a 0 alone in the line.<p>
+
+</p><h3>SAMPLE INPUT (file schlnet.in)</h3>
+<pre>5
+2 4 3 0
+4 5 0
+0
+0
+1 0
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>Your program should write two lines to the output file.  The first 
+line
+should contain one positive integer: the solution of subtask A. The 
+second
+line should contain the solution of subtask B. </p><p>
+
+</p><h3>SAMPLE OUTPUT (file schlnet.out)</h3>
+<pre>1
+2
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="schlnet" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

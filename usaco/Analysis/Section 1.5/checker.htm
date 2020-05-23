@@ -1,0 +1,398 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 74: Checker Challenge</title> </head><body 
+background="checker_files/bg3.jpg">
+<img src="checker_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Checker Challenge</font></b><br>
+Russ Cox
+</center>
+
+
+<p>We use a recursive complete search to simply test all boards.  The
+search proceeds by trying to put one checker in each row.  We keep track
+of which columns and diagonals already have checkers on them in the
+"col", "updiag", and "downdiag" arrays.
+
+</p><p>Since we generate solutions in increasing order, we record the 
+first
+3 in the "sol" array.
+
+</p><p>Symmetry enables us to count the first half of the solutions
+double and avoid calculating the second half.  An exception happens
+when N is odd; the odd row needs to be counted once.
+
+</p><p>The N&gt;6 lines get the program out of trouble when N==6, 
+because
+at that point, the first 3 solutions include one of the symmetric
+answers.
+
+</p><p>Since we number rows from 0 to N-1 rather than 1 to N, we need to
+add 1 to each digit as we print (in "printsol").
+
+</p><pre>/*
+TASK: checker
+LANG: C
+*/
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+#define MAXN 16
+
+int n;
+int nsol, nprinted;
+char row[MAXN];
+FILE *fout;
+
+void
+solution() {
+    int i;
+    for(i=0; i&lt;n; i++) {
+	if(i != 0) fprintf(fout, " ");
+	fprintf(fout, "%d", row[i]+1);
+    }
+    fprintf(fout, "\n");
+}
+
+/* Keep track of whether there is a checker on each column, and diagonal. */
+char col[MAXN];		/* (i, j) -&gt; j */
+char updiag[2*MAXN];	/* (i, j) -&gt; i+j */
+char downdiag[2*MAXN];	/* (i, j) -&gt; i-j + N */
+
+/*
+ * Calculate number of ways to place checkers
+ * on each row of the board starting at row i and going to row n.
+ */
+void
+nway(i, lim) {
+    int j;
+
+    if(i == n) {
+	nsol++;
+	if (n &gt; 6 &amp;&amp; row[0] &lt; n/2) nsol++;
+	if (nprinted++ &lt; 3) solution();
+	return;
+    }
+
+    for(j=0; j&lt;lim; j++){
+	if(!col[j] &amp;&amp; !updiag[i+j] &amp;&amp; !downdiag[i-j+MAXN]){
+	    row[i] = j;
+
+	    col[j]++;
+	    updiag[i+j]++;
+	    downdiag[i-j+MAXN]++;
+
+	    nway(i+1,n);
+
+	    col[j]--;
+	    updiag[i+j]--;
+	    downdiag[i-j+MAXN]--;
+	}
+    }
+}
+
+main(void) {
+    FILE *fin = fopen("checker.in", "r");
+    fout = fopen("checker.out", "w");
+    fscanf(fin, "%d", &amp;n);
+    nway(0, n&gt;6?(n+1)/2:n);
+    fprintf(fout, "%d\n", nsol);
+    exit (0);
+}
+</pre>
+
+<h3>Clever Michael Rybak's Solution</h3>
+The Ukraine's Michael Rybak removed the 'this row is used' search
+(which obviously at the end of the recursion is a lot of wasted
+iterating) and replaced it with a list of valid rows to use (which
+presumably has but a single element at the end of the recursion).
+His program runs almost 4x faster then N==13.
+
+<pre>Program Checker;
+   Var diagPLUS: Array[2..30] Of Boolean;
+       diagMINUS: Array[-15..15] Of Boolean;
+       sol: Array[1..15] Of ShortInt;
+       i,n,found: Longint;
+       stop: Boolean;
+       next,prev: Array[0..16] Of ShortInt;
+       sy: ShortInt;
+
+Procedure Search0(y:ShortInt);
+    Var x,i:ShortInt;
+Begin
+    If stop Then Exit;
+    If y=n+1 Then Begin
+        Inc(found);
+        If found&lt;4 Then Begin
+            For i:=1 To n-1 Do
+                Write(sol[i],' ');
+            Writeln(sol[n]);
+        End Else
+        stop:=True;
+        Exit;
+    End;
+    If sol[y]&lt;&gt;0 Then Begin
+        Search0(y+1);
+        Exit;
+    End;
+    x:=next[0];
+    While x&lt;=n Do Begin
+        If Not ((diagPLUS[x+y]) Or (diagMINUS[x-y])) Then Begin
+            sol[y]:=x;
+            diagPLUS[x+y]:=True;
+            diagMINUS[x-y]:=True;
+            next[prev[x]]:=next[x];
+	    prev[next[x]]:=prev[x];
+            Search0(y+1);
+            diagPLUS[x+y]:=False;
+            diagMINUS[x-y]:=False;
+            next[prev[x]]:=x; prev[next[x]]:=x;
+        End;
+        x:=next[x];
+    End;
+    sol[y]:=0; 
+End;
+
+Procedure Search;
+    Var x:ShortInt;
+Begin
+    If sy=n+1 Then Begin
+        Inc(found);
+        Exit;
+    End;
+    If sol[sy]&lt;&gt;0 Then Begin
+        Inc(sy);
+        Search;
+        Dec(sy);
+        Exit;
+    End; 
+    x:=next[0];
+    While x&lt;=n Do Begin
+        If Not ((diagPLUS[x+sy]) Or (diagMINUS[x-sy])) Then Begin
+            sol[sy]:=x;
+            diagPLUS[x+sy]:=True;
+            diagMINUS[x-sy]:=True;
+            next[prev[x]]:=next[x];
+            prev[next[x]]:=prev[x];
+            Inc(sy);
+            Search;
+            Dec(sy);
+            diagPLUS[x+sy]:=False;
+            diagMINUS[x-sy]:=False;
+            next[prev[x]]:=x;
+            prev[next[x]]:=x;
+        End;
+        x:=next[x];
+    End;
+    sol[sy]:=0;
+End;
+
+Procedure Search2(miny:Longint);
+    Var x,y,i:ShortInt;
+         curf:Longint;
+Begin
+    x:=n Div 2+1;
+    For y:=miny To n Div 2 Do
+	If Not (diagPLUS[x+y] Or diagMINUS[x-y]) Then Begin
+	    curf:=found;
+	    sol[y]:=x;
+            diagPLUS[x+y]:=True;
+            diagMINUS[x-y]:=True;
+            next[prev[x]]:=next[x]; prev[next[x]]:=prev[x];
+            sy:=1;
+            Search;
+            If y&gt;miny Then
+                found:=found+(found-curf);
+            sol[y]:=0;
+            diagPLUS[x+y]:=False;
+            diagMINUS[x-y]:=False;
+            next[prev[x]]:=x; prev[next[x]]:=x;
+	End;
+End;
+
+Procedure Search1;
+    Var x,y,i:ShortInt;
+Begin
+    y:=n Div 2+1;
+    For x:=1 To n Div 2 Do Begin
+        sol[y]:=x;
+        diagPLUS[x+y]:=True;
+        diagMINUS[x-y]:=True;
+        next[prev[x]]:=next[x]; prev[next[x]]:=prev[x];
+        Search2(x);
+        diagPLUS[x+y]:=False;
+        diagMINUS[x-y]:=False;
+        next[prev[x]]:=x; prev[next[x]]:=x;
+    End;
+    sol[y]:=0; 
+    found:=found*4;
+    x:=n Div 2+1;
+    sol[y]:=x;
+    diagPLUS[x+y]:=True;
+    diagMINUS[x-y]:=True;
+    next[prev[x]]:=next[x]; prev[next[x]]:=prev[x];
+    sy:=1;
+    Search;
+End;
+
+Begin
+    Assign(Input,'checker.in'); Reset(Input);
+    Assign(Output,'checker.out'); Rewrite(Output);
+    Read(n);
+    found:=0;
+    FillChar(diagPLUS,SizeOf(diagPLUS),False);
+    FillChar(diagMINUS,SizeOf(diagMINUS),False);
+    FillChar(sol,SizeOf(sol),0);
+    For i:=0 To n+1 Do Begin
+        prev[i]:=i-1;
+        next[i]:=i+1;
+    End;
+    If n Mod 2=0 Then Begin
+        stop:=False;
+        Search0(1);
+        sy:=1;
+        found:=0;
+        Search;
+    End Else Begin
+        stop:=False;
+        Search0(1);
+        found:=0;
+        Search1;
+    End;
+        Writeln(found);
+        Close(Output);
+End.
+</pre>
+
+<h3>Clever Romanian Solution</h3>
+Submitted by several from Romania, this solution uses bitmasks
+instead of a list to speed searching:
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fstream.h&gt;
+#define MAX_BOARDSIZE 16
+typedef unsigned long SOLUTIONTYPE;
+#define MIN_BOARDSIZE 6
+SOLUTIONTYPE g_numsolutions = 0;
+
+void Nqueen(int board_size) {
+    int aQueenBitRes[MAX_BOARDSIZE];	 /* results */
+    int aQueenBitCol[MAX_BOARDSIZE];	 /* marks used columns */
+    int aQueenBitPosDiag[MAX_BOARDSIZE]; /* marks used "positive diagonals" */
+    int aQueenBitNegDiag[MAX_BOARDSIZE]; /* marks used "negative diagonals" */
+    int aStack[MAX_BOARDSIZE + 2];	 /* a stack instead of recursion */
+    int *pnStack;
+
+    int numrows = 0; 		/* numrows redundant - could use stack */
+    unsigned int lsb;		/* least significant bit */
+    unsigned int bitfield;	/* set bits denote possible queen positions */
+    int i;
+    int odd = board_size &amp; 1; 	/* 1 if board_size odd */
+    int board_m1 = board_size - 1; 	/* board size - 1 */
+    int mask = (1 &lt;&lt; board_size) - 1; 	/* N bit mask of all 1's */
+
+    aStack[0] = -1; 		/* sentinel signifies end of stack */
+    for (i = 0; i &lt; (1 + odd); ++i) {
+	bitfield = 0;
+	if (0 == i) {
+	    int half = board_size&gt;&gt;1; /* divide by two */
+	    bitfield = (1 &lt;&lt; half) - 1;
+	    pnStack = aStack + 1; /* stack pointer */
+	    aQueenBitRes[0] = 0;
+	    aQueenBitCol[0] = aQueenBitPosDiag[0] = aQueenBitNegDiag[0] = 0;
+	} else {
+	    bitfield = 1 &lt;&lt; (board_size &gt;&gt; 1);
+	    numrows = 1; /* prob. already 0 */
+
+	    aQueenBitRes[0] = bitfield;
+	    aQueenBitCol[0] = aQueenBitPosDiag[0] = aQueenBitNegDiag[0] = 0;
+	    aQueenBitCol[1] = bitfield;
+
+	    aQueenBitNegDiag[1] = (bitfield &gt;&gt; 1);
+	    aQueenBitPosDiag[1] = (bitfield &lt;&lt; 1);
+	    pnStack = aStack + 1; /* stack pointer */
+	    *pnStack++ = 0; /* row done -- only 1 element &amp; we've done it */
+	    bitfield = (bitfield - 1) &gt;&gt; 1;
+			/* bitfield -1 is all 1's to the left of the single 1 */
+	}
+	for (;;) {
+	    lsb = -((signed)bitfield) &amp; bitfield;
+		/* this assumes a 2's complement architecture */
+	    if (0 == bitfield) {
+		bitfield = *--pnStack;	/* get prev. bitfield from stack */
+		if (pnStack == aStack)	/* if sentinel hit.... */
+		    break;
+		--numrows;
+		continue;
+	    }
+	    bitfield &amp;= ~lsb; /* bit off -&gt; don't try it again */
+	    aQueenBitRes[numrows] = lsb; /* save the result */
+	    if (numrows &lt; board_m1) {	/* more rows to process? */
+		int n = numrows++;
+		aQueenBitCol[numrows] = aQueenBitCol[n] | lsb;
+		aQueenBitNegDiag[numrows] = (aQueenBitNegDiag[n] | lsb) &gt;&gt; 1;
+		aQueenBitPosDiag[numrows] = (aQueenBitPosDiag[n] | lsb) &lt;&lt; 1;
+		*pnStack++ = bitfield;
+		bitfield = mask &amp; ~(aQueenBitCol[numrows] |
+			aQueenBitNegDiag[numrows] | aQueenBitPosDiag[numrows]);
+		continue;
+	    } else {
+		++g_numsolutions;
+		bitfield = *--pnStack;
+		--numrows;
+		continue;
+	   }
+	}
+    }
+    g_numsolutions *= 2;
+}
+
+int main(int argc, char** argv) {
+    ifstream f("checker.in");
+    ofstream g("checker.out");
+    long boardsize,s[20],ok,k,i,sol=0;
+    f&gt;&gt;boardsize;
+    Nqueen (boardsize);
+    k=1;
+    s[k]=0;
+    while (k&gt;0) {
+	ok=0;
+	while(s[k]&lt;boardsize &amp;&amp; !ok) {
+	    ok=1;
+	    s[k]++;
+	    for(i=1;i&lt;k;i++)
+		if(s[i]==s[k] || abs(s[k]-s[i])==abs(k-i))
+		    ok=0;
+	}
+	if(sol!=3)
+	    if(!ok)
+		k--;
+	    else
+		if(k==boardsize) {
+		    for(i=1;i&lt;boardsize;i++) {
+			for(int j=1;j&lt;=boardsize;j++)
+			    if(s[i]==j) g&lt;&lt;j&lt;&lt;" ";
+		    }
+		    for(i=1;i&lt;=boardsize;i++)
+			if(s[boardsize]==i) g&lt;&lt;i;
+		    g&lt;&lt;"\n";
+		    sol++;
+		} else {
+		    k++;
+		    s[k]=0;
+		} else break;
+    }
+    g&lt;&lt;g_numsolutions&lt;&lt;"\n";
+    f.close();
+    g.close();
+    return 0;
+}
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

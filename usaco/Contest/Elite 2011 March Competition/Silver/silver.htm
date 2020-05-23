@@ -1,0 +1,463 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<meta http-equiv="Pragma" content="no-cache">
+<script language="javascript">
+<!--
+    var endtime;
+    
+    function initcount(secondsleft) {
+        var now = new Date();
+        return now.getTime() + secondsleft*1000;
+    }
+    function count1(i) { i = i - i%1; return i; } 
+    function count2(i) { i = i - i%1; if (i < 10) return "0"+i; return i; }
+    function updateclock(head, word, endtime) {
+        var now = new Date();
+        var delta = (endtime - now.getTime())/1000;
+        var s, x;
+        if(delta < 1)
+            s = head + " has ended";
+        else{
+            s = head + " ends: ";
+            s = head + ": ";
+            if(delta >= 24*3600)
+                s = s + count1(delta/86400) + "d";
+            if(delta >= 3600)
+                s = s + count2((delta/3600)%24) + "h";
+            if(delta >= 60)
+                s = s + count2((delta/60)%60) + "m";
+            s = s + count2(delta%60) + "s";
+            setTimeout("updateclock('"+head+"','"+word+"',"+endtime+")", 500);
+        }
+
+        var slot = document.getElementById(word);
+        slot.innerHTML = s;
+    }
+-->
+</script>
+
+<title>USACO Problems</title>
+<style type="text/css"><!--
+table,td,body {
+font-family: Helvetica, Verdana, Arial, SunSans-Regular, Sans-Serif;
+}
+--></style>
+</head><body onload="" background="silver_files/bg9silver.jpg">
+
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans">
+<table><tbody><tr>
+<td><img src="silver_files/cowhead2.gif">
+</td>
+<td valign="top">
+<table cellpadding="0" cellspacing="0">
+    <tbody><tr><td>Contest: MAR11 <b>SILVER</b> Division</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    
+</tbody></table>
+</td></tr>
+</tbody></table>
+<font color="red"><b>
+</b></font>
+
+<br><font size="6"><b>ANALYSIS MODE</b></font><br>
+Submit solutions for your own enjoyment.
+
+</font><pre>**********************************************************************
+                           SILVER PROBLEMS
+**********************************************************************
+                  Three problems numbered 6 through 8
+**********************************************************************
+
+Problem 6: Meeting Place [Damon Doucet, 2011]
+
+Bessie and Jonell are great friends. Since Farmer John scrambles
+where the cows graze every day, they are sometimes quite far from
+each other and can't talk.
+
+The pastures and paths on FJ's farm form a 'tree' structure.  Each
+pasture has exactly one distinct path to any other pasture, and
+each pasture (except pasture #1, the 'root') also has a single
+parent node.
+
+Bessie and Jonell have decided that they will always meet at the
+closest pasture that that is both an ancestor of Jonell's pasture
+and of Bessie's pasture.
+
+FJ created a map of his N (1 &lt;= N &lt;= 1,000) pastures (conveniently
+numbered 1..N) that tells the parent P_i (1 &lt;= P_i &lt;= N) of each
+pasture except pasture 1, which has no parent.
+
+FJ has released his daily grazing schedule for the next M (1 &lt;= M
+&lt;= 1,000) days, so Bessie and Jonell are deciding where they should
+meet each day for gossip. On day k, Bessie is in pasture B_k (1 &lt;=
+B_k &lt;= N) and Jonell is in pasture J_k (1 &lt;= J_k &lt;= N).
+
+Given a map and schedule, help Bessie and Jonell find their meeting
+places.
+
+Consider, for example, the following farm layout:
+
+                            Pasture      Parent Pasture
+             [1]           ---------    ----------------
+            / | \              1              ---
+           /  |  \             2               1 
+         [2] [3] [6]           3               1
+         /        | \          4               2
+        /         |  \         5               8
+      [4]        [8]  [9]      6               1
+                /   \          7               8
+               /     \         8               6
+             [5]     [7]       9               6
+
+Here are the meeting places that Bessie and Jonell would choose
+given a six day schedule of their initial grazing locations:
+
+              Bessie      Jonell       Meeting Place
+             --------    --------     ---------------
+                 2           7               1
+                 4           2               2
+                 1           1               1
+                 4           1               1
+                 7           5               8
+                 9           5               6
+
+PROBLEM NAME: meetplace
+
+INPUT FORMAT:
+
+* Line 1: Two space-separated integers: N and M
+
+* Lines 2..N: Line i contains a single integer that describes the
+        parent of pasture i:  P_i
+
+* Lines N+1..N+M: Line k+N describes Bessie and Jonell's respective
+        pastures with two space-separated integers: B_k and J_k
+
+SAMPLE INPUT (file meetplace.in):
+
+9 6
+1
+1
+2
+8
+1
+8
+6
+6
+2 7
+4 2
+3 3
+4 1
+7 5
+9 5
+
+OUTPUT FORMAT:
+
+* Lines 1..M: Line j contains the meeting place Bessie and Jonell
+        would use for line j+N of the input
+
+SAMPLE OUTPUT (file meetplace.out):
+
+1
+2
+3
+1
+8
+6
+
+**********************************************************************
+
+Problem 7: Package Delivery [Damon Doucet, 2011]
+
+Farmer John must deliver a package to Farmer Dan, and is preparing
+to make his journey. To keep the peace, he gives a tasty treat to
+every cow that he meets along his way and, of course, FJ is so
+frugal that he would like to encounter as few cows as possible.
+
+FJ has plotted a map of N (1 &lt;= N &lt;= 50,000) barns, connected by M
+(1 &lt;= M &lt;= 50,000) bi-directional cow paths, each with C_i (0 &lt;=
+C_i &lt;= 1,000) cows ambling along it. A cow path connects two distinct
+barns, A_i and B_i (1 &lt;= A_i &lt;= N; 1 &lt;= B_i &lt;= N; A_i != B_i). Two
+barns may be directly connected by more than one path. He is currently
+located at barn 1, and Farmer Dan is located at barn N.
+
+Consider the following map:
+
+           [2]---
+          / |    \
+         /1 |     \ 6
+        /   |      \
+     [1]   0|    --[3]
+        \   |   /     \2
+        4\  |  /4      [6]
+          \ | /       /1
+           [4]-----[5] 
+                3  
+
+The best path for Farmer John to take is to go from 1 -&gt; 2 -&gt; 4 -&gt;
+5 -&gt; 6, because it will cost him 1 + 0 + 3 + 1 = 5 treats.
+
+Given FJ's map, what is the minimal number of treats that he should
+bring with him, given that he will feed each distinct cow he meets
+exactly one treat? He does not care about the length of his journey.
+
+PROBLEM NAME: packdel
+
+INPUT FORMAT:
+
+* Line 1: Two space-separated integers: N and M
+
+* Lines 2..M+1: Three space-separated integers: A_i, B_i, and C_i
+
+SAMPLE INPUT (file packdel.in):
+
+6 8
+4 5 3
+2 4 0
+4 1 4
+2 1 1
+5 6 1
+3 6 2
+3 2 6
+3 4 4
+
+OUTPUT FORMAT:
+
+* Line 1: The minimum number of treats that FJ must bring
+
+SAMPLE OUTPUT (file packdel.out):
+
+5
+
+**********************************************************************
+
+Problem 8: Bovine Bridge Battle [Richard Ho, 2007]
+
+Each of Farmer John's N (4 &lt;= N &lt;= 1,000) cows is patiently waiting
+in the main pasture with cow i at point with integer coordinates
+(X_i, Y_i) (-1,000,000,000 &lt;= X_i &lt;= 1,000,000,000; -1,000,000,000
+&lt;= Y_i &lt;= 1,000,000,000).
+
+The cows wish to form into groups of four in order to play Bridge,
+their new favorite card game. Each group must satisfy an important
+constraint: four cows are allowed to team up if and only if there
+exists some point X somewhere in the plane (and not coincident with
+any of the four points of the potential group of four) such that
+rotating any of the group's cows 180 degrees about that point X
+gives the position of some other cow in the group.
+
+Please help the cows determine the number of sets of four cows that
+can form a Bridge group.
+
+By way of example, suppose eight cows are standing at eight points:
+
+                  |
+                 f*
+                  |             a = (-3, 1)    e = (-1, 1)
+           b*     |             b = (-2, 2)    f = ( 0, 3)
+        a      e  |             c = (-3, 0)    g = ( 2, 0)
+         *     *  |             d = (-2, 0)    h = ( 3, 0)
+         c  d     |     g  h
+---------*--*-----+-----*--*---------
+                  |
+
+Then the three legal sets of four cows are {a, b, e, d} (they rotate
+around point (-2, 1)), {b, c, e, f} (around the point (-1.5, 1.5)),
+and {c, d, g, h} (around (0,0)).
+
+The supplied locations of the cows given are all distinct, although
+they are supplied in no particular order. Furthermore, the answer
+will fit into a signed 32-bit integer.
+
+PROBLEM NAME: rotsym
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Line i+1 contains two space-separated integers: X_i
+        and Y_i
+
+SAMPLE INPUT (file rotsym.in):
+
+8
+-3 0
+-2 0
+-1 1
+0 3
+2 0
+-3 1
+3 0
+-2 2
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer that is the number of sets of 4 cows that
+        form valid groups for bridge.
+
+SAMPLE OUTPUT (file rotsym.out):
+
+3
+
+**********************************************************************
+
+</pre><hr>
+<form action="/ioiupload" enctype="multipart/form-data" method="POST">
+<input name="a" value="89Are9bjPrE" type="hidden">
+
+<table>
+<tbody><tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+  <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill
+ Sans">
+  <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+  <tbody><tr><td><b>Submit a program  for grading:&nbsp;<b><input 
+name="filename" type="file">
+  &nbsp;&nbsp;
+  <input value="Submit" name="submit" type="submit"></b></b></td></tr>
+  </tbody></table>
+
+</font></td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+   <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+   <tbody><tr><td colspan="2">
+   <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+   <b>To run your program with your own test data, enter the program<br>
+   file name and input file name then click 'Test':</b></font></td></tr>
+
+  <tr><td>
+
+   <table>
+   <tbody><tr><td>
+     <table>
+     <tbody><tr><td>
+     <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+     <b>Program&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testprogramname" type="file"></td></tr>
+     <tr><td align="right">
+         <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+         <b>Input&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testfilename" type="file"></td></tr>
+     </tbody></table>
+   </td>
+   <td>&nbsp;&nbsp;</td>
+   <td><input value="Test" name="submit" type="submit"></td>
+   </tr>
+   </tbody></table>
+
+   </td></tr></tbody></table>
+
+</td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+  <table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+    <tbody><tr><td height="1"></td></tr>
+    <tr><td width="1"></td><td>
+
+    <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+      <tbody><tr><td>
+      <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+      <b>Backup a file:&nbsp;</b><input name="backupfilename" 
+type="file">
+      &nbsp;&nbsp;&nbsp;<input value="Backup" name="submit" 
+type="submit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input value="See Backups" name="submit" type="submit">
+      </font></td></tr>
+    </tbody></table>
+
+    </td><td width="1"></td></tr>
+    <tr><td height="1"></td><td></td></tr>
+  </tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+</tbody></table>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> The following solution files are saved for grading:<br>
+<table cellspacing="3">
+<tbody><tr><th>Name</th><th>Size</th><th>When</th><th>Age</th></tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=meetplace.p">meetplace.p</a></td>
+<td align="right">1003</td>
+<td align="center">22h05:51</td>
+<td align="center">676h11:59</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=packdel.p">packdel.p</a></td>
+<td align="right">3206</td>
+<td align="center">23h47:32</td>
+<td align="center">674h30:18</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=rotsym.p">rotsym.p</a></td>
+<td align="right">843</td>
+<td align="center"> 0h08:00</td>
+<td align="center">674h09:50</td>
+</tr>
+</tbody></table>
+</font><hr>
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a href="http://ace.delos.com/ioiedit?a=89Are9bjPrE">Edit your 
+database record</a>&nbsp;|&nbsp;
+
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;logout=1"> 
+Logout </a>
+<!--<a href="https://ace.delos.com/rules.html" target="_blank"> Rules </a>-->
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?init=1&amp;a=89Are9bjPrE">Main 
+contest index</a>
+</font></center>
+<!--&nbsp;|&nbsp;-->
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;showsubmit">See 
+submitted solutions</a>
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;suggestionbox">Send
+ message
+to operations staff</a>
+&nbsp;|&nbsp;
+Phone: +1 719-321-7333
+<br>
+Director is not online<br>
+This page was generated at 9:17:50 GMT.
+</font></center>
+</form></body></html>

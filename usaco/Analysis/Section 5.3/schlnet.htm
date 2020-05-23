@@ -1,0 +1,211 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 9: Network of Schools</title> </head><body 
+background="schlnet_files/bg3.jpg">
+<img src="schlnet_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Network of Schools</font></b><br>
+<b>Adam D'Angelo</b>
+</center>
+
+<p>
+The first subtask is to find a minimal set of schools such that there is
+ a
+path to every school from some school in this set. We will call this set
+ the
+"tops." We can find the tops with the following algorithm:
+</p><ol>
+<li>Mark each school as not being a top and not having a top. Having a 
+top
+means that a school is reachable from some school which is a top.
+</li><li>Sequentially make each school N which has no top into a top. 
+When we do
+this, mark off all schools reachable from it as having tops. We also 
+mark
+them off as not being tops, because this is unnecessary - all schools 
+that
+were being served by them can now just be served by N.
+</li></ol>
+This gets us a solution to subtask A.
+
+<p> The second subtask is more tricky. First look at the minimal set of
+schools such that at least one of them can be reached from any school. 
+This
+can be found by reversing all connections in the graph and finding the 
+tops
+- we will call these the "bottoms."
+
+</p><p> If there is only one bottom and one top, we need only to add one
+connection from the bottom to the top to solve the problem: every school
+can get to the bottom, the bottom can get to the top, and the top can 
+get
+to every school.
+
+</p><p> If there is more than one bottom and one top, we need to add one
+connection for each bottom to the top. If there is one bottom and more 
+than
+one top, we need one connection from the bottom to each top.
+
+</p><p> The hard part is when there is more than one bottom and more 
+than one
+top.  In this case, there is always some bottom B and some top T such 
+that
+some other top OT leads to B and T leads to some other bottom OB.
+Connecting B to T makes T no longer a top (because OT can do its work) 
+and
+B no longer a bottom (because OB can do its work.) If we sequentially
+remove tops and bottoms in this manner, we get to one of the above 
+cases.
+Thus, the answer is max(tops, bottoms).
+
+</p><p> We have to watch out for the special case of the graph already 
+being
+fully connected. This leads to a tops/bottoms value of 1, but no new
+connections need to be made. This is done with a flood fill.
+
+Here's some code:
+</p><pre>#include &lt;stdio.h&gt;
+
+#define MAX_N 100
+
+int n;
+int conn[MAX_N][MAX_N]; //[from][to]
+
+int is_top[MAX_N];
+int has_top[MAX_N];
+int touched[MAX_N];
+int reachable[MAX_N];
+
+int max(int a, int b)
+{
+    return a&gt;b?a:b;
+}
+
+void fill_from(int x)
+{
+    if(touched[x])
+        return;
+  
+    is_top[x] = 0;
+    has_top[x] = 1;
+    touched[x] = 1;
+  
+    for(int i=0; i&lt;n; i++)
+        if(conn[x][i])
+            fill_from(i);
+}
+
+int count_tops()
+{
+    for(int i=0; i&lt;n; i++) {
+        has_top[i] = 0;
+        is_top[i] = 0;
+    }
+  
+    while(1) {
+    
+    // find one that has no top
+      int i;
+    
+      for(i=0; i&lt;n; i++)
+          if(!has_top[i])
+              break;
+    
+      if(i == n)
+          break;
+    
+      for(int j=0; j&lt;n; j++)
+          touched[j] = 0;
+    
+      // flood-fill all descendents of it to have a top, and not be a top
+      fill_from(i);
+    
+      is_top[i] = 1;
+    }
+  
+    int count = 0;
+  
+    for(int i=0; i&lt;n; i++)
+        if(is_top[i])
+            count++;
+  
+    return count;
+}
+
+void fill_reachable(int x)
+{
+    if(reachable[x])
+        return;
+  
+    reachable[x] = 1;
+  
+    for(int i=0; i&lt;n; i++)
+        if(conn[x][i])
+            fill_reachable(i);
+}
+
+// check to see if the graph is already fully connected
+int none_needed()
+{
+    for(int i=0; i&lt;n; i++) {
+      for(int j=0; j&lt;n; j++)
+          reachable[j] = 0;
+      fill_reachable(i);
+    
+      for(int j=0; j&lt;n; j++)
+          if(!reachable[j])
+              return 0;
+    }
+    return 1;
+}
+      
+
+int main()
+{
+    FILE *in;
+  
+    in = fopen("schlnet.in", "r");
+  
+    fscanf(in, "%d", &amp;n);
+  
+    for(int i=0; i&lt;n; i++) {
+        while(1) {
+            int to;
+            fscanf(in, "%d", &amp;to);
+            if(to == 0)
+                break;
+            conn[i][to-1] = 1;
+        }
+    }
+    fclose(in);
+  
+    int tops = count_tops();
+  
+    // reverse the graph
+    for(int i=0; i&lt;n; i++)
+        for(int j=i+1; j&lt;n; j++) {
+            int temp = conn[i][j];
+            conn[i][j] = conn[j][i];
+            conn[j][i] = temp;
+        }
+  
+    int bottoms = count_tops();
+    int b;
+  
+    if(none_needed())
+        b = 0;
+    else
+        b = max(tops, bottoms);
+  
+    FILE *out;
+    out = fopen("schlnet.out", "w");
+    fprintf(out, "%d\n%d\n", tops, b);
+    fclose(out);
+    return 0;
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

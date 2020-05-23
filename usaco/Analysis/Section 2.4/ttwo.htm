@@ -1,0 +1,113 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 72: The Tamworth Two</title> </head><body background="ttwo_files/bg3.jpg">
+<img src="ttwo_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">The Tamworth Two</font></b><br>
+Russ Cox
+</center>
+
+
+<p>We can simply simulate the movement of Farmer John and the two cows,
+but we need to find a way to detect loops.  There are only 100 places
+where the cows can be, and 4 directions they can face.  The same goes
+for Farmer John.  This multiplies out to 400*400 = 160,000 different
+(place, direction) configurations for Farmer John and the cows.  If we
+ever happen upon a configuration we have been in before, we are in an
+infinite loop, and John and the cows will never meet.
+
+</p><p>In fact, we don't even need to keep track of which configurations
+we've seen.  If they're going to meet, they're going to meet in fewer
+than 160,000 steps.  Otherwise, they have to repeat some configuration,
+in which case they'll never meet.
+
+</p><p>We take care of the simulation by keeping track of the position and
+direction of each.  Direction is a number from 0 to 3, 0 = north, 1 =
+east, 2 = south, 3 = west.  So turning clockwise is incrementing one.
+We calculate how to move given the direction by looking up offsets in
+the deltax and deltay arrays.
+
+</p><pre>/*
+PROG: ttwo
+ID: rsc001
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+char grid[10][10];
+
+/* delta x, delta y position for moving north, east, south, west */
+int deltax[] = { 0, 1, 0, -1 };
+int deltay[] = { -1, 0, 1, 0 };
+
+void
+move(int *x, int *y, int *dir)
+{
+	int nx, ny;
+
+	nx = *x+deltax[*dir];
+	ny = *y+deltay[*dir];
+
+	if(nx &lt; 0 || nx &gt;= 10 || ny &lt; 0 || ny &gt;= 10 || grid[ny][nx] == '*')
+		*dir = (*dir + 1) % 4;
+	else {
+		*x = nx;
+		*y = ny;
+	}
+}
+
+void
+main(void)
+{
+	FILE *fin, *fout;
+	char buf[100];
+	int i, x, y;
+	int cowx, cowy, johnx, johny, cowdir, johndir;
+
+
+	fin = fopen("ttwo.in", "r");
+	fout = fopen("ttwo.out", "w");
+	assert(fin != NULL &amp;&amp; fout != NULL);
+
+	cowx = cowy = johnx = johny = -1;
+
+	for(y=0; y&lt;10; y++) {
+		fgets(buf, sizeof buf, fin);
+		for(x=0; x&lt;10; x++) {
+			grid[y][x] = buf[x];
+			if(buf[x] == 'C') {
+				cowx = x;
+				cowy = y;
+				grid[y][x] = '.';
+			}
+			if(buf[x] == 'F') {
+				johnx = x;
+				johny = y;
+				grid[y][x] = '.';
+			}
+		}
+	}
+
+	assert(cowx &gt;= 0 &amp;&amp; cowy &gt;= 0 &amp;&amp; johnx &gt;= 0 &amp;&amp; johny &gt;= 0);
+
+	cowdir = johndir = 0;	/* north */
+
+	for(i=0; i&lt;160000 &amp;&amp; (cowx != johnx || cowy != johny); i++) {
+		move(&amp;cowx, &amp;cowy, &amp;cowdir);
+		move(&amp;johnx, &amp;johny, &amp;johndir);
+	}
+
+	if(cowx == johnx &amp;&amp; cowy == johny)
+		fprintf(fout, "%d\n", i);
+	else
+		fprintf(fout, "0\n");
+	exit(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

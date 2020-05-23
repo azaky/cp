@@ -1,0 +1,241 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 55: Starry Night</title> </head><body 
+background="starry_files/bg3.jpg">
+<img src="starry_files/cow1.jpg" width="742" height="118">
+
+<center>
+<b><font size="7">Starry Night</font></b><br>
+Hal Burch
+</center>
+
+<p>Flood filling will quickly give all the shapes.  Go
+through each shape and see if it is the same as any previous
+shape, checking each rotation.  Then, you have to go through
+(using flood fill again) and mark the shape with it's final letter.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+
+#define NAME "starry"
+/* MAXSTAR is the largest a cluster can be */
+#define MAXSTAR 160
+
+/* the board */
+char board[100][100];
+int w, h;
+
+/* clusters already lettered */
+int stars[26][MAXSTAR]; /* stars are stored as xval + yval*1000 */
+int count[26]; /* number of stars */
+int size[26][2]; /* the x &amp; y dimensions */
+int nstart; /* number of clusters */
+
+/* the current cluster */
+int current[MAXSTAR][2]; /* y, x */
+int ncurrent; /* number of stars in current cluster */
+
+/* int_comp is integer comparison, used for bsearch and qsort */
+int
+int_comp(const void *pa, const void *pb)
+ {
+  int a = *(int*)pa;
+  int b = *(int*)pb;
+  if (a &gt; b) return 1;
+  else if (a &lt; b) return -1;
+  else return 0;
+ }
+
+/* find the boundary (in my,mx,My, and Mx.. m is minimum, M is maximum */
+/* also fills in current */
+int
+find_boundary(int y, int x, int *my, int *mx, int *My, int *Mx)
+ {
+  int rv = 0;
+  if (board[y][x] != '1') return 0; /* not a star or already visited */
+  rv++; /* one more star */
+  board[y][x] = '2'; /* mark as visited */
+
+  /* put in current cluster */
+  current[ncurrent][0] = y;
+  current[ncurrent][1] = x;
+  ncurrent++;
+
+  /* update boundary */
+  if (y &lt; *my) *my = y;
+  if (y &gt; *My) *My = y;
+  if (x &lt; *mx) *mx = x;
+  if (x &gt; *Mx) *Mx = x;
+
+  /* check all adjacent stars */
+  if (x &gt; 0) 
+   {
+    x--;
+    rv += find_boundary(y, x, my, mx, My, Mx);
+    if (y &gt; 0) rv += find_boundary(y-1, x, my, mx, My, Mx);
+    if (y+1 &lt; h) rv += find_boundary(y+1, x, my, mx, My, Mx);
+    x++;
+   }
+  if (y &gt; 0) rv += find_boundary(y-1, x, my, mx, My, Mx);
+  if (y+1 &lt; h) rv += find_boundary(y+1, x, my, mx, My, Mx);
+  if (x+1 &lt; w)
+   {
+    x++;
+    rv += find_boundary(y, x, my, mx, My, Mx);
+    if (y &gt; 0) rv += find_boundary(y-1, x, my, mx, My, Mx);
+    if (y+1 &lt; h) rv += find_boundary(y+1, x, my, mx, My, Mx);
+    x--;
+   }
+  return rv;
+ }
+
+/* this is a very basic flood fill...fill ch everywhere there's not a '0' */
+void
+mark_shape(int y, int x, char ch)
+ {
+  if (board[y][x] == ch) return; /* done already */
+  if (board[y][x] == '0') return; /* nothing to do */
+
+  board[y][x] = ch;
+
+  /* recurse on all boundary stars */
+  if (x &gt; 0) 
+   {
+    x--;
+    mark_shape(y, x, ch);
+    if (y &gt; 0) mark_shape(y-1, x, ch);
+    if (y+1 &lt; h) mark_shape(y+1, x, ch);
+    x++;
+   }
+  if (y &gt; 0) mark_shape(y-1, x, ch);
+  if (y+1 &lt; h) mark_shape(y+1, x, ch);
+  if (x+1 &lt; w) 
+   {
+    x++;
+    mark_shape(y, x, ch);
+    if (y &gt; 0) mark_shape(y-1, x, ch);
+    if (y+1 &lt; h) mark_shape(y+1, x, ch);
+   }
+ }
+
+/* is shape id the same as the current shape */
+/* specify the orientation with dy/dx and by/bx */
+/* dy/dx is the difference value to associate with y and x changes */
+/* by/bx is the upper right corner of the bounding box with respect
+   to the current orientation */
+/* NOTE: assumes that the number of stars are the same */
+int
+check_shape(int id, int dy, int dx, int by, int bx)
+ {
+  int lv;
+  int pval;
+
+  for (lv = 0; lv &lt; ncurrent; lv++)
+   {
+    pval = (current[lv][0]-by)*dy + (current[lv][1]-bx)*dx;
+    if (!bsearch(&amp;pval, stars[id], count[id], sizeof(stars[id][0]), int_comp))
+      return 0; /* found a star that didn't match */
+   }
+  return 1;
+ }
+
+/* we found a star here, make it a cluster */
+void
+fix_board(int y, int x)
+ {
+  int mx, my, Mx, My;
+  int cnt;
+  int lv;
+  int pw, ph;
+  int f;
+
+/* gather the cluster information */
+  mx = Mx = x;
+  my = My = y;
+
+  ncurrent = 0;
+  cnt = find_boundary(y, x, &amp;my, &amp;mx, &amp;My, &amp;Mx);
+
+  pw = Mx - mx + 1;
+  ph = My - my + 1;
+
+  f = 0;
+  /* check each cluster */
+  for (lv = 0; lv &lt; nstart; lv++)
+    if (cnt == count[lv]) /* the cluster must have the same # of stars */
+     {
+      if (pw == size[lv][1] &amp;&amp; ph == size[lv][0])
+       { /* the bounding box sizes match */
+	f += check_shape(lv, 1000, 1, my, mx);
+	f += check_shape(lv, 1000, -1, my, Mx);
+	f += check_shape(lv, -1000, 1, My, mx);
+	f += check_shape(lv, -1000, -1, My, Mx);
+       }
+      if (pw == size[lv][0] &amp;&amp; ph == size[lv][1])
+       { /* the bounding box sizes match */
+	f += check_shape(lv, 1, 1000, my, mx);
+	f += check_shape(lv, 1, -1000, my, Mx);
+	f += check_shape(lv, -1, 1000, My, mx);
+	f += check_shape(lv, -1, -1000, My, Mx);
+       }
+      if (f) break;
+     }
+  if (f) mark_shape(y, x, 'a' + lv); /* found match */
+  else { /* new cluster! */
+    count[nstart] = 0;
+    mark_shape(y, x, 'a' + nstart);
+    for (lv = 0; lv &lt; ncurrent; lv++)
+      stars[nstart][lv] = (current[lv][0]-my)*1000 + (current[lv][1]-mx);
+    count[nstart] = ncurrent;
+    /* we need the stars in increasing order */
+    qsort(stars[nstart], count[nstart], sizeof(stars[nstart][0]), int_comp);
+    size[nstart][0] = ph;
+    size[nstart][1] = pw;
+    nstart++;
+   }
+ }
+
+
+int
+main(int argc, char **argv)
+ {
+  FILE *fin, *fout;
+  int lv, lv2;
+
+  fin = fopen(NAME ".in", "r");
+  fout = fopen(NAME ".out", "w");
+  assert(fin);
+  assert(fout);
+
+/* read in the data */
+  fscanf (fin, "%d %d", &amp;w, &amp;h);
+
+  for (lv = 0; lv &lt; h; lv++) fscanf (fin, "%s", board[lv]);
+  fclose(fin);
+
+/* everywhere there's a star not in a cluster, make it into one */
+  for (lv = 0; lv &lt; h; lv++)
+    for (lv2 = 0; lv2 &lt; w; lv2++)
+      if (board[lv][lv2] == '1')
+        fix_board(lv, lv2);
+
+/* output data */
+  for (lv = 0; lv &lt; h; lv++)
+   {
+    fprintf (fout, "%c", board[lv][0]);
+    for (lv2 = 1; lv2 &lt; w; lv2++)
+      fprintf (fout, "%c", board[lv][lv2]);
+    fprintf (fout, "\n");
+   }
+
+  fclose(fout);
+  return 0;
+ }
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

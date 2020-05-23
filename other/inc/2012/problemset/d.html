@@ -1,0 +1,128 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/df30a9807f3de02333d98a80faa639b8/d.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem D</h2>
+<h1>Auto Complete</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>Do you remember the auto-complete system when you use google.com to search for something? It can give us some suggestion of words you want to type before you complete the word itself. Here we will deal with a similar problem.</p>
+
+<p>You have a dictionary of N words and each word has an integer value denoting the search point of the corresponding string. Now, given Q query string and for each query string you have to find 4 words from the dictionary which prefix match completely with the query string. If there are less than 4 matched words, then just output all the matched words, otherwise, you have to select matched words with highest search point. If there is more than one matched word with equal value, choose the least lexicographically one. The matched words should be output in lexicographically order.</p>
+
+<p>For example, given a dictionary: { ("superman",10), ("supper",7), ("super",7), ("sup",8), ("suez",9), ("superboy",6)}</p>
+
+<p>Let the query string "sup", then you should output:
+</p><ul><li>sup</li>
+<li>super</li>
+<li>superman</li>
+<li>supper</li>
+</ul>
+<p></p>
+<p>"suez" is not chosen because its prefix doesn't match "sup", while "superboy" is not chosen because the other 4 matched words have a higher search point.</p>
+
+<p>If the query string is "super", then you should output:
+</p><ul>
+<li>super</li>
+<li>superboy</li>
+<li>superman</li>
+</ul>
+<p></p>
+<p>In this case, "supper", "sup" and "suez" are not chosen because its prefix doesn't match "super".</p>
+
+
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 20) the number of cases. Each case begins with an integer N (1 &#8804; N &#8804; 10,000) and Q (1 &#8804; Q &#8804; 100) denoting the number of words in dictionary and the number of query respectively. The next N lines each contains a string S<sub>i</sub> (1 &#8804; |S<sub>i</sub>| &#8804; 15) and an integer P<sub>i</sub> (1 &#8804; P<sub>i</sub> &#8804; 1,000,000) denoting the word and the respective search point. You may assume that all words in dictionary are distinct. The next Q lines each contains a query string R<sub>i</sub> (1 &#8804; |R<sub>i</sub>| &#8804; 15). All strings/words in the input contains only lowercase alphabets (a-z).</p>
+
+
+<h3>Output</h3>
+<p>For each test case, output begins with "Case #X:" in a line where X is the case number starts from 1. The next Q blocks in each case contains the matched word for the query string in the following format:</p>
+<pre>FIND R<sub>i</sub>
+&gt; result1
+&gt; result2
+&gt; result3
+&gt; result4
+</pre>
+<p>Where R<sub>i</sub> is the query string, and result1-4 are the matched words. Check sample input/output for clarity.</p>
+
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
+6 4
+superman 10
+supper 7
+super 7
+sup 8
+suez 9
+superboy 6
+sup
+super
+summer
+s
+5 2
+abcdef 6
+abcd 4
+abcde 5
+ab 2
+abc 3
+ab
+abcd
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 
+FIND sup
+&gt; sup
+&gt; super
+&gt; superman
+&gt; supper
+FIND super
+&gt; super
+&gt; superboy
+&gt; superman
+FIND summer
+FIND s
+&gt; suez
+&gt; sup
+&gt; super
+&gt; superman
+Case #2:
+FIND ab
+&gt; abc
+&gt; abcd
+&gt; abcde
+&gt; abcdef
+FIND abcd
+&gt; abcd
+&gt; abcde
+&gt; abcdef
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>The first two queries correspond to the example in problem statement. There are no word matched with "summer" in the dictionary", and all words in the dictionary match with "s" in which we should select the 4 word with highest search point. Note that in any query, the matched words should be output in lexicographically order.</p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

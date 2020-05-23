@@ -1,0 +1,484 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Graph Theory
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Graph%20Theory_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Graph Theory
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">What's a Graph?</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Formally, a <i>graph</i> is the following:
+
+</font></p><ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> a collection of <i>vertices</i> V, and </li>
+<li>a collection of <i>edges</i> E consisting of pairs of vertices.</li>
+</font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Think of vertices as ``locations''. The set of vertices is the set
+of all the possible locations. In this analogy, edges represent paths
+between pairs of those locations; the set E contains all the paths
+between the locations.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Representation</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The graph is normally represented using that analogy. Vertices are points
+or circles; edges are lines between them.
+<br><img src="Graph%20Theory_files/graph1.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">In this example graph, V = {1, 2, 3, 4, 5, 6} and E = {(1,3), (1,6),
+(2,5), (3,4), (3,6)}.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Each <i>vertex</i> is a member of the set V.  A vertex is sometimes called
+a <i>node</i>.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Each <i>edge</i> is a member of the set E. Note that some vertices might
+not be the end point of any edge.  Such vertices are termed `isolated'.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sometimes, numerical values are associated with edges, specifying lengths
+or costs; such graphs are called <i>edge-weighted</i> graphs (or weighted
+graphs). The value associated with an edge is called the <i>weight</i> of the
+edge.  A similar definition holds for node-weighted graphs,
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Examples of Graphs</font></h4>
+
+<h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Telecowmunication (USACO Championship 1996)</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given a set of computers and a set of wires running between pairs of
+computers, what is the minimum number of machines whose crash causes
+two given machines to be unable to communicate? (The two given machines
+will not crash.)
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph: The vertices of the graph are the computers.  The edges are the
+wires between the computers.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problem: Riding The Fences</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Farmer John owns a large number of fences, which he must periodically
+check for integrity. He keeps track of his fences by maintaining a list
+of points at which fences intersect. He records the name of the point
+and the one or two fence names that touch that point.  Every fence has
+two end points, each at some intersection point, although the intersection
+point may be the end point of only one fence.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given a fence layout, calculate if there is a way for Farmer John to
+ride his horse to all of his fences without riding along a fence more
+than once. Farmer John can start and finish anywhere, but cannot cut
+across his fields (i.e., the only way he can travel between intersection
+points is along a fence). If there is a way, find one way.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph: Farmer John starts at intersection points and travels between
+the points along fences.  Thus, the vertices of the underlying graph
+are the intersection points, and the fences represent edges.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Knight moves</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given: Two squares on an 8x8 chessboard.  Determine the shortest sequence
+of knight moves from one square to the other.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph: The graph here is harder to see.  Each location on the chessboard
+represents a vertex.  There is an edge between two positions if it is
+a legal knight move.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Overfencing [Kolstad &amp; Schrijvers, Spring 1999 USACO Open]</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Farmer John created a huge maze of fences in a field.  He omitted two
+fence segments on the edges, thus creating two ``exits'' for the maze.
+The maze is a `perfect' maze; you can find a way out of the maze from
+any point inside it.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given the layout of the maze, calculate the number of steps required to
+exit the maze from the `worst' point in the maze (the point that is
+`farther' from either exit when walking optimally to the closest exit).
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Here's what one particular W=5, H=3 maze looks like:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-+-+-+-+-+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-+&nbsp;+-+&nbsp;+&nbsp;+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;+-+-+&nbsp;+&nbsp;+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-+&nbsp;+-+-+-+<br>
+</font></tt>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph: The vertices of the graph are positions in the grid.  There
+is an edge between two vertices if they represent adjacent positions
+that are not separated by a wall.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Terminology</font></h4>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Let's look again at the first example graph:
+<br><img src="Graph%20Theory_files/graph1.gif"><br>
+
+</font><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">An edge is a <i>self-loop</i> if it is of the form (u,u).  The 
+sample graph contains no self-loops.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A graph is <i>simple</i> if it neither contains self-loops nor contains
+an edge that is repeated in E.  A graph is called a <i>multigraph</i>
+if it contains a given edge more than once or contain self-loops. For
+our discussions, graphs are assumed to be simple.  The example graph is
+a simple graph.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">An edge (u,v) is <i>incident</i> to both vertex u and vertex v. For
+example, the edge (1,3) is incident to vertex 3.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The <i>degree</i> of a vertex is the number of edges which are incident
+to it. For example, vertex 3 has degree 3, while vertex 4 has degree 1.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Vertex u is <i>adjacent</i> to vertex v if there is some edge to which
+both are incident (that is, there is an edge between them). For example,
+vertex 2 is adjacent to vertex 5.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A graph is said to be <i>sparse</i> if the total number of edges is small
+compared to the total number possible ((<i>N  x  (N-1))/2</i>) and <i>dense</i>
+otherwise. For a given graph, whether it is dense or sparse is not
+well-defined.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Directed Graph</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graphs described thus far are called <i>undirected</i>, as the edges go
+`both ways'. So far, the graphs have connoted that if one can travel
+from vertex 1 to vertex 3, one can also travel from vertex 3 to vertex 1. In
+other words, (1,3) being in the edge set implies (3,1) is in the edge
+set.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sometimes, however, a graph is <i>directed</i>, in which case the edges
+have a direction.  In this case, the edges are called <i>arcs</i>.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Directed graphs are drawn with arrows to show direction.
+<br><img src="Graph%20Theory_files/graph2.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The <i>out-degree</i> of a vertex is the number of arcs which <i>begin</i>
+at that vertex.  The <i>in-degree</i> of a vertex is the number of arcs
+which <i>end</i> at that vertex. For example, vertex 6 has in-degree 2
+and out-degree 1.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A graph is assumed to be undirected unless specifically called a directed
+graph.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Paths</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> A <i>path</i> from vertex <i>u</i> to vertex <i>x</i> is a
+sequence of vertices (<i>v <sub> 0</sub></i>, <i>v <sub> 1</sub></i>,
+..., <i>v <sub> k</sub></i>) such that <i>v <sub> 0</sub></i> =
+<i>u</i> and <i>v <sub>k</sub></i> = <i>x</i> and (<i>v <sub>
+0</sub></i>, <i>v <sub> 1</sub></i>) is an edge in the graph, as
+is (<i>v <sub> 1</sub></i>, <i>v <sub> 2</sub></i>), (<i>v <sub>
+2</sub></i>, <i>v <sub> 3</sub></i>), etc. The length of such a
+path is <i>k</i>.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> For example, in the undirected graph above, (4, 3, 1, 6) is a
+path.
+
+<br><img src="Graph%20Theory_files/graph3.gif"><br>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> This path is said to <i>contain</i> the vertices <i>v <sub>
+0</sub></i>, <i>v <sub> 1</sub></i>, etc., as well as the edges
+(<i>v <sub> 0</sub></i>, <i>v <sub> 1</sub></i>), (<i>v <sub>
+1</sub></i>, <i>v <sub> 2</sub></i>), etc.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Vertex <i>x</i> is said to be <i>reachable</i> from vertex
+<i>u</i> if a path exists from <i>u</i> to <i>x</i>.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A path is <i>simple</i> if it contains no vertex more than once.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> A path is a <i>cycle</i> if it is a path from some vertex to
+that same vertex.  A cycle is <i>simple</i> if it contains no vertex
+more than once, except the start (and end) vertex, which only
+appears as the first and last vertex in the path.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> These definitions extend similarly to directed graphs (e.g.,
+(<i>v <sub> 0</sub></i>, <i>v <sub> 1</sub></i>), (<i>v <sub>
+1</sub></i>, <i>v <sub> 2</sub></i>), etc. must be arcs).
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph Representation</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The choice of representation of a graph is important, as
+different representations have very different time and space costs.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The vertices are generally tracked by numbering them, so that
+one can index them just by their number. Thus, the representations
+focus on how to store the <i>edges</i>.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Edge List</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The most obvious way to keep track of the edges is to keep a list of
+the pairs of vertices representing the edges in the graph.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This representation is easy to code, fairly easy to debug, and fairly
+space efficient.  However, determining the edges incident to a given
+vertex is expensive, as is determining if two vertices are adjacent.
+Adding an edge is quick, but deleting one is difficult if its location
+in the list is not known.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For weighted graphs, this representation also keeps one more number for
+each edge, the edge weight. Extending this data structure to handle
+directed graphs is straightforward.  Representing multigraphs is also
+trivial.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Example</font></h5>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The sample undirected graph might be represented as the following
+list of edges:
+
+</font><center>
+<table border="1">
+<tbody><tr> <td> &nbsp; </td> <td><i>V<sub>1</sub></i></td> <td><i>V<sub>2</sub></i></td></tr>
+<tr><td><i>e<sub>1</sub></i></td> <td>4</td> <td>3</td>
+</tr><tr><td><i>e<sub>2</sub></i></td> <td>1</td> <td>3</td>
+</tr><tr><td><i>e<sub>3</sub></i></td> <td>2</td> <td>5</td>
+</tr><tr><td><i>e<sub>4</sub></i></td> <td>6</td> <td>1</td>
+</tr><tr><td><i>e<sub>5</sub></i></td> <td>3</td> <td>6</td>
+</tr></tbody></table>
+</center>
+
+<h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Adjacency Matrix</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A second way to represent a graph utilizes an <i>adjacency matrix</i>.
+This is a N by N array (N is the number of vertices).  The i,j entry
+contains a 1 if the edge (i,j) is in the graph; otherwise it contains
+a 0.  For an undirected graph, this matrix is symmetric.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This representation is easy to code. It's much less space efficient,
+especially for large, sparse graphs. Debugging is harder, as the matrix is
+large. Finding all the edges incident to a given vertex is fairly
+expensive (linear in the number of vertices), but checking if two vertices
+are adjacent is very quick. Adding and removing edges are also very
+inexpensive operations.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For weighted graphs, the value of the (i,j) entry is used to store the
+weight of the edge. For an unweighted multigraph, the (i,j) entry can
+maintain the number of edges between the vertices.  For a weighted
+multigraph, it's harder to extend this.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Example</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The sample undirected graph would be represented by the following
+adjacency matrix:
+
+</font></p><center>
+<table border="1">
+<tbody><tr><td>&nbsp;</td> <td><i>V<sub>1</sub></i></td> <td><i>V<sub>2</sub></i></td> <td><i>V<sub>3</sub></i></td> <td><i>V<sub>4</sub></i></td> <td><i>V<sub>5</sub></i></td> <td><i>V<sub>6</sub></i></td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>1</sub></i></td> <td align="center">0</td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td> <td align="center">0</td> <td align="center">1</td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>2</sub></i></td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>3</sub></i></td> <td align="center">1</td> <td align="center">0</td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td> <td align="center">1</td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>4</sub></i></td> <td align="center">0</td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>5</sub></i></td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td></tr><tr>
+</tr><tr><td align="center"><i>V<sub>6</sub></i></td> <td align="center">1</td> <td align="center">0</td> <td align="center">1</td> <td align="center">0</td> <td align="center">0</td> <td align="center">0</td></tr><tr>
+</tr></tbody></table>
+</center>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">It is sometimes helpful to use the fact that the (i,j) entry of the
+adjacency matrix raised to the k-th power gives the number of paths from
+vertex i to vertex j consisting of exactly k edges.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Adjacency List</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The third representation of graph is to keep track of all the edges
+incident to a given vertex.  This can be done by using an array of
+length N, where N is the number of vertices.  The i<sup>th</sup> entry
+in this array is a list of the edges incident to i'th vertex (edges are
+represented by the index of the other vertex incident to that edge).
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This representation is much more difficult to code, especially if the
+number of edges incident to each vertex is not bounded, so the lists
+must be linked lists (or dynamically allocated).  Debugging this is
+difficult, as following linked lists is more difficult.  However, this
+representation uses about as much memory as the edge list.  Finding the
+vertices adjacent to each node is very cheap in this structure, but
+checking if two vertices are adjacent requires checking all the edges
+adjacent to one of the vertices. Adding an edge is easy, but deleting
+an edge is difficult, if the locations of the edge in the appropriate
+lists are not known.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Extend this representation to handle weighted graphs by maintaining both
+the weight and the other incident vertex for each edge instead of just
+the other incident vertex. Multigraphs are already representable.
+Directed graphs are also easily handled by this representation, in one
+of several ways: store only the edges in one direction, keep a seperate
+list of incoming and outgoing arcs, or denote the direction of each arc
+in the list.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Example</font></h5>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The adjacency list representation of the example undirected graph is as
+follows:
+
+</font><center>
+<table border="1">
+<tbody><tr><td align="center">&nbsp;</td>  <td align="center">Adjacent</td></tr>
+<tr><td align="center">Vertex</td>  <td align="center">Vertices</td></tr>
+<tr><td align="center">1</td>  <td align="center">3, 6</td></tr>
+<tr><td align="center">2</td>  <td align="center">5</td></tr>
+<tr><td align="center">3</td>  <td align="center">6, 4, 1</td></tr>
+<tr><td align="center">4</td>  <td align="center">3</td></tr>
+<tr><td align="center">5</td>  <td align="center">2</td></tr>
+<tr><td align="center">6</td>  <td align="center">3, 1</td></tr>
+</tbody></table>
+</center>
+
+<h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Implicit Representation</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For some graphs, the graph itself does not have to be stored at all.
+For example, for the Knight moves and Overfencing problems, it is easy
+to calculate the neighbors of a vertex, check adjacency, and determine
+all the edges without actually storing that information, thus, there is
+no reason to actually store that information; the graph is implicit in
+the data itself.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">If it is possible to store the graph in this format, it is generally
+the correct thing to do, as it saves a lot on storage and reduces the
+complexity of your code, making it easy to both write and debug.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">If N is the number of vertices, M the number of edges, and <i>d <sub> max</sub></i>
+the maximum degree of a node, the following table summarizes the
+differences between the representations:
+
+</font></p><center>
+<table border="1">
+<tbody><tr><td>Efficiency</td> <td align="center">Edge List</td> <td align="center">Adj Matrix</td> <td align="center">Adj List</td></tr>
+<tr><td>Space</td> <td align="center">2xM</td> <td align="center">N<sup>2</sup></td> <td align="center">2xM</td></tr>
+<tr><td>Adjacency Check</td> <td align="center">M</td> <td align="center">1</td> <td align="center"><i>d <sub> max</sub></i></td></tr>
+<tr><td>List of Adj Vertices</td> <td align="center">M</td> <td align="center">N</td> <td align="center"><i>d <sub> max</sub></i></td></tr>
+<tr><td>Add Edge</td> <td align="center">1</td> <td align="center">1</td> <td align="center">1</td></tr>
+<tr><td>Delete Edge</td> <td align="center">M</td> <td align="center">2</td> <td align="center">2x<i>d <sub> max</sub></i></td></tr>
+</tbody></table>
+</center>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Connectedness</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">An undirected graph is said to be <i>connected</i> if there is a
+path from every vertex to every other vertex. The example graph
+is <i>not</i> connected, as there is no path from vertex 2 to
+vertex 4.
+
+<br><img src="Graph%20Theory_files/graph1.gif"><br>
+
+However, if you add an edge between vertex 5 and vertex 6, then
+the graph becomes connected.
+
+<br><img src="Graph%20Theory_files/graph1a.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A <i>component</i> of a graph is a maximal subset of the vertices such
+that every vertex is reachable from each other vertex in the component.
+The original example graph has two components: {1, 3, 4, 6} and {2, 5}.
+Note that {1, 3, 4} is not a component, as it is not maximal.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A directed graph is said to be <i>strongly connected</i> if there is a
+path from every vertex to every other vertex.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A <i>strongly connected component</i> of a directed graph is a vertex
+u and the collection of all vertices v such that there is a path from
+u to v and a path from v to u.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Subgraphs</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Graph G' = (V', E') is a subgraph of G = (V, E) if V' is a subset
+of V and E' is a subset of E.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The subgraph of G <i>induced</i> by V' is the graph (V', E'), where E'
+consists of all the edges of E that are between members of V'.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For example, for V' = {1, 3, 4, 2}, the subgraph induced is:
+
+<br><img src="Graph%20Theory_files/graph4.gif"><br>
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Special Graphs</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">An undirected graph is said to be a <i>tree</i> if it contains no cycles
+and is connected.
+
+<br><img src="Graph%20Theory_files/graph5.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Many trees are what is called <i>rooted</i>, where there is a notion of
+the "top" node, which is called the <i>root</i>.  Thus, each node has
+one <i>parent</i>, which is the adjacent node which is closer to the
+root, and may have any number of <i>children</i>, which are the rest of
+the nodes adjacent to it.  The tree above was drawn as a rooted tree.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">An undirected graph which contains no cycles is called a <i>forest</i>.
+<br><img src="Graph%20Theory_files/graph6.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A directed acyclic graph is often referred to as a <i>dag</i>.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A graph is said to be <i>complete</i> if there is an edge between every
+pair of vertices.
+<br><img src="Graph%20Theory_files/graph7.gif"><br>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A graph is said to be <i>bipartite</i> if the vertices can be split into
+two sets <i>V <sub> 1</sub></i> and <i>V <sub> 2</sub></i> such there are no edges between two vertices of
+<i>V <sub> 1</sub></i> or two vertices of <i>V <sub> 2</sub></i>.
+
+<br><img src="Graph%20Theory_files/graph8.gif"><br>
+
+</font></p></div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

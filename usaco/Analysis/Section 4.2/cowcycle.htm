@@ -1,0 +1,246 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 39: Cowcycle</title> </head><body background="cowcycle_files/bg3.jpg">
+<img src="cowcycle_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Cowcycle</font></b><br>
+Rob Kolstad
+</center>
+
+
+<p>  This problem is only tricky for generating the proper gears
+to check ratios and coding so that it doesn't run too long.  Tomek
+Czajka's program (below) does all these things well.  Note how
+he generates the gear ratios in an order to reduce sorting time.
+His recursive gear generation is very elegant with very few extra
+steps.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+const double epsilon = 1e-13;
+
+int F,R,F1,F2,R1,R2;
+int GearF[20];
+int GearR[20];
+double bestvar;
+int BestGearF[20];
+int BestGearR[20];
+
+void Try() {
+    static int f,r,N,a,b;
+    static double S[100];
+    static double m,var;
+    if(GearF[F-1]*GearR[R-1]&lt;3*GearF[0]*GearR[0]) return;
+				/* note use of integers */
+    N=0;
+    for(f=F-1; f&gt;=0; f--)
+        for(r=0; r&lt;R; r++)
+            S[N++]=double(GearF[f])/GearR[r];
+    /* sort */
+    for(a=1; a&lt;N; a++) {
+        b=a;
+        while(b&gt;0 &amp;&amp; S[b-1]&lt;S[b]) {
+            m=S[b-1]; S[b-1]=S[b]; S[b]=m;
+            b--;
+        }
+    }
+    /* build difference table */
+    N--;
+    for(a=0; a&lt;N; a++) S[a]-=S[a+1];
+
+    /* calculate mean */
+    m=0.0;
+    for(a=0; a&lt;N; a++) m+=S[a];
+    m/=N;
+
+    /* calculate variance */
+    var=0.0;
+    for(a=0; a&lt;N; a++) var+=S[a]*S[a];
+    var=var/N-m*m;
+    if(var&lt;bestvar) {
+        bestvar=var-epsilon;
+        for(a=0; a&lt;F; a++) BestGearF[a]=GearF[a];
+        for(a=0; a&lt;R; a++) BestGearR[a]=GearR[a];
+    }
+}
+
+void rekR(int nr,int least) {
+    int i;
+    if(nr==R) Try();
+    else {
+        for(i=least; i&lt;=R2; i++) {
+            GearR[nr]=i;
+            rekR(nr+1,i+1);
+        }
+    }
+}
+
+void rekF(int nr,int least) {
+    int i;
+    if(nr==F) rekR(0,R1);
+    else {
+        for(i=least; i&lt;=F2; i++) {
+            GearF[nr]=i;
+            rekF(nr+1,i+1);
+        }
+    }
+}
+
+void Read() {
+    FILE *f=fopen("cowcycle.in","r");
+    fscanf(f,"%d%d%d%d%d%d",&amp;F,&amp;R,&amp;F1,&amp;F2,&amp;R1,&amp;R2);
+    fclose(f);
+}
+
+void Write() {
+    int i;
+    FILE *f=fopen("cowcycle.out","w");
+    for(i=0; i&lt;F; i++) {
+        fprintf(f,"%d",BestGearF[i]);
+        if(i&lt;F-1) fputc(' ',f);  else fputc('\n',f);
+    }
+    for(i=0; i&lt;R; i++) {
+        fprintf(f,"%d",BestGearR[i]);
+        if(i&lt;R-1) fputc(' ',f);  else fputc('\n',f);
+    }
+    fclose(f);
+}
+
+int main() {
+    Read();  // F,R,F1,F2,R1,R2
+    bestvar=1e100;
+    rekF(0,F1);
+    Write();
+    return 0;
+}
+</pre>
+
+<h3>Increasing speed with hashing</h3>
+<i>USA's Jacob Steinhardt writes:</i>
+<p>
+Cowcycles can be solved much faster by hashing the gear ratios. If
+after the front gears are finished, the gear ratios for the front
+set have already been searched, we can stop. For example,
+</p><pre>1 3 5 7
+</pre>
+will give an equivalent variance to
+<pre>2 6 10 14
+</pre>
+or to
+<pre>3 9 15 21
+</pre>
+Thus we can eliminate a good portion of our search time.
+
+<pre>import java.io.*;
+import java.util.*;
+public class cowcycle {
+    static int[] front,rear;
+    static int F,R,F1,F2,R1,R2;
+    static int[] bF,bR;
+    static String[] hash;
+    static double bvar;
+
+    static boolean contains(String str) {
+         int num = str.hashCode();
+         if(num&lt;0) num = -num;
+         int p = num % hash.length;
+         while(hash[p]!=null)
+             if(str.equals(hash[p]))   return true;
+             else if(p==hash.length-1) p=0;
+             else p++;
+         hash[p]=str;
+         return false;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader infile = new BufferedReader(new FileReader("cowcycle.in"));
+        PrintWriter outfile = new PrintWriter(new BufferedWriter(new FileWriter("cowcycle.out")));
+        StringTokenizer st = new StringTokenizer(infile.readLine());
+        hash = new String[50003];
+        F = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(infile.readLine());
+        F1 = Integer.parseInt(st.nextToken());
+        F2 = Integer.parseInt(st.nextToken());
+        R1 = Integer.parseInt(st.nextToken());
+        R2 = Integer.parseInt(st.nextToken());
+        front = new int[F];
+        rear = new int[R];
+        bF = new int[F];
+        bR = new int[R];
+        bvar = 1&lt;&lt;21;
+        recurF(0);
+        for (int i = 0; i &lt; F-1; i++)
+            outfile.print(bF[i]+" ");
+        outfile.println(bF[F-1]);
+        for(int i=0;i&lt;R-1;i++)
+            outfile.print(bR[i]+" ");
+        outfile.println(bR[R-1]);
+        outfile.close();
+        System.exit(0);
+    }
+
+    static void recurF (int p) {
+        if (p==F) {
+            StringBuffer str = new StringBuffer();
+            for(int i=1;i&lt;F;i++)
+                str.append((int)(100*(double)front[i]/front[0]));
+            if(contains(str.toString())) return;
+            recurR(0);
+        } else {
+            for(int i = (p==0 ? F1 : front[p-1]+1); i &lt;= F2-(F-p)+1; i++) {
+                front[p] = i;
+                recurF (p+1);
+            }
+   	}
+    }
+
+    static void recurR (int p) {
+        if (p==R) {
+            if (front[F-1] * rear[R-1] &gt;= 3 * rear[0] * front[0])
+                var (rear,front);
+        } else {
+            for (int i = (p==0 ? R1 : rear[p-1]+1); i &lt;= R2-(R-p)+1; i++) {
+                rear[p]=i;
+                recurR(p+1);
+            }
+  	}
+    }
+
+    static void var (int[] r,int[] f) {
+        double[] ratios = new double[r.length*f.length];
+        int p = 0;
+        for (int i = 0; i &lt; r.length; i++)
+            for (int j=0; j &lt; f.length; j++)
+                ratios[p++] = ((double)f[j])/r[i];
+        Arrays.sort(ratios);
+        double[] diff = new double[ratios.length-1];
+        p = 0;
+        for (int i = 1; i &lt; ratios.length; i++)
+            diff[p++] = ratios[i] - ratios[i-1];
+        double mean = 0;
+        for (int i =0; i &lt; diff.length; i++)
+            mean += diff[i];
+        mean /= diff.length;
+        double var = 0;
+        for (int i = 0; i &lt; diff.length; i++)
+            var += (diff[i]-mean) * (diff[i]-mean);
+        if(var &lt; bvar) {
+            clone (bR,r);
+            clone (bF,f);
+            bvar = var;
+        }
+    }
+
+    static void clone (int[] to,int[] arr) {
+        for (int i = 0; i &lt; to.length; i++)
+            to[i] = arr[i];
+    }
+}
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

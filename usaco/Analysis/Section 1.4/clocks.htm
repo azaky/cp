@@ -1,0 +1,247 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 58: The Clocks</title> </head><body 
+background="clocks_files/bg3.jpg">
+<img src="clocks_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">The Clocks</font></b><br>
+Russ Cox
+</center>
+
+<p>Notice that the order in which we apply moves is irrelevant,
+and that applying a move four times is the same as applying it not at 
+all.
+
+</p><p>Thus there are only 4<sup>9</sup> = 262144 move sequences that 
+need
+to be tried, so we might as well just try them all.
+
+</p><p>We don't generate them shortest first, but looking at sequences 
+of
+the same length, we generate the lesser ones before the greater ones,
+so we only need to keep track of the shortest working sequence we've
+found.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;ctype.h&gt;
+
+#define INF 60000	/* bigger than longest possible path */
+
+char *movestr[] = { "abde", "abc", "bcef", "adg", "bdefh", "cfi", "degh",
+                    "ghi", "efhi" };
+
+int movedist[9][9];
+int clock[9];
+
+int bestmove[9];
+int nbestmove;
+
+/* translate move strings into array "movedist" of which clocks change on each move */
+void
+mkmove(void)
+{
+    int i;
+    char *p;
+
+    for(i=0; i&lt;9; i++)
+	for(p=movestr[i]; *p; p++)
+	    movedist[i][*p-'a'] = 3;
+}
+
+/* apply some number of each move from k to 9 */
+/* move contains the number of times each move is applied */
+void
+solve(int *move, int k)
+{
+    int i, j, n, rep;
+
+    if(k == 9) {
+	for(j=0; j&lt;9; j++)
+	    if(clock[j]%12 != 0)
+		return;
+
+	/* we have a successful sequence of moves */
+	n = 0;
+	for(j=0; j&lt;9; j++)
+	    n += move[j];
+
+	if(nbestmove == 0 || n &lt; nbestmove) {
+	    nbestmove = n;
+	    for(j=0; j&lt;9; j++)
+		bestmove[j] = move[j];
+	}
+	return;
+    }
+
+    /*
+     * the for loop counts down so we
+     * generate smaller numbers first by
+     * trying more of small numbered
+     * moves before we try less of them.
+     */
+    for(rep=3; rep&gt;=0; rep--) {
+	/* apply move k rep times */
+	for(i=0; i&lt;rep; i++)
+	    for(j=0; j&lt;9; j++)
+		clock[j] += movedist[k][j];
+	move[k] = rep;
+
+	solve(move, k+1);
+
+	/* undo move */
+	for(i=0; i&lt;rep; i++)
+	    for(j=0; j&lt;9; j++)
+		clock[j] -= movedist[k][j];
+    }
+}
+
+void
+main(void)
+{
+    FILE *fin, *fout;
+    int i, j, move[9];
+    char *sep;
+
+    fin = fopen("clocks.in", "r");
+    fout = fopen("clocks.out", "w");
+    assert(fin != NULL &amp;&amp; fout != NULL);
+
+    mkmove();
+
+    for(i=0; i&lt;9; i++)
+	fscanf(fin, "%d", &amp;clock[i]);
+
+    solve(move, 0);
+
+    sep = "";
+    for(i=0; i&lt;9; i++) {
+	for(j=0; j&lt;bestmove[i]; j++) {
+	    fprintf(fout, "%s%d", sep, i+1);
+	    sep = " ";
+	}
+    }
+    fprintf(fout, "\n");
+
+    exit(0);
+}
+</pre>
+
+<h3>Lucian Boca submitted a constant time solution</h3>
+
+<p>You can precalculate a matrix a as following:
+
+</p><p>a[i][0],a[i][1],....,a[i][8] is the number of moves 
+'1','2','3',...'9'
+necessarly to move ONLY clock i (where 0 &lt; i &lt;= 8 - there are 9
+clocks: 0=A, 1=B, ... 8=I) 90 degrees clockwise.  So, you have the
+matrix:
+</p><pre>int a[9][9]= { {3,3,3,3,3,2,3,2,0},
+               {2,3,2,3,2,3,1,0,1},
+               {3,3,3,2,3,3,0,2,3},
+               {2,3,1,3,2,0,2,3,1},
+               {2,3,2,3,1,3,2,3,2},
+               {1,3,2,0,2,3,1,3,2},
+               {3,2,0,3,3,2,3,3,3},
+               {1,0,1,3,2,3,2,3,2},
+               {0,2,3,2,3,3,3,3,3} };
+</pre>
+<p>
+That means: to move ONLY the clock 0 (clock A) 90 degrees clockwise
+you have to do {3,3,3,3,3,2,3,2,0}, 3 moves of type 1, three moves of
+type 2, ..., 2 moves of type 8, 0 moves of type 9, etc.
+</p><p>
+To move ONLY the clock 8 (clock I), you have to do the moves
+{0,2,3,2,3,3,3,3,3}: 0 moves of type 1, 2 moves of type 2... 3 moves
+of type 9....
+</p><p>
+That's it! You count in a vector v[9] how many moves of each type
+you have to do, and the results will be modulo 4 (%4 - 5 moves of
+any type have the same effect 1 move has).
+
+The source code:
+</p><pre>#include &lt;stdio.h&gt;
+
+int a[9][9]= { {3,3,3,3,3,2,3,2,0},
+               {2,3,2,3,2,3,1,0,1},
+               {3,3,3,2,3,3,0,2,3},
+               {2,3,1,3,2,0,2,3,1},
+               {2,3,2,3,1,3,2,3,2},
+               {1,3,2,0,2,3,1,3,2},
+               {3,2,0,3,3,2,3,3,3},
+               {1,0,1,3,2,3,2,3,2},
+               {0,2,3,2,3,3,3,3,3} };
+int v[9];
+
+int main() {
+    int i,j,k;
+    freopen("clocks.in","r",stdin);
+    for (i=0; i&lt;9; i++) {
+        scanf("%d",&amp;k);
+        for(j=0; j&lt;9; j++)
+             v[j]=(v[j]+(4-k/3)*a[i][j])%4;
+    }
+    fclose(stdin);
+
+    k=0;
+    freopen("clocks.out","w",stdout);
+    for (i=0; i&lt;9; i++)
+        for (j=0; j&lt;v[i]; j++)
+            if (!k) { printf("%d",i+1); k=1; }
+            else    printf(" %d",i+1);
+    printf("\n");
+    fclose(stdout);
+    return 0;
+}
+</pre>
+
+<p>Here's a different approach from Sopot Cela -- no loops, constant
+time.  It is, however, extraordinarily intricate: getting such a program
+correct in a contest environment could be extremely challenging:
+
+</p><pre>program clocks;
+const
+  INV : array[3..12] of byte =(1, 0, 0, 2, 0, 0, 3, 0, 0, 0);
+
+var inp, out: text;
+    a, b, c, d, e, f, g, h, i: integer;
+    ax, bx, cx, dx, ex, fx, gx, hx, ix,l: integer;
+    t,an: array[1..9] of integer;
+begin
+    assign (inp, 'clocks.in'); reset (inp);
+    readln(inp, ax, bx, cx);
+    readln(inp, dx, ex, fx);
+    readln(inp, gx, hx, ix);
+    a:=inv[ax]; b:=inv[bx]; c:=inv[cx]; d:=inv[dx];
+    e:=inv[ex]; f:=inv[fx]; g:=inv[gx]; h:=inv[hx];
+    i:=inv[ix];
+    t[1] := (8+a+2*b+c+2*d+2*e-f+g-h) mod 4;
+    t[2] := (a+b+c+d+e+f+2*g+    2*i) mod 4;
+    t[3] := (8+  a+2*b+  c  -d+2*e+2*f      -h+  i) mod 4;
+    t[4] := (    a+  b+2*c+  d+  e+      g+  h+2*i) mod 4;
+    t[5] := (4+  a+2*b+  c+2*d  -e+2*f+  g+2*h+  i) mod 4;
+    t[6] := (  2*a+  b+  c+      e+  f+2*g+  h+  i) mod 4;
+    t[7] := (8+  a  -b+    2*d+2*e  -f+  g+2*h+  i) mod 4;
+    t[8] := (  2*a+    2*c+  d+  e+  f+  g+  h+  i) mod 4;
+    t[9] := (8      -b+  c  -d+2*e+2*f+  g+2*h+  i) mod 4;
+    assign(out, 'clocks.out'); rewrite(out);
+    for a := 1 to 9 do
+	for b := 1 to t[a] do Begin
+	    inc(l);
+	    an[l]:=a;
+	end;
+    for a:=1 to l-1 do
+	write(out,an[a],' ');
+    write(out,an[l]);
+    writeln(out); close(out)
+end.
+</pre>
+
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

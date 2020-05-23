@@ -1,0 +1,203 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 brownie Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="brownie_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'brownie' Analysis</h2>
+<h4>by Paul Christiano</h4>
+<p> We are asked to find the largest integer K such that the brownie can
+ be divided
+into pieces each with at least K chocolate chips. If we could determine 
+whether
+such a division existed for any fixed K, then we could perform a binary 
+search
+to find the maximal value of K for which a division exists.  
+</p>
+
+<p>
+The first step is building a table M such that M[r][c] which stores the 
+number
+of chocolate chips in each r x c rectangular subbrownie in the upper 
+right
+corner. This table can be constructed in O(RC) time using the formula
+M[r+1][c+1] = M[r][c+1] + M[r+1][c] - M[r][c] + N[r+1][c+1]. 
+</p>
+
+<p>
+Using this array we can compute the number of chocolate chips in any
+rectangular subbrownie. The number of chocolate chips in the subbrownie 
+[a, b]
+x [c, d] is equal to M[b][d] - M[b][c] - M[a][d] + M[a][c].
+</p>
+
+<p>
+For any fixed K we can now use a greedy algorithm to divide the brownie 
+into
+pieces with at least K chocolate chips. To decide where to make the 
+first
+vertical cut, we consider each possible location in turn and cut at the 
+first
+location for which the resulting strip can be divided into B pieces of 
+size at
+least K. To determine whether a vertical strip can be divided into B 
+pieces, we
+use another greedy algorithm. 
+</p>
+
+<p>
+After making the first vertical cut, we decide where to make the second
+vertical cut using the same procedure. After making A-1 vertical cuts in
+ this
+way, we determine whether the last vertical strip can be divided into B 
+pieces.
+If it can't, or if we fail to make one of the earlier cuts because we 
+run out
+of brownie, then it is impossible to divide the brownie into A*B pieces 
+with at
+least K chocolate chips. If the last strip can be divided into B pieces,
+ then
+it is possible to divide the brownie into A*B pieces with at least K 
+chocolate
+chips. 
+</p>
+
+<p>
+Solution by Jacob Steinhardt:
+</p>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+using namespace std;
+
+#define MAX (505)
+
+int R,C,A,B;
+int N[MAX][MAX];
+int dp[MAX][MAX]; //number of brownies in (0,r] x (0,c]
+int numBrownies(int r1,int r2,int c1,int c2){
+	return dp[r2][c2]-dp[r1][c2]-dp[r2][c1]+dp[r1][c1];
+}
+
+int numCuts(int r1,int r2,int M){ 
+	if(numBrownies(r1,r2,0,C) &lt; M) return 0;
+	int b=1,c0=0,c=0;
+	while(c&lt;C){
+			if(numBrownies(r1,r2,c0,c) &gt;= M &amp;&amp;
+			   numBrownies(r1,r2,c,C) &gt;= M){  
+				b++; c0=c;
+			} else {
+				c++;
+			}
+	}
+	return b;
+}
+int main(){
+	FILE *fin = fopen("brownie.in","r");
+	FILE *fout = fopen("brownie.out","w");
+	fscanf(fin,"%d%d%d%d",&amp;R,&amp;C,&amp;A,&amp;B);
+	for(int r=1;r&lt;=R;r++)
+		for(int c=1;c&lt;=C;c++){
+			fscanf(fin,"%d",&amp;N[r][c]);
+			dp[r][c]=dp[r-1][c]+dp[r][c-1]-dp[r-1][c-1]+N[r][c];
+		}
+	
+	int lo = 0, hi = 1000000001;
+	while(hi-lo &gt; 1){
+		int M = (lo+hi)/2;
+		if(numCuts(0,R,M) &lt; B){
+			hi=M; continue;
+		}
+		int a=1,r0=0,r=0;
+		while(r&lt;R){
+			if(numCuts(r0,r,M) &gt;= B &amp;&amp; numCuts(r,R,M) &gt;= B){
+				r0=r; a++;
+			} else {
+				r++;
+			}
+		}
+		if(a&lt;A) hi=M;
+		else lo=M;
+	}
+	fprintf(fout,"%d\n",lo);
+	fclose(fin); fclose(fout);
+	return 0;
+}
+</pre>
+
+<p>Neal Wu contributes the solution below, with a slightly different
+implementation:</p>
+
+<pre>#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+using namespace std;
+
+FILE *in = fopen ("brownie.in", "r"), *out = fopen ("brownie.out", "w");
+
+const int MAX = 505, BOUND = 1000000005;
+
+int R, C, A, B, chips [MAX][MAX];
+int column [MAX];
+
+bool works (int block)
+{
+    memset (column, 0, C * sizeof (int));
+    int rows = 0;
+
+    for (int i = 0; i &lt; R; i++)
+    {
+        int sum = 0, cols = 0;
+
+        for (int j = 0; j &lt; C; j++)
+        {
+            column [j] += chips [i][j];
+            sum += column [j];
+
+            if (sum &gt;= block)
+            {
+                cols++;
+                sum = 0;
+            }
+        }
+
+        if (cols &gt;= B)
+        {
+            rows++;
+            memset (column, 0, C * sizeof (int));
+        }
+    }
+
+    return rows &gt;= A;
+}
+
+int main ()
+{
+    fscanf (in, "%d %d %d %d", &amp;R, &amp;C, &amp;A, &amp;B);
+
+    for (int i = 0; i &lt; R; i++)
+        for (int j = 0; j &lt; C; j++)
+            fscanf (in, "%d", &amp;chips [i][j]);
+
+    int lo = 0, hi = BOUND;
+
+    while (lo &lt; hi)
+    {
+        int mid = (lo + hi + 1) &gt;&gt; 1;
+
+        if (works (mid))
+            lo = mid;
+        else
+            hi = mid - 1;
+    }
+
+    fprintf (out, "%d\n", lo);
+    return 0;
+}
+</pre>
+
+</body></html>

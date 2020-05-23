@@ -1,0 +1,343 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>2-D Convex Hull
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: 
+solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="2-D%20Convex%20Hull_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	2-D Convex Hull
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Prerequisite</font></h4>
+
+<ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Geometry</li>
+
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> 
+The Abstraction </font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> 
+Given: A collection of points in the plane, find the convex
+polygon with smallest area such that each point is contained within
+(or on the boundary of) the polygon.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> Observe that the vertices of such a polygon will be 
+points from
+the given collection.
+
+<br><img src="2-D%20Convex%20Hull_files/ch1.gif"><br>
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> Sample Problem: Cow Herding </font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> 
+Farmer John wants a fence to keep the pesky local college
+students from tipping his cows over as they sleep. Each of his cows
+has a favorite spot for grazing grass, and Farmer John would like
+the fenced enclosure to include all of these favorite locations.
+Farmer John would like to enclose a convex figure, as it makes it
+a lot easier for the cows to make it to their grazing locations.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> Help Farmer John by calculating the fence which 
+encloses the
+minimum amount of area while still including all of the cows'
+favorite dining locations.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> The Algorithm </font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> 
+Several algorithms solve the two dimensional convex hull
+algorithm. Here, we'll present only the ``gift-wrapping'' algorithm,
+which is probably the easiest to code and the easiest to remember.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> The basic idea is to add the points in clockwise or 
+counterclockwise
+order around some point within the final answer, checking to see
+if any angles greater than 180 degrees are created, which would
+make the final figure concave. Every time three points in a row
+appear such that the angle created by those three points is greater
+than 180 degrees, delete the middle point.  Check the angle is done
+by calculating the cross product of vectors along two consecutive
+edges.
+
+<br><img src="2-D%20Convex%20Hull_files/ch2.gif"><br>
+ <br>
+
+<br><img src="2-D%20Convex%20Hull_files/ch3a.gif"><br>
+
+<br><img src="2-D%20Convex%20Hull_files/ch3b.gif"><br>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans"> Find a point which will be within the convex hull:
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> 
+Calculate the angle that each point makes with the x
+axis (within the range 0 to 360 degrees) </li>
+
+<li> Sort the points based on this angle</li>
+
+<li> Add the first two points </li>
+
+<li> For every other point except the last point </li>
+
+<li> Make it the next point in the convex hull </li>
+
+<li> Check to see if the angle it forms with the previous two points
+is greater than 180 degrees </li>
+
+</font><ul type="square">
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> 
+As long as the angle formed with the last two points is greater
+than 180 degrees, remove the previous point</li>
+
+</font></ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> 
+To add the last point </li>
+
+</font><ul type="square">
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Perform
+ the deletion above, </li>
+
+<li> Check to see if the angle the last point forms with the 
+previous point and the first point is greater than 180 degrees
+or if the angle formed with the last point and the first two
+points is greater than 180 degrees. </li>
+
+<li> If the first case is true, remove the last point, and continue
+checking with the next-to-last point. </li>
+
+<li> If the second case is true, remove the first point and continue
+checking. </li>
+
+<li> Stop when neither case is true. </li>
+
+</font></ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> 
+The adding of the points is linear time, as is the calculation
+of the angles. Thus, the run-time is dominated by the time of the
+sort, so gift-wrapping runs in O(<i>n</i> log <i>n</i>) time, which is 
+provably
+optimal. </li>
+
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> 
+Pseudocode </font></h4>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Here 
+is the pseudocode for this convex hull algorithm:
+<br>
+<tt><font size="2"> <br>
+&nbsp;#&nbsp;x(i),&nbsp;y(i)&nbsp;is&nbsp;the&nbsp;x,y&nbsp;position&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;i-th&nbsp;point<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;zcrossprod(v1,v2)&nbsp;-&gt;&nbsp;z&nbsp;component<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;vectors&nbsp;v1,&nbsp;v2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;if&nbsp;zcrossprod(v1,v2)&nbsp;&lt;&nbsp;0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then&nbsp;v2&nbsp;is&nbsp;"right"&nbsp;of&nbsp;v1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;since&nbsp;we&nbsp;add&nbsp;counter-clockwise<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;0&nbsp;-&gt;&nbsp;&nbsp;angle&nbsp;&gt;&nbsp;180&nbsp;deg<br>
+&nbsp;1&nbsp;&nbsp;&nbsp;(midx,&nbsp;midy)&nbsp;=&nbsp;(0,&nbsp;0)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;points&nbsp;i<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(midx,&nbsp;midy)&nbsp;=&nbsp;(midx,&nbsp;midy)&nbsp;+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(x(i)/npoints,&nbsp;y(i)/npoints)<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;points&nbsp;i<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;angle(i)&nbsp;=&nbsp;atan2(y(i)&nbsp;-&nbsp;midy,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x(i)&nbsp;-&nbsp;midx)<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perm(i)&nbsp;=&nbsp;i&nbsp;<br>
+<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;sort&nbsp;perm&nbsp;based&nbsp;on&nbsp;the&nbsp;angle()&nbsp;values&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;i.e.,&nbsp;angle(perm(0))&nbsp;&lt;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;angle(perm(i))&nbsp;for&nbsp;all&nbsp;i&nbsp;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;start&nbsp;making&nbsp;hull<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;hull(0)&nbsp;=&nbsp;perm(0)<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;hull(1)&nbsp;=&nbsp;perm(1)<br>
+10&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;2<br>
+11&nbsp;&nbsp;&nbsp;for&nbsp;all&nbsp;points&nbsp;p,&nbsp;perm()&nbsp;order,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;perm(npoints&nbsp;-&nbsp;1)<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(hullpos&nbsp;&gt;&nbsp;1&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zcrossprod(hull(hullpos-2)&nbsp;-<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos-1),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos-1)&nbsp;-&nbsp;p)&nbsp;&lt;&nbsp;0)&nbsp;<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;hullpos&nbsp;-&nbsp;1<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos)&nbsp;=&nbsp;p<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;hullpos&nbsp;+&nbsp;1<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;add&nbsp;last&nbsp;point<br>
+17&nbsp;&nbsp;&nbsp;p&nbsp;=&nbsp;perm(npoints&nbsp;-&nbsp;1)<br>
+18&nbsp;&nbsp;&nbsp;while&nbsp;(hullpos&nbsp;&gt;&nbsp;1&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zcrossprod(hull(hullpos-2)&nbsp;-<br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos-1),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos-1)&nbsp;-&nbsp;p)&nbsp;&lt;&nbsp;0)&nbsp;<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;hullpos&nbsp;-&nbsp;1&nbsp;<br>
+<br>
+21&nbsp;&nbsp;&nbsp;hullstart&nbsp;=&nbsp;0<br>
+22&nbsp;&nbsp;&nbsp;do<br>
+23&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&nbsp;=&nbsp;false<br>
+24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(hullpos&nbsp;-&nbsp;hullstart&nbsp;&gt;=&nbsp;2&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zcrossprod(p&nbsp;-<br>
+25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullpos-1),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullstart)&nbsp;-&nbsp;p)&nbsp;&lt;&nbsp;0)<br>
+26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p&nbsp;=&nbsp;hull(hullpos-1)<br>
+27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;hullpos&nbsp;-&nbsp;1<br>
+28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&nbsp;=&nbsp;true<br>
+29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(hullpos&nbsp;-&nbsp;hullstart&nbsp;&gt;=&nbsp;2&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zcrossprod(hull(hullstart)&nbsp;-&nbsp;p,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullstart+1)&nbsp;-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hull(hullstart))&nbsp;&lt;&nbsp;0)<br>
+30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hullstart&nbsp;=&nbsp;hullstart&nbsp;+&nbsp;1<br>
+31&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&nbsp;=&nbsp;true<br>
+32&nbsp;&nbsp;&nbsp;while&nbsp;flag<br>
+33&nbsp;&nbsp;&nbsp;hull(hullpos)&nbsp;=&nbsp;p<br>
+34&nbsp;&nbsp;&nbsp;hullpos&nbsp;=&nbsp;hullpos&nbsp;+&nbsp;1<br>
+
+</font></tt>
+
+</font><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> Sample Run </font>
+
+<p>For the sample run, use these points:
+
+<br><img src="2-D%20Convex%20Hull_files/ch2a.gif"><br>
+
+</p><p> Select a center, calculate angles, and sort.
+
+<br><img src="2-D%20Convex%20Hull_files/ch2.gif"><br>
+
+Now, start by adding the first two points.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3a.gif"><br>
+
+</p><p>Now, add the third point. Since this does not create an angle
+of greater than 180 degrees with the first two points, we just have
+to add the point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3b.gif"><br>
+
+</p><p> Add the fourth point. Again, no angle greater than 180 degrees
+was created, so no further work is necessary.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3c.gif"><br>
+
+</p><p>Add the fifth point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3d.gif"><br>
+
+</p><p>Since the third, fourth, and fifth points together create an
+angle of greater than 180 degrees (a "right" turn), we remove the
+fourth point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3e.gif"><br>
+
+</p><p>The second, third, and fifth points do not create an angle of
+greater than 180 degrees, so we are done with adding the fifth
+point.
+
+</p><p>Add the sixth, seventh, and eighth points. None of these require
+additional work.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3h.gif"><br>
+
+</p><p>Next, add the last point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3j.gif"><br>
+
+</p><p> The eighth, ninth, and first point create a "right" turn; remove
+ the
+ninth point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3k.gif"><br>
+
+</p><p>The seventh, eighth, and first points are fine, but the eighth, 
+first
+and second points have a "right" term, so we must remove the first 
+point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3l.gif"><br>
+
+</p><p> Now the eighth, second and thirst points have a "right" term, so
+ we must
+remove the second point.
+
+<br><img src="2-D%20Convex%20Hull_files/ch3m.gif"><br>
+
+</p><p>No more violations exist, so we are done, and we have the convex
+hull of the given points.
+
+</p></h4><h4> Problem Cues </h4>
+
+<p> Problems which ask for enclosing points within a polygon are
+usually convex hull problems.  If the problem asks for a minimum
+area convex polygon or a polygon of minimum circumference, it's
+almost certainly asking for the convex hull.
+
+</p><h4> Extensions </h4>
+
+<p> Unfortunately, this algorithm does not extend in an obvious
+manner to three dimensions. Fortunately, the three dimensional
+algorithms are all fairly complicated (four and higher+ dimensions
+are just plain ugly), so it's unlikely you'll get asked to do it
+there.
+
+</p><p> This algorithm no longer works if you limit the created polygon
+in any way (e.g., no more than n points or must be a rectangle).
+
+</p><h4> Sample Problems </h4>
+
+<h5>Trees Problem [IOI 1991, problem 2] </h5>
+
+<p> Given: a collection of trees, surround it with wire such that
+you use the minimal amount of wire. Calculate the trees that will
+be the vertices of the polygon, the length of wire required, and
+whether the farmer's house, which is at a given location, lies
+inside of, outside of, or across the polygon.
+
+</p><p> Analysis: The vertices of the polygon and the length of wire
+required follow fairly directly above. The farmer's house is
+specified as an axis-aligned rectangle, so it takes a bit of geometry
+to determine if all the points are within the convex hull, without
+the convex hull, or some are within and some without, which gives
+you the answer you wanted.  See the Geometry pamphlet for clues on
+these kinds of intersections.
+
+</p><h4>Cheapskate Moat Building</h4>
+
+<p> Given: A collection of polygon houses, calculate the minimum
+length moat that encloses all but at most one of them.
+
+</p><p> Analysis: To enclose a given polygon in convex polygon is
+equivalent to enclosing all of the vertices of the given polygon.
+This is very slightly a combination problem, which requires both
+a loop and a convex hull builder.  For each house, delete the house
+and enclose the remaining vertices in a convex hull. Pick the house
+whose resulting convex hull is smallest. Note that only deleting
+houses which share a vertex with the convex hull of the entire set
+would help if some of the houses don't share a vertex with that
+convex hull.
+</p></div><br>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Zeq1JEUeQxb">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

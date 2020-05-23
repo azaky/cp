@@ -1,0 +1,980 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 15: Cryptcowgraphy</title> </head><body 
+background="cryptcow_files/bg3.jpg">
+<img src="cryptcow_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Cryptcowgraphy</font></b><br>
+Hal Burch
+</center>
+
+<p>The basic algorithm is to find a C, O, and W and 'undo' the
+cryptographic operation assuming that these were the last letters
+added.  Given that there can be up to 9 encryption steps done,
+and search step corresponds to picking a C, O, and W, there are
+(9!)<sup>3</sup> ways to do this, which is much more than
+can possibly be searched, so optimizations must be performed.
+
+</p><p>For simplicity, call any letter that a C, an O, or a W an
+encoding letter.
+
+</p><p>First, note that the number of letters in the sequence must be
+47 (the length of the message) plus 3 times some integer, so any
+other type of sequence can be eliminated immediately.
+
+</p><p>Second, the number of non C/O/W letters must correspond to the 
+counts
+in the original sequence.  Thus, there must be exactly four a's in the
+encoded message, since there are four a's in the original message.
+
+</p><p>Third, the sequence between every pair of successive encoding 
+letters
+must be in the original message.  Thus, the encoding message cannot
+contain the sequence 'Cn the BW' since 'n the B' does not appear in
+the original message.
+
+</p><p>Fourth, undoing the encryption can be done more quickly
+by basically storing the sequence as a linked list.  For each
+letter location, store the index into the original message the
+corresponds to the next letter in the current message (and also
+maintain the index of the first letter).  Thus, undoing an
+encryption corresponds to taking the link from the letter before
+the C and pointing it to the letter after the O, taking the
+link from the letter before the W and pointing it to the letter
+after the C, and taking the pointing from the letter before the O
+and pointing it to the letter after the W.
+
+</p><p>Fifth, the letters between the first character and the first 
+encoding
+letter must correspond to a prefix of the original message, and similar
+for the end.
+
+</p><p>Sixth, the first encoding letter must be a C, and the last 
+encoding
+letter must be a W.
+
+</p><p>These optimization, along with using a hash table to store 
+sequences
+already examined creates an fairly quick program.  Because of memory
+constraint, only so much can be hashed, however.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;ctype.h&gt;
+
+/* for purposes of value a-z are 0-25, A-Z are 26-51, and space is 52 */
+
+#define MAXLEN 100
+const char goal[50] = "Begin the Escape execution at the Break of Dawn";
+
+/* represents locations of characters in the goal string */
+/* used to get fragment matches (e.g., finding if/where 'e exec' occurs in
+   the goal, try all places that start with e) */
+int starts[53][10];
+int nstart[53];
+
+/* the link list that is the current message */
+int next[MAXLEN];
+int head;
+
+/* the encrypted message */
+char str[MAXLEN];
+
+int lvl; /* how many levels of encryption are left to do */
+
+/* hash table size */
+#define HSIZE 502973
+typedef struct HASH_T *hash_t;
+
+struct HASH_T
+ {
+  char str[MAXLEN];
+  hash_t next; /* use chaining to resolve conflicts */
+ };
+
+/* hash entries */
+#define NUMENT 262144
+struct HASH_T entries[NUMENT];
+int hloc;
+
+/* hash table */
+hash_t table[HSIZE];
+
+/* calculate the hash value of the current message */
+int hash_chain(void)
+ {
+  int rv = 0;
+  int c;
+
+  for (c = head; c != -1; c = next[c])
+    rv = (str[c] + (rv * 2377)) % HSIZE;
+  return rv;
+ }
+
+/* change the current message into a string (from a linked list) */
+void fill(char *dst)
+ {
+  int lv, c;
+
+  for (lv = 0, c = head; c != -1; c = next[c], lv++)
+    dst[lv] = str[c];
+  dst[lv] = '\0';
+ }
+
+/* is the current message in the hash table? */
+int check_hash(void)
+ {
+  int i;
+  hash_t lp;
+  hash_t t;
+
+  i = hash_chain(); /* compute hash */
+
+  /* grab an entry (we can throw it away if we don't use it) */
+  t = &amp;entries[hloc];
+  fill(t-&gt;str); /* create the string */
+
+  /* check the hash table */
+  for (lp = table[i]; lp; lp = lp-&gt;next)
+    if (strcmp(lp-&gt;str, t-&gt;str) == 0) return 1; /* match found */
+
+  /* no match, add it to the table if we have entries left */
+  if (hloc &lt; NUMENT-1)
+   {
+    hloc++;
+    t-&gt;next = table[i];
+    table[i] = t;
+   }
+  return 0;
+ }
+
+/* initialize the start[] &amp; nstart[] arrays */
+void fill_start(void)
+ {
+  int lv;
+  int pos;
+
+  for (lv = 0; goal[lv]; lv++)
+   { 
+    if (goal[lv] &gt;= 'a' &amp;&amp; goal[lv] &lt;= 'z') pos = goal[lv] - 'a';
+    if (goal[lv] &gt;= 'A' &amp;&amp; goal[lv] &lt;= 'Z') pos = goal[lv] - 'A' + 26;
+    if (goal[lv] == ' ') pos = 52;
+    starts[pos][nstart[pos]++] = lv;
+   }
+ }
+
+/* output the linked list to stderr (debugging routine) */
+void out_str(void)
+ {
+  int pos;
+  for (pos = head; pos != -1; pos = next[pos])
+    fprintf (stderr, "%c", str[pos]);
+  fprintf (stderr, "\n");
+ }
+
+/* make sure the numbers match up */
+int check_distrib(char *str)
+ {
+  int lv;
+  char *lp;
+  int count[52];
+  int rv;
+
+  /* init the counts */
+  for (lv = 0; lv &lt; 52; lv++) count[lv] = 0;
+
+  /* add in the encoded string counts */
+  for (lp = str; *lp; lp++)
+   {
+    if (*lp &gt;= 'a' &amp;&amp; *lp &lt;= 'z')
+      count[*lp - 'a']++;
+    if (*lp &gt;= 'A' &amp;&amp; *lp &lt;= 'Z')
+      count[*lp - 'A'+26]++;
+   }
+
+  /* subtract the goal string counts */
+  for (lp = goal; *lp; lp++)
+   {
+    if (*lp &gt;= 'a' &amp;&amp; *lp &lt;= 'z')
+      count[*lp - 'a']--;
+    if (*lp &gt;= 'A' &amp;&amp; *lp &lt;= 'Z')
+      count[*lp - 'A'+26]--;
+   }
+
+  /* make sure encoded string has as many C as O as W's */
+  if (count['C' - 'A' + 26] != count['O' - 'A' + 26]) return 0;
+  if (count['C' - 'A' + 26] != count['W' - 'A' + 26]) return 0;
+  rv = count['C' - 'A' + 26] + 1; /* how many decodings to do + 1 */
+
+  /* we don't expect these counts to match up with original */
+  count['C'-'A'+26] = 0;
+  count['O'-'A'+26] = 0;
+  count['W'-'A'+26] = 0;
+
+  /* make sure frequencies match */
+  for (lv = 0; lv &lt; 52; lv++)
+    if (count[lv] != 0) return 0; /* not that same number, can't decode */
+
+  /* can decode, return number of encodings + 1 */
+  return rv;
+ }
+
+/* ensure that all frags (sequences between encoding letters) are
+   frags of the original string */
+/* for a string without a C, O, or W, this routine degenarets to
+   checking if the string is the same as the goal string */
+int check_frags(void)
+ {
+  int lv, lv2, lv3;
+  int f = 0;
+  int pos;
+  char *lp, *p;
+  int lpos;
+  int tp;
+  char l = 'W';
+  int max;
+  static int cnt = 0;
+
+  /* make sure prefix matches */
+  for (lpos = head, lv = 0; lpos != -1 &amp;&amp; str[lpos] != 'C' &amp;&amp; 
+                            str[lpos] != 'O' &amp;&amp; str[lpos] != 'W'; 
+			                            lpos = next[lpos], lv++)
+    if (str[lpos] != goal[lv]) 
+      return 0;
+
+  /* first encoding character must be a 'C' */
+  if (lpos != -1 &amp;&amp; str[lpos] != 'C') return 0;
+
+  /* find next non-encoding character */
+  for (; str[lpos] == 'C' || str[lpos] == 'O' || str[lpos] == 'W'; 
+                lpos = next[lpos])
+    if (lpos == -1) break;
+
+  /* while it's not the end of the string */
+  for (; lpos != -1; )
+   { 
+    /* calculate value of first character in fragment */
+    if (str[lpos] &gt;= 'a' &amp;&amp; str[lpos] &lt;= 'z') pos = str[lpos] - 'a';
+    if (str[lpos] &gt;= 'A' &amp;&amp; str[lpos] &lt;= 'Z') pos = str[lpos] - 'A' + 26;
+    if (str[lpos] == ' ') pos = 52;
+
+    max = nstart[pos];
+
+    for (lv2 = 0; lv2 &lt; max; lv2++)
+     { /* go through all the frags */
+
+      /* the prefix of the goal string must occur at the beginning of
+         the encoded string if the first character is not an encoding
+	 letter */
+      if (lv2 == 0 &amp;&amp; str[head] == 'B' &amp;&amp; str[lpos] == 'B' &amp;&amp; lpos != head) 
+        continue;
+
+      /* find match length */
+      p = goal + starts[pos][lv2];
+      tp = lpos;
+      for (lv3 = 0; tp != -1 &amp;&amp; str[tp] == p[lv3]; lv3++, tp = next[tp])
+       ;
+      if (tp == -1) /* matches until end of encoded string */
+       {
+        /* substring must end here as well */
+	/* also, last encoding letter must be a 'W' */
+        if (p[lv3] == '\0') return (l == 'W'); 
+	continue;
+       }
+      /* if it matches up to an encoding letter */
+      if (str[tp] == 'C' || str[tp] == 'O' || str[tp] == 'W')
+       {
+	lpos = tp; 
+	break;
+       }
+     }
+    if (lv2 &gt;= max) 
+      return 0; /* no match for string found */
+    if (str[lpos] == '\0') break; /* end of string */
+    /* find next encoding letter */
+    for (; lpos != -1 &amp;&amp; (str[lpos] == 'C' || str[lpos] == 'O' || 
+                                     str[lpos] == 'W'); lpos = next[lpos])
+      l = str[lpos];
+   }
+  return (l == 'W'); /* last encoding letter must be a 'W' */
+ }
+
+/* translate the encoding string */
+/* pcloc/poloc/pwloc are the position just BEFORE the C, O, and W */
+void do_xform(int pcloc, int poloc, int pwloc)
+ {
+  int t;
+  if (pcloc == -1) t = head;
+  else t = next[pcloc];
+
+  /* most of this is dealing with cases where the encoded letters
+     selected are adjacent */
+  if (t == poloc)
+   {
+    if (next[poloc] == pwloc)
+     {
+      if (pcloc == -1) head = next[next[pwloc]];
+      else next[pcloc] = next[next[pwloc]];
+     }
+    else
+     {
+      if (pcloc == -1) head = next[next[poloc]];
+      else next[pcloc] = next[next[poloc]];
+
+      next[pwloc] = next[next[pwloc]];
+     }
+   } else if (next[poloc] == pwloc) {
+    if (pcloc == -1) head = next[head];
+    else next[pcloc] = next[next[pcloc]];
+
+    next[poloc] = next[next[pwloc]];
+   } else {
+    if (pcloc == -1)
+     {
+      t = next[head];
+      head = next[next[poloc]];
+     }
+    else
+     {
+      t = next[next[pcloc]];
+      next[pcloc] = next[next[poloc]];
+     }
+
+    next[poloc] = next[next[pwloc]];
+    next[pwloc] = t;
+   }
+ }
+
+int find_str(void)
+ {
+  int c, o, w;
+  int lc, lo, lw;
+  int pc, po, pw;
+  int lv;
+  
+  /* location of encoding letter */
+  int cloc[15], oloc[15], wloc[15];
+
+  /* location of characetr before encoding letter */
+  int pcloc[15], poloc[15], pwloc[15];
+
+  /* the position within the encoded string of the letter */
+  int cord[15], oord[15], word[15];
+
+  int cc, oc, wc;
+  int p;
+
+  /* initialize *loc, p*loc, and *ord arrays */
+  cc = oc = wc = 0;
+  p = -1;
+  for (lv = 0, c = head; c != -1; c = next[c], lv++)
+   {
+    if (str[c] == 'C') 
+     {
+      cord[cc] = lv;
+      pcloc[cc] = p;
+      cloc[cc++] = c;
+     }
+    if (str[c] == 'O') 
+     {
+      oord[oc] = lv;
+      poloc[oc] = p;
+      oloc[oc++] = c;
+     }
+    if (str[c] == 'W') 
+     {
+      word[wc] = lv;
+      pwloc[wc] = p;
+      wloc[wc++] = c;
+     }
+    p = c;
+   }
+
+  pc = -1;
+  if (lvl == 0) return check_frags(); /* all encodings undone */
+  lvl--;
+  for (c = 0; c &lt; cc; c++)
+   {
+    lc = cloc[c];
+    pc = pcloc[c];
+    for (o = 0; o &lt; oc; o++)
+     {
+      /* O must be after the C */
+      if (cord[c] &gt; oord[o]) continue;
+      lo = oloc[o];
+      po = poloc[o];
+      for (w = 0; w &lt; wc; w++)
+       {
+        /* W must be after the O */
+        if (oord[o] &gt; word[w]) continue;
+        lw = wloc[w];
+	pw = pwloc[w];
+	do_xform(pc, po, pw);
+
+	/* depending on level, perform different checks */
+	if (lvl &lt;= 1 || check_frags())
+	 {
+	  if (lvl &lt; 3 || !check_hash())
+	   {
+	    if (find_str()) return 1; /* we found a match! */
+	   }
+	 }
+
+        /* undo the do_xform */
+	if (pc == -1) head = lc;
+	else next[pc] = lc;
+	next[po] = lo;
+	next[pw] = lw;
+       }
+     }
+   }
+  lvl++;
+  return 0;
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int len;
+  char end[MAXLEN];
+  int rv;
+
+  /* initialize fragment arrays (starts/nstart) */
+  fill_start();
+
+  if ((fin = fopen("cryptcow.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("cryptcow.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  fgets(str, sizeof(str)-1, fin);
+  len = strlen(str);
+
+  /* eat trailing newlines */
+  while (!isalpha(str[len-1])) str[--len] = '\0';
+
+  /* initialize the linked list */
+  for (rv = 0; rv &lt; len; rv++) next[rv] = rv+1;
+  next[len-1] = -1;
+  head = 0;
+
+
+  /* make sure distribution is correct */
+  rv = check_distrib(str);
+  if (!rv || !check_frags())
+   { /* distribution or frags don't match, can't decode */
+    fprintf (fout, "0 0\n");
+    return 0;
+   }
+
+  lvl = (len - 47) / 3; /* number of decodes to perform */
+  if (find_str())
+    fprintf (fout, "1 %i\n", rv-1);
+  else
+    fprintf (fout, "0 0\n");
+
+  return 0;
+ }
+</pre>
+
+<pre>/*
+ * How to solve this problem
+ * First you must notice the following, crucial fact. 
+ * Call the encrypted message Hmm, and the original message Moo.
+ * Call a maximal subsequence (possibly empty) of non-COW letters in Hmm
+ * a "segment."
+ * If encryption was applied N times, then
+ * there are 3N+1 segments.
+ * Suppose that the triples of C's, O's, and W's to which encryption was
+ * applied are (C_1, O_1, W_1) ... (C_N, O_N, W_N).
+ * Knowing only these triples -- without knowing
+ * the order in which the triples were applied -- one can
+ * determine what the original message must have been;
+ * the order that the segments originally appeared must have
+ * been as follows:
+ *  - the first segment in Moo is the first segment in Hmm
+ *  - if the kth segment in Moo is the segment of Hmm that ends at C_i, then
+ *    the (k+1)th segment in Moo is the segment in Hmm that starts with O_i,
+ *  - if the kth segment in Moo is the segment of Hmm that ends at O_i, then
+ *    the (k+1)th segment in Moo is the segment in Hmm that starts with W_i,
+ *  - if the kth segment in Moo is the segment of Hmm that ends at W_i, then
+ *    the (k+1)th segment in Moo is the segment in Hmm that starts with C_i,
+ * This is the crucial fact.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#include &lt;time.h&gt;
+#include &lt;assert.h&gt;
+
+
+#define MAX_MSG_LEN     76
+#define MAX_N           9       // (75-47)/3
+#define MAX_N_TRIPLES   (MAX_N*MAX_N*MAX_N)
+#define C_          0
+#define O_          1
+#define W_          2           
+#define NOT_COW     3
+
+
+char Moo[] = "Begin the Escape execution at the Break of Dawn";
+int Moo_len = 47;
+
+char Hmm[MAX_MSG_LEN];  // message received
+int Hmm_len;
+int N;      // number of encryptions
+
+int cowpos[3*MAX_N + 2];    // +2 for the start and end
+int T;      // number of triples
+
+int triple[MAX_N_TRIPLES + 1][3];   // triples will be numbered
+                                    // starting from 1
+                                    // don't ask why
+
+// node in linked list
+struct llnode_t {
+    int data;
+    llnode_t *next;
+} *its_triple[3*MAX_N+1] = {0};
+
+// for curiosity's sake:
+int n_calls_to_find_tripleset = 0;
+int n_calls_to_find_ordering = 0;
+int starttime;
+
+
+void input ();
+int submoo (const char *, int);
+void subhmm (char *, int, int);
+void init ();
+int thingy (char);
+void output (bool);
+void find_tripleset (int decoded_len, int last_seg_start, int *its_triple_used);
+void find_ordering (int *curcowpos, int *triple_used, int n_decodings_applied);
+int main ();
+
+
+// add a node to the beginning of linked list
+void addnode (llnode_t **np, int data)
+{
+    llnode_t *temp = *np;
+    *np = new llnode_t;
+    (*np)-&gt;data = data;
+    (*np)-&gt;next = temp;
+}
+
+
+int thingy (char c)
+{
+    switch (c) {
+    case 'C':
+        return C_;
+    case 'O':
+        return O_;
+    case 'W':
+        return W_;
+    default:
+        return NOT_COW;
+    }
+}
+
+// is word a subsequence of Moo, starting from position 'start' in Moo?
+// if so, return position of first character in Moo that starts it
+// otherwise return -1
+int submoo (const char *word, int start)
+{
+    int word_len = strlen (word);
+    
+    if (word_len == 0)
+        return start;
+
+    int i, j;
+    
+    for (i = start; i &lt;= Moo_len - word_len; i++) {
+        for (j = 0; j &lt; word_len &amp;&amp; Moo[i+j] == word[j]; j++)
+            ;
+        if (j == word_len)
+            return i;
+    }
+
+    return -1;
+}
+
+// get Hmm[start..end]
+void subhmm (char *target, int start, int end)
+{
+    int i, j = 0;
+    for (i = start; i &lt;= end; i++)
+        target[j++] = Hmm[i];
+    target[j] = '\0';
+}
+
+// output the answer
+void output (bool result)
+{
+    FILE *fout = fopen ("cryptcow.out", "w");
+    if (result) {
+        fprintf (fout, "1 %d\n", N);
+        printf ("The answer is yes.\n");
+    } else {
+        fprintf (fout, "0 0\n");
+        printf ("The answer is no.\n");
+    }
+    fclose(fout);
+
+    printf ("%d calls to find_tripleset; %d calls to find_ordering.\n",
+        n_calls_to_find_tripleset, n_calls_to_find_ordering);
+    printf ("Runtime: %g seconds.\n", (double) (clock () - starttime) / CLOCKS_PER_SEC);
+    exit (0);
+}
+
+// just get the input
+void input ()
+{
+    FILE *fin = fopen ("cryptcow.in", "r");
+    fscanf (fin, "%[^\n]", Hmm);
+    fclose (fin);
+
+#ifndef NDEBUG
+    printf ("%s\n", Hmm);
+#endif
+}
+
+// do stuff
+void init ()
+{
+    Hmm_len = strlen (Hmm);
+
+    // is length acceptable?
+    if (Hmm_len &lt; Moo_len || (Hmm_len - Moo_len) % 3 != 0) {
+        printf ("Length badness.\n");
+        output (0);
+    } else
+        N = (Hmm_len - Moo_len) / 3;
+
+    // while forming array cowpos[],
+    // make sure N = # of C's = # of O's = # of W's
+    int i;
+    int chartype;
+    int ncows[3] = {0};
+    int totncows = 1;   // 1, and not 0, because of the start
+
+    cowpos[0] = -1;
+
+    for (i = 0; i &lt; Hmm_len; i++) {
+        chartype = thingy (Hmm[i]);
+        if (chartype != NOT_COW) {
+            if (++ncows[chartype] &gt; N) {
+                // too many cows
+                printf ("Too many of one type of cow.\n");
+                output (0);
+            }
+            cowpos[totncows++] = i;
+            if (totncows == 1 &amp;&amp; chartype != C_) {
+                // first cow is not a 'C'
+                printf ("First cow not C.\n");
+                output (0);
+            } else if (totncows == 3*N+1 &amp;&amp; chartype != W_) {
+                // last cow is not a 'W'
+                printf ("Last cow not W\n");
+                output (0);
+            }
+        } else {
+            if (totncows == 1 &amp;&amp; Hmm[i] != Moo[i]) {
+                // first segments don't match
+                printf ("First segments don't match.\n");
+                output (0);
+            } else if (totncows == 3*N+1 &amp;&amp; Hmm[i] != Moo[i+Moo_len-Hmm_len]) {
+                // last segments don't match
+                printf ("Last segments don't match.\n");
+                output (0);
+            }
+        }
+    }
+    
+    cowpos[3*N+1] = Hmm_len;
+
+    if (ncows[0] != N || ncows[1] != N || ncows[2] != N) {
+        printf ("Wrong number of some cow.\n");
+        output (0);
+    }
+    if (Hmm_len == Moo_len)
+        output (1);
+
+    // find the triples that might work
+    int c, o, w;
+    char segment[3][2][MAX_MSG_LEN];    // [C, O, or W][left or right][]
+    char subword[MAX_MSG_LEN];
+    int c_start;
+
+    T = 0;
+    for (c = 1; c &lt;= 3*N; c++) {
+        if (Hmm[cowpos[c]] != 'C')
+            continue;
+        
+        subhmm (segment[C_][0], cowpos[c-1] + 1, cowpos[c] - 1);
+        subhmm (segment[C_][1], cowpos[c] + 1, cowpos[c+1] - 1);
+
+        c_start = submoo (segment[C_][0], 0);
+        
+        if (c_start == -1) {
+            printf ("Some segment does not exist.\n");
+            output (0);
+        }
+
+        for (o = 1; o &lt;= 3*N; o++) {
+            if (Hmm[cowpos[o]] != 'O')
+                continue;
+
+            subhmm (segment[O_][0], cowpos[o-1] + 1, cowpos[o] - 1);
+            subhmm (segment[O_][1], cowpos[o] + 1, cowpos[o+1] - 1);
+
+            // the segment left of c and the segment right of o must fit
+            // together to form a subsequence of Moo
+
+            strcpy (subword, segment[C_][0]);
+            strcat (subword, segment[O_][1]);
+            if (submoo (subword, c_start) == -1) {
+                assert (submoo (subword, 0) == -1);
+                continue;
+            }
+
+            for (w = 1; w &lt;= 3*N; w++) {
+                if (Hmm[cowpos[w]] != 'W')
+                    continue;
+
+                subhmm (segment[W_][0], cowpos[w-1] + 1, cowpos[w] - 1);
+                subhmm (segment[W_][1], cowpos[w] + 1, cowpos[w+1] - 1);
+
+                // the segment left of o and the segment right of w must fit
+                strcpy (subword, segment[O_][0]);
+                strcat (subword, segment[W_][1]);
+                if (submoo (subword, 0) == -1)
+                    continue;
+                
+                // the segment left of w and the segment right of c must fit
+                strcpy (subword, segment[W_][0]);
+                strcat (subword, segment[C_][1]);
+                if (submoo (subword, 0) == -1)
+                    continue;
+
+                // finally, after all these tests we have found a triple
+                // worthy of further consideration
+                T++;
+                triple[T][C_] = c;
+                triple[T][O_] = o;
+                triple[T][W_] = w;
+                addnode (&amp;its_triple[c], T);
+                addnode (&amp;its_triple[o], T);
+                addnode (&amp;its_triple[w], T);
+            }
+        }
+    }
+
+    //printf ("All %d triples found.\n", T);
+
+    // verify that each cow has at least one triple
+    for (i = 1; i &lt;= 3*N; i++) {
+        if (its_triple[i] == 0) {
+            printf ("Cow %d has no triples.\n", i);
+            output (0);
+        }
+    }
+
+#ifndef NDEBUG
+    printf ("Initialization results (after %g seconds):\n",
+        (double) (clock () - starttime) / CLOCKS_PER_SEC);
+    printf ("\tNumber of encrpytions (possibly): %d.\n", N);
+    printf ("\tNumber of triples: %d.\n", T);
+#endif
+}
+
+
+// use this function recursively
+// find a set of triples given:
+// - the length of Moo already decoded (i.e., the position in Moo from which
+//   further consideration is necessary)
+// - the id of the cow to the left of the last segment used,
+// - the triples that you've already committed to using
+void find_tripleset (int decoded_len, int last_seg_start, int *its_triple_used)
+{
+    n_calls_to_find_tripleset++;
+
+//  printf ("Trying to find tripleset.\n");
+
+    int i;
+    int last_seg_end = last_seg_start+1;
+    int last_seg_end_type = thingy (Hmm[cowpos[last_seg_end]]);
+    int last_seg_len;
+    int next_seg_start;
+    int triple_to_use;
+
+    // first see if the segment from last_seg_start to last_seg_end really fits
+    assert (0 &lt;= last_seg_start &amp;&amp; last_seg_end &lt;= 3*N+1);
+
+    last_seg_len = cowpos[last_seg_end] - cowpos[last_seg_start] - 1;
+    if (decoded_len + last_seg_len &gt; Moo_len)
+        return;
+    for (i = 0; i &lt; last_seg_len &amp;&amp;
+            Moo[decoded_len + i] == Hmm[cowpos[last_seg_start]+1+i]; i++)
+        ;
+    if (i &lt; last_seg_len)
+        return;
+    
+//  printf ("The last segment does fit.\n");
+
+    // the last segment indeed fits
+    decoded_len += last_seg_len;
+
+    if (last_seg_start == 3*N &amp;&amp; decoded_len == Moo_len) {
+        // we have found a successful tripleset!
+
+#ifndef NDEBUG
+        printf ("Tripleset found after %d calls to find_tripleset.\n",
+            n_calls_to_find_tripleset);
+#endif
+
+        int triple_used[MAX_N];
+        int curcowpos[3*MAX_N+2];
+        int j = 0;
+        for (i = 1; i &lt;= 3*N; i++) {
+            if (Hmm[cowpos[i]] == 'C') {
+                triple_used[j++] = its_triple_used[i];
+            }
+        }
+        memcpy (curcowpos, cowpos, sizeof (*cowpos) * (3*N+2));
+
+        find_ordering (curcowpos, triple_used, 0);
+        return;     
+    }
+
+    assert (0 &lt;= last_seg_end_type &amp;&amp; last_seg_end_type &lt; 3);
+    assert (last_seg_end &lt;= 3*N);
+
+    if ((triple_to_use = its_triple_used[last_seg_end]) != 0) {
+        // the next segment to be used has already been decided
+        next_seg_start = triple[triple_to_use][(last_seg_end_type + 1) % 3];
+        find_tripleset (decoded_len, next_seg_start, its_triple_used);
+    } else {
+        // the next segment to be used is up for grabs
+//      printf ("The next segment to be used is up for grabs.\n");
+
+        llnode_t *trytriple;
+        assert (0 &lt; last_seg_end &amp;&amp; last_seg_end &lt;= 3*N);
+
+        for (trytriple = its_triple[last_seg_end];
+                trytriple != 0; trytriple = trytriple-&gt;next) {
+            triple_to_use = trytriple-&gt;data;
+
+            assert (1 &lt;= triple_to_use &amp;&amp; triple_to_use &lt;= T);
+            assert (1 &lt;= triple[triple_to_use][(last_seg_end_type + 1) % 3]);
+            assert (triple[triple_to_use][(last_seg_end_type + 1) % 3] &lt;= 3*N);
+
+            if (its_triple_used[triple[triple_to_use]
+                [(last_seg_end_type + 1) % 3]] != 0)
+            {
+                continue;
+            }
+
+            if (its_triple_used[triple[triple_to_use]
+                [(last_seg_end_type + 2) % 3]] != 0)
+            {
+                continue;
+            }
+
+            assert (last_seg_end == triple[triple_to_use][last_seg_end_type]);
+
+            its_triple_used[last_seg_end] = triple_to_use;
+            its_triple_used[triple[triple_to_use][(last_seg_end_type + 1) % 3]]
+                = triple_to_use;
+            its_triple_used[triple[triple_to_use][(last_seg_end_type + 2) % 3]]
+                = triple_to_use;
+
+            next_seg_start = triple[triple_to_use][(last_seg_end_type+1) % 3];
+            find_tripleset (decoded_len, next_seg_start, its_triple_used);
+
+            its_triple_used[last_seg_end] = 0;
+            its_triple_used[triple[triple_to_use][(last_seg_end_type + 1) % 3]]
+                = 0;
+            its_triple_used[triple[triple_to_use][(last_seg_end_type + 2) % 3]]
+                = 0;
+        }
+    }
+}
+
+
+// use this function recursively
+// find an ordering of the triples given in triple_used
+// that accomplishes the task given:
+// - the current positions of all cows, which includes
+//   information about which triples have already been used
+//   (those cows that have already been used are at position -1)
+// - which triples are to be used
+void find_ordering (int *curcowpos, int *triple_used, int n_decodings_applied)
+{
+    n_calls_to_find_ordering++;
+
+
+    if (n_decodings_applied == N)
+        output (1);
+
+    int nextcowpos[3*MAX_N+2];
+        
+    int i, j, cpos, opos, wpos;
+    for (i = 0; i &lt; N; i++) {
+        cpos = curcowpos[triple[triple_used[i]][C_]];
+        opos = curcowpos[triple[triple_used[i]][O_]];
+        wpos = curcowpos[triple[triple_used[i]][W_]];
+        if (cpos &gt;= opos || opos &gt;= wpos) {
+            continue;
+        }
+        for (j = 1; j &lt;= 3*N; j++) {
+            if (curcowpos[j] == -1)
+                nextcowpos[j] = -1;
+            else if (curcowpos[j] &lt; cpos)
+                nextcowpos[j] = curcowpos[j];
+            else if (curcowpos[j] == cpos)
+                nextcowpos[j] = -1;
+            else if (curcowpos[j] &lt; opos)
+                nextcowpos[j] = curcowpos[j] + wpos - opos - 2;
+            else if (curcowpos[j] == opos)
+                nextcowpos[j] = -1;
+            else if (curcowpos[j] &lt; wpos)
+                nextcowpos[j] = curcowpos[j] + cpos - opos - 1;
+            else if (curcowpos[j] == wpos)
+                nextcowpos[j] = -1;
+            else
+                nextcowpos[j] = curcowpos[j] - 3;
+        }
+        find_ordering (nextcowpos, triple_used, n_decodings_applied+1);
+    }
+}
+
+
+int main ()
+{
+    starttime = clock ();
+    input ();
+    init ();
+
+    int its_triple_used[3*MAX_N+1] = {0};
+    find_tripleset (0, 0, its_triple_used);
+
+    // if you're still alive, the answer must be no
+    output (0);
+    return 0;
+}
+</pre>
+
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+
+</body></html>

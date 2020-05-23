@@ -1,0 +1,176 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 pathfind Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="pathfind_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'pathfind' Analysis</h2>
+<h4>by </h4>
+<p>In this problem, we need to find the hops of each island from island 
+M. That
+fits exactly the Breadth First Search (BFS) algorithm introduced in the 
+USACO
+training pages. The algorithm is summarized as follows:</p>
+
+<ol>
+	<li>Insert M into the queue.
+	</li><li>Get the next island, I from the queue.
+	</li><li>Insert the unmarked neigbors of I into the queue, record their
+ hops (add 1
+to I's hop) and mark them. 
+	</li><li>If the queue is not empty, go to step 2.
+</li></ol>
+
+<p>For the example in the problem, the steps can be demonstrated as 
+follows:</p>
+<pre>		mark array
+step 	queue	1 2 3 4 =&gt; islands
+====	=====	=======
+0	1	0
+1	2 4	0 1   1	=&gt; hopes in each step
+2	4 3	0 1 2 1
+3       3	0 1 2 1
+4 		0 1 2 1
+</pre>
+
+<p>Notice that we don't use an array for hops but use the mark array 
+also to
+record the hops of the islands. While outputting the islands, we need to
+ be
+careful about the order to be ascending. So, what we need to do is to 
+search
+the mark array for 0 hops and output the first line, search for 1 hop 
+and
+output the second line, search for 2 hops and output the third line, and
+ so
+on... Since we search the islands from left to right, the output will be
+ in
+ascending order.</p>
+
+<p>Below is an example solution:</p>
+
+<pre>#include &lt;fstream&gt;
+#define MAX 101
+
+using namespace std;
+
+int n,m,mat[MAX][MAX],mark[MAX],que[MAX],front,rear;
+
+int main()
+{
+	// read the matrix from file
+	ifstream fin("pathfind.in");
+	fin &gt;&gt; n &gt;&gt; m;
+	for (int i=1; i &lt;= n; i++)
+		for (int j=1; j &lt;= n; j++)
+			fin &gt;&gt; mat[i][j];
+	fin.close();
+
+	que[rear++]=m;		// add M into the queue
+	mark[m]=1;		// start the hops from 1 not 0
+				//	since all the islands will be initially 0
+	// continue until the queue is empty
+	while (front &lt; rear)
+	{
+		// get the next island in the queue
+		int island=que[front++];
+
+		// add all the unmarked neighbors of the island into the queue
+		for (int i=1; i &lt;= n; i++)
+			if (!mark[i] &amp;&amp; mat[island][i])
+				que[rear++]=i,mark[i]=mark[island]+1;
+	}
+
+	// write the output
+	ofstream fout("pathfind.out");
+	
+	// start searching the islands with 1 hop, 2 hops, etc...
+	// 	until the last island that was in the queue.
+	for (int i=1; i &lt;= mark[que[rear-1]]; i++)
+	{
+		for (int j=1, k=0; j&lt;=n; j++)
+			// if the hop of the island is equal the current hop
+			if (mark[j] == i) 
+			{
+				// be careful when outputting
+				// if it is not the first island in the line, 
+				// 	put space after that (k is used for that)
+				if (k) fout &lt;&lt; " ";
+				fout &lt;&lt; j;
+				k++;
+			}
+		fout &lt;&lt; endl;	// end of line
+	}
+	fout.close();
+}
+</pre>
+
+<p>In the solution above, we did a couple work to output the islands in 
+the
+desired format. Another solution is to do BFS, sort the islands in each 
+line,
+and output them. This solution is slightly faster  than the former 
+solution.
+Here's Rob's code:</p>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* automatically zero out everything (global): */
+int n, m, connect[100][100], visits[100+1][100+1], nvisits[100+1];
+int seen[100+1], seendist[100+1];
+
+int compar(const void *a, const void *b) {
+    return *(int *)a - *(int *)b;
+}
+
+main () {
+    FILE *fin = fopen ("pathfind.in", "r");
+    FILE *fout = fopen ("pathfind.out", "w");
+    int r, c, i, j, nseen, dist, nlisted;
+    
+    fscanf (fin, "%d%d", &amp;n, &amp;m);
+    for (r = 0; r &lt; n; r++)
+	for (c = 0; c &lt; n; c++)
+	    fscanf (fin, "%d", &amp;connect[r][c]);
+
+    seen[m-1] = 1;
+    seendist[m-1] = 0;
+    visits[0][nvisits[0]++] = m;
+    nseen = 1;
+
+    dist = 0;
+    while (nseen &lt; n &amp;&amp; dist &lt; n) {
+        for (r = 0; r &lt; n; r++) {
+	    for (c = 0; c &lt; n; c++) {
+		if (connect[r][c] &amp;&amp; seen[r] &amp;&amp; seendist[r] == dist &amp;&amp; seen[c] == 0) {	/*
+then visit c */
+		    seendist[c] = dist+1;
+		    seen[c] = 1;
+		    visits[ dist+1 ] [ nvisits[dist+1]++ ] = c+1;
+		    nseen++;
+		}
+	    }
+        }
+	dist++;
+    }
+    for (nlisted = i = 0; i &lt; n+1 &amp;&amp; nlisted &lt; nseen; i++) {
+	if (nvisits[i] &gt; 1) qsort(visits[i], nvisits[i], sizeof(int), compar);
+	for (j = 0; j &lt; nvisits[i]; j++) {
+	    if (j &gt; 0) fprintf (fout, " ");
+	    fprintf (fout, "%d", visits[i][j]);
+	    nlisted++;
+	}
+	fprintf (fout, "\n");
+    }
+    exit (0);
+}
+</pre>
+
+
+
+</body></html>

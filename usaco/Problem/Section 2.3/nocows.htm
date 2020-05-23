@@ -1,0 +1,79 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Cow Pedigrees</title>
+</head><body background="nocows_files/bg3.jpg">
+<img src="nocows_files/cow1.jpg" width="742" height="118">
+
+<center> <h1>Cow Pedigrees</h1> </center>
+<center>Silviu Ganceanu -- 2003</center>
+
+<p></p><p>Farmer John is considering purchasing a new herd of cows. In
+this new herd, each mother cow gives birth to two children. The
+relationships among the cows can easily be represented by one or
+more binary trees with a total of N (3 &lt;= N &lt; 200) nodes.  The 
+trees
+have these properties:
+
+</p><ul>
+<li>The degree of each node is 0 or 2. The degree is the count of
+the node's immediate children.</li>
+
+<li>The height of the tree is equal to K (1 &lt; K &lt;100). The height
+is the number of nodes on the longest path from the root to any
+leaf; a leaf is a node with no children.</li> </ul>
+
+<p>How many different possible pedigree structures are there?  A
+pedigree is different if its tree structure differs from that of
+another pedigree. Output the remainder when the total number of
+different possible pedigrees is divided by 9901.
+
+</p><h3>PROGRAM NAME: nocows</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<ul><li> Line 1: Two space-separated integers, N and K.
+</li></ul>
+
+<h3>SAMPLE INPUT (file nocows.in)</h3>
+
+<pre>5 3
+</pre>
+
+
+<h3>OUTPUT FORMAT</h3>
+
+<ul><li> Line 1: One single integer number representing the number of 
+possible
+pedigrees MODULO 9901.
+</li></ul>
+
+<h3>SAMPLE OUTPUT (file nocows.out) </h3>
+
+<pre>2
+</pre>
+
+<h3>OUTPUT DETAILS</h3>
+
+Two possible pedigrees have 5 nodes and height equal to 3:
+<pre>           @                   @      
+          / \                 / \
+         @   @      and      @   @
+        / \                     / \
+       @   @                   @   @
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="nocows" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,146 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 spiral Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="spiral_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'spiral' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>
+First, we observe that in order to walk in a spiral, we walk right, 
+down, left, up, then keep 
+repeating until we reach the center. This can be easily implemented in 
+two arrays called 
+<tt>dx</tt> and <tt>dy</tt> as defined below, which represent what 
+direction we are currently 
+going in. Then, when we change directions, we just increment the index 
+of our array. Once we 
+reach the end, we just start at the beginning of the array again. This 
+is accomplished by taking 
+the index mod 4.
+</p>
+
+<p>
+Now, we can focus on when to change directions. We change directions for
+ two different conditions: 
+(a) our next step will bring us out of bounds, or (b) our next step will
+ make us step on a square 
+that we already marked. That means, we keep incrementing our current 
+position by <tt>dx</tt> and 
+<tt>dy</tt> until we get to one of those conditions, then we increment 
+our index.
+</p>
+
+<p>
+We know there are N*N numbers, so we just loop from 1 to N*N, walking in
+ the 
+spiral. After that, we just print out the numbers in the array.
+</p>
+
+<p>
+Here is a solution combining these ideals.
+</p>
+
+<pre>import java.io.*;
+import java.util.*;
+import static java.lang.Integer.parseInt;
+
+public class spiral
+{
+    private static BufferedReader in;
+    private static PrintWriter out;
+    
+    private static int [] dx = new int [] {1, 0, -1, 0},
+                          dy = new int [] {0, 1, 0, -1};
+
+    public static void main (String [] args) throws IOException {
+        in = new BufferedReader (new FileReader ("spiral.in"));
+        out = new PrintWriter (new BufferedWriter (new FileWriter ("spiral.out")));
+        
+        int N = parseInt (in.readLine ());
+        
+        int [][] arr = new int [N][N];
+
+        int curx = 0, cury = 0, idx = 0;
+        
+        arr [0][0] = 1;
+        for (int i = 2; i &lt;= N * N; i++) {
+            if (curx + dx [idx] &gt;= N || cury + dy [idx] &gt;= N || // next space is out of bounds
+                curx + dx [idx] &lt; 0 || cury + dy [idx] &lt; 0 ||
+                arr [curx + dx [idx]][cury + dy [idx]] != 0) //  or is already visited
+                    idx = (idx + 1) % 4;
+            arr [curx += dx [idx]][cury += dy [idx]] = i;
+        }
+        
+        for (int i = 0; i &lt; N; i++) {
+            out.print (arr [0][i]);
+            for (int j = 1; j &lt; N; j++)
+                out.print (" " + arr [j][i]);
+            out.println ();
+        }
+        
+        out.close ();
+        System.exit (0);
+    }
+}
+
+</pre>
+
+<p>
+Another way to do this would be to keep walk right as far as we can, 
+then walk down as far as we 
+can, then do the same for left and up, and keep repeating until we can't
+ move anymore. The 
+solution below does this nicely. Just be careful to keep track of the 
+indices correctly. 
+</p>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int out[1000][1000];
+main () {
+    FILE *fin = fopen ("spiral.in", "r");
+    FILE *fout = fopen ("spiral.out", "w");
+    int n, x, y, counter;
+
+    fscanf (fin, "%d", &amp;n);
+    x = y = 0;
+    counter = 1;
+    for (;;) {
+	for ( ;y &lt; n &amp;&amp; !out[x][y]; y++)  // right
+	    out[x][y] = counter++;
+	y--;
+	if (n == 1) break;
+
+	for (x++; x &lt; n &amp;&amp; !out[x][y]; x++) // down
+	    out[x][y] = counter++;
+	x--;
+	for (y--; y &gt;= 0 &amp;&amp; !out[x][y]; y--) // left
+	    out[x][y] = counter++;
+	y++;
+	for (x--; x &gt;= 0 &amp;&amp; !out[x][y]; x--) // up
+	    out[x][y] = counter++;
+	x++;
+	y++;
+
+	if (out[x][y]) break;
+    }
+    for (x = 0; x &lt; n; x++) {
+	for (y = 0; y &lt; n; y++) {
+	    if (y) fprintf (fout, " ");
+	    fprintf (fout, "%d", out[x][y]);
+	}
+	fprintf (fout, "\n");
+    }
+    exit (0);
+}
+</pre>
+
+
+
+</body></html>

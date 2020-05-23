@@ -1,0 +1,116 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Problem 99: Broken Necklace</title>
+</head><body background="beads_files/bg3.jpg">
+<img src="beads_files/cow1.jpg" width="742" height="118">
+
+<center>
+<h1>Broken Necklace</h1>
+</center>
+
+<p> You have a necklace of N red, white, or blue beads (3&lt;=N&lt;=350)
+some of which are red, others blue, and others white, arranged at random.
+Here are two examples for n=29:
+
+</p><pre>                1 2                               1 2
+            r b b r                           b r r b
+          r         b                       b         b
+         r           r                     b           r
+        r             r                   w             r
+       b               r                 w               w
+      b                 b               r                 r
+      b                 b               b                 b
+      b                 b               r                 b
+       r               r                 b               r
+        b             r                   r             r
+         b           r                     r           r
+           r       r                         r       b
+             r b r                             r r w
+            Figure A                         Figure B
+                        r red bead
+                        b blue bead
+                        w white bead
+</pre>
+
+<p> The beads considered first and second in the text that follows have
+been marked in the picture.
+
+</p><p> The configuration in Figure A may be represented as a string of b's
+and r's, where b represents a blue bead and r represents a red one, as
+follows:  brbrrrbbbrrrrrbrrbbrbbbbrrrrb .
+
+</p><p> Suppose you are to break the necklace at some point, lay it out
+straight, and then collect beads of the same color from one end
+until you reach a bead of a different color, and do the same for
+the other end (which might not be of the same color as the beads
+collected before this).
+
+</p><p> Determine the point where the necklace should be broken so that the
+most number of beads can be collected.
+
+</p><h3> Example </h3>
+
+<p> For example, for the necklace in Figure A, 8 beads can be collected,
+with the breaking point either between bead 9 and bead 10 or else between
+bead 24 and bead 25.
+
+</p><p> In some necklaces, white beads had been included as shown in Figure
+B above.  When collecting beads, <b>a white bead that is encountered may
+be treated as either red or blue and then painted with the desired color</b>.
+The string that represents this configuration will include the three
+symbols r, b and w.
+
+</p><p>
+Write a program to determine the largest number of beads that can be
+collected from a supplied necklace.
+
+
+</p><h3>PROGRAM NAME: beads</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table>
+<tbody><tr> <td> Line 1: </td> <td> N, the number of beads</td>
+</tr><tr> <td> Line 2: </td> <td> a string of N characters, each of which
+is r, b, or w</td>
+</tr></tbody></table>
+
+<h3>SAMPLE INPUT (file beads.in) </h3>
+
+<pre>29
+wwwbbrwrbrbrrbrbrwrwwrbwrwrrb
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing the maximum of number of beads that can be
+collected from the supplied necklace.
+
+<h3>SAMPLE OUTPUT (file beads.out)</h3>
+
+<pre>11
+</pre>
+
+<h3>OUTPUT EXPLANATION</h3>
+
+Consider two copies of the beads (kind of like being able to runaround
+the ends).  The string of 11 is marked.
+
+<pre>wwwbbrwrbrbrrbrbrwrwwrbwrwrrb wwwbbrwrbrbrrbrbrwrwwrbwrwrrb
+                       ****** *****
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="beads" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

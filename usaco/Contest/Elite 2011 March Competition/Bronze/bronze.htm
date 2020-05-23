@@ -1,0 +1,437 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<meta http-equiv="Pragma" content="no-cache">
+<script language="javascript">
+<!--
+    var endtime;
+    
+    function initcount(secondsleft) {
+        var now = new Date();
+        return now.getTime() + secondsleft*1000;
+    }
+    function count1(i) { i = i - i%1; return i; } 
+    function count2(i) { i = i - i%1; if (i < 10) return "0"+i; return i; }
+    function updateclock(head, word, endtime) {
+        var now = new Date();
+        var delta = (endtime - now.getTime())/1000;
+        var s, x;
+        if(delta < 1)
+            s = head + " has ended";
+        else{
+            s = head + " ends: ";
+            s = head + ": ";
+            if(delta >= 24*3600)
+                s = s + count1(delta/86400) + "d";
+            if(delta >= 3600)
+                s = s + count2((delta/3600)%24) + "h";
+            if(delta >= 60)
+                s = s + count2((delta/60)%60) + "m";
+            s = s + count2(delta%60) + "s";
+            setTimeout("updateclock('"+head+"','"+word+"',"+endtime+")", 500);
+        }
+
+        var slot = document.getElementById(word);
+        slot.innerHTML = s;
+    }
+-->
+</script>
+
+<title>USACO Problems</title>
+<style type="text/css"><!--
+table,td,body {
+font-family: Helvetica, Verdana, Arial, SunSans-Regular, Sans-Serif;
+}
+--></style>
+</head><body onload="" background="bronze_files/bg9silver.jpg">
+
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans">
+<table><tbody><tr>
+<td><img src="bronze_files/cowhead2.gif">
+</td>
+<td valign="top">
+<table cellpadding="0" cellspacing="0">
+    <tbody><tr><td>Contest: MAR11 <b>SILVER</b> Division</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    
+</tbody></table>
+</td></tr>
+</tbody></table>
+<font color="red"><b>
+</b></font>
+
+<br><font size="6"><b>ANALYSIS MODE</b></font><br>
+Submit solutions for your own enjoyment.
+
+</font><pre>**********************************************************************
+                           BRONZE PROBLEMS
+**********************************************************************
+                  Three problems numbered 11 through 13
+**********************************************************************
+
+Problem 11: Lucky Charms [Rob Kolstad, 2011]
+
+Bessie has a lovely charm bracelet whose length is L (4 &lt;= L &lt;=
+32,768) mm.  Hanging from this bracelet are C (1 &lt;= C &lt;= 512) charms,
+each at a unique integer distance from the bracelet's left side.
+Charm i dangles on the end of a string whose length is S_i mm (1
+&lt;= S_i &lt;= 25) and which is located P_i (0 &lt;= P_i &lt;= L) mm from the
+bracelet's left side.
+
+Margaret snatches the bracelet from Bessie and nails it (with a
+zero-width nail) to a fencepost. The nail is located N mm (1 &lt;= N
+&lt;= L-1) from the left side of the bracelet, and the bracelet itself
+thus hangs left and right of the nail, with gravity pulling the
+bracelet and charms straight down.
+
+Bessie is curious: How far is each charm from the nail in the fencepost?
+
+By way of example, consider a bracelet of length 16 mm with three
+charms. The schematic diagram below shows + signs which are each
+separated by 1 mm and vertical bars which each represent 1mm of an
+attached string. The charms are defined to be 4, 7, and 3 mm from
+the bracelet.
+    
+                        1 1 1 1 1 1 1
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |         |             |
+            |         |             |
+            |         |             *
+            *         |
+                      |
+                      |
+                      *
+
+When the bracelet is nailed to the fencepost with the nail at
+location 5, it droops like this (please ignore the left-right spread
+which is shown for clarity):
+
+Droop  Bracelet         Bracelet
+dist.  location         location 
+  0      5         +        5    &lt;---- nail is here
+  1      4        + +       6
+  2      3      | + +       7
+  3      2      | + +       8              D
+  4      1      | + +       9              O
+  5      0      * + + |    10              W
+  6                 + |    11              N
+  7                 + |    12              |
+  8                 + |    13              |
+  9                 + |    14              V
+ 10                 + |    15
+ 11                 + *    16
+ 12                     |
+ 13                     |
+ 14                     *
+
+As you can see, the first charm droops down 5 mm from the nail; the
+second charm droops to 11 mm and the third charm all the way down
+to 14 mm from the nail.
+
+Calculate the charm droop distance for each charm given.
+
+PROBLEM NAME: charms
+
+INPUT FORMAT:
+
+* Line 1: Three space-separated integers: L, C, and N
+
+* Lines 2..C+1: Line i+1 describes charm i with two space-separated
+        integers: S_i and P_i
+
+SAMPLE INPUT (file charms.in):
+
+16 3 5
+4 4
+7 9
+3 16
+
+OUTPUT FORMAT:
+
+* Lines 1..C: Line i contains the distance from charm i to the nail
+
+SAMPLE OUTPUT (file charms.out):
+
+5
+11
+14
+
+**********************************************************************
+
+Problem 12: Pathfinding [Sherry Wu, 2011]
+
+Bessie is stranded on a deserted arctic island and wants to determine
+all the paths she might take to return to her pasture. She has
+tested her boat and knows she can travel from one island to another
+island in 1 unit of time if a route with proper currents connects
+the pair.
+
+She has experimented to create a map of the ocean with valid
+single-hop routes between each pair of the N (1 &lt;= N &lt;= 100) islands,
+conveniently numbered 1..N. The routes are one-way (unidirectional),
+owing to the way the currents push her boat in the ocean. It's
+possible that a pair of islands is connected by two routes that use
+different currents and thus provide a bidirectional connection. The
+map takes care to avoid specifying that a route exists between an
+island and itself.
+
+Given her starting location M (1 &lt;= M &lt;= N) and a representation
+of the map, help Bessie determine which islands are one 'hop' away,
+two 'hops' away, and so on. If Bessie can take multiple different
+paths to an island, consider only the path with the shortest distance.
+
+By way of example, below are N=4 islands with connectivity as shown
+(for this example, M=1):
+
+       start--&gt; 1--------&gt;2
+                |         |
+                |         |
+                V         V
+                4&lt;--------3
+
+Bessie can visit island 1 in time 0 (since M=1), islands 2 and 4
+at time 1, and island 3 at time 2.
+
+The input for this task is a matrix C where the element at row r,
+column c is named C_rc (0 &lt;= C_rc &lt;= 1) and, if it has the value
+1, means "Currents enable Bessie to travel directly from island r
+to island c in one time unit". Row C_r has N elements, respectively
+C_r1..C_rN, each one of which is 0 or 1.
+
+PROBLEM NAME: pathfind
+
+INPUT FORMAT:
+
+* Line 1: Two space-separated integers: N and M
+
+* Lines 2..N+1: Line i+1 contains N space-separated integers: C_r
+
+SAMPLE INPUT (file pathfind.in):
+
+4 1
+0 1 0 1
+0 0 1 0
+0 0 0 1
+0 0 0 0
+
+OUTPUT FORMAT:
+
+* Lines 1..???: Line i+1 contains the list of islands (in ascending
+        numerical order) that Bessie can visit at time i.  Do not
+        include any lines of output after all reachable islands have
+        been listed.
+
+SAMPLE OUTPUT (file pathfind.out):
+
+1
+2 4
+3
+
+**********************************************************************
+
+Problem 13: A spiral walk [Traditional, 2011]
+
+Oh how the cows love to walk in their square pasture with sides of
+length N (1 &lt;= N &lt;= 750) and which is partitioned into N*N squares.
+They enjoy the sights, the smells, and the general ambience of the
+grass and trees.
+
+Bessie has decided to take the cows on the longest possible walk
+from the upper left corner to the center (or near the center when
+N is even) of the pasture, passing through each and every square
+along the way after starting.
+
+She has decided to create the obvious clockwise spiral route (example
+below) for this evening's stroll. Write a program to create a map
+for her that shows the order of squares she should visit.
+
+By way of example, for pastures of size N=3 and N=4, here are the
+routes Bessie should use:
+
+      1  2  3        1  2  3  4
+      8  9  4       12 13 14  5
+      7  6  5       11 16 15  6
+                    10  9  8  7
+
+PROBLEM NAME: spiral
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+SAMPLE INPUT (file spiral.in):
+
+3
+
+OUTPUT FORMAT:
+
+* Lines 1..N: N space-separated integers
+
+SAMPLE OUTPUT (file spiral.out):
+
+1 2 3
+8 9 4
+7 6 5
+
+**********************************************************************
+
+</pre><hr>
+<form action="/ioiupload" enctype="multipart/form-data" method="POST">
+<input name="a" value="89Are9bjPrE" type="hidden">
+
+<table>
+<tbody><tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+  <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill
+ Sans">
+  <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+  <tbody><tr><td><b>Submit a program  for grading:&nbsp;<b><input 
+name="filename" type="file">
+  &nbsp;&nbsp;
+  <input value="Submit" name="submit" type="submit"></b></b></td></tr>
+  </tbody></table>
+
+</font></td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+   <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+   <tbody><tr><td colspan="2">
+   <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+   <b>To run your program with your own test data, enter the program<br>
+   file name and input file name then click 'Test':</b></font></td></tr>
+
+  <tr><td>
+
+   <table>
+   <tbody><tr><td>
+     <table>
+     <tbody><tr><td>
+     <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+     <b>Program&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testprogramname" type="file"></td></tr>
+     <tr><td align="right">
+         <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+         <b>Input&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testfilename" type="file"></td></tr>
+     </tbody></table>
+   </td>
+   <td>&nbsp;&nbsp;</td>
+   <td><input value="Test" name="submit" type="submit"></td>
+   </tr>
+   </tbody></table>
+
+   </td></tr></tbody></table>
+
+</td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+  <table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+    <tbody><tr><td height="1"></td></tr>
+    <tr><td width="1"></td><td>
+
+    <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+      <tbody><tr><td>
+      <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+      <b>Backup a file:&nbsp;</b><input name="backupfilename" 
+type="file">
+      &nbsp;&nbsp;&nbsp;<input value="Backup" name="submit" 
+type="submit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input value="See Backups" name="submit" type="submit">
+      </font></td></tr>
+    </tbody></table>
+
+    </td><td width="1"></td></tr>
+    <tr><td height="1"></td><td></td></tr>
+  </tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+</tbody></table>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> The following solution files are saved for grading:<br>
+<table cellspacing="3">
+<tbody><tr><th>Name</th><th>Size</th><th>When</th><th>Age</th></tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=meetplace.p">meetplace.p</a></td>
+<td align="right">1003</td>
+<td align="center">22h05:51</td>
+<td align="center">676h12:01</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=packdel.p">packdel.p</a></td>
+<td align="right">3206</td>
+<td align="center">23h47:32</td>
+<td align="center">674h30:20</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;seesaved=rotsym.p">rotsym.p</a></td>
+<td align="right">843</td>
+<td align="center"> 0h08:00</td>
+<td align="center">674h09:52</td>
+</tr>
+</tbody></table>
+</font><hr>
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a href="http://ace.delos.com/ioiedit?a=89Are9bjPrE">Edit your 
+database record</a>&nbsp;|&nbsp;
+
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;logout=1"> 
+Logout </a>
+<!--<a href="https://ace.delos.com/rules.html" target="_blank"> Rules </a>-->
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?init=1&amp;a=89Are9bjPrE">Main 
+contest index</a>
+</font></center>
+<!--&nbsp;|&nbsp;-->
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a 
+href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;showsubmit">See 
+submitted solutions</a>
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?a=89Are9bjPrE&amp;suggestionbox">Send
+ message
+to operations staff</a>
+&nbsp;|&nbsp;
+Phone: +1 719-321-7333
+<br>
+Director is not online<br>
+This page was generated at 9:17:52 GMT.
+</font></center>
+</form></body></html>

@@ -1,0 +1,99 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Your Ride Is Here</title>
+</head><body background="ride_files/bg3.jpg">
+<img src="ride_files/cow1.jpg" width="742" height="118">
+
+<center>
+<h1>Your Ride Is Here</h1>
+</center>
+
+<p> It is a well-known fact that behind every good comet is a UFO. These
+UFOs often come to collect loyal supporters from here on Earth.
+Unfortunately, they only have room to pick up one group of followers on
+each trip. They do, however, let the groups know ahead of time which
+will be picked up for each comet by a clever scheme: they pick a name
+for the comet which, along with the name of the group, can be used to
+determine if it is a particular group's turn to go (who do you think
+names the comets?). The details of the matching scheme are given below;
+your job is to write a program which takes the names of a group and a
+comet and then determines whether the group should go with the UFO behind
+that comet.
+
+</p><p> Both the name of the group and the name of the comet are converted into
+a number in the following manner: the final number is just the product of
+all the letters in the name, where "A" is 1 and "Z" is
+26. For instance, the group "USACO" would be 21 * 19 * 1 * 3 *
+15 = 17955. If the group's number mod 47 is the same as the comet's number
+mod 47, then you need to tell the group to get ready! (Remember that
+"a mod b" is the remainder left over after dividing a by b; 34
+mod 10 is 4.)
+
+</p><p> Write a program which reads in the name of the comet and the name of
+the group and figures out whether according to the above scheme the names
+are a match, printing "GO" if they match and "STAY" if
+not. The names of the groups and the comets will be a string of capital
+letters with no spaces or punctuation, up to 6 characters long.
+
+
+</p><p>
+Examples:
+</p><p>
+<table border="1">
+<tbody><tr> <td align="center"> Input </td> <td align="center"> Output </td> </tr>
+<tr>
+<td>
+<pre>COMETQ
+HVNGAT
+</pre> </td> <td align="center" valign="Center"><tt>GO</tt> </td> </tr>
+<tr><td><pre>ABSTAR
+USACO </pre> </td> <td align="center" valign="Center"><tt> STAY </tt> </td> </tr>
+</tbody></table>
+
+</p><h3>PROGRAM NAME: ride</h3>
+This means that you fill in your header with:<br>
+<tt>PROG: ride</tt>
+
+
+<h3>INPUT FORMAT</h3>
+
+<table>
+<tbody><tr> <td> Line 1: </td> <td> An upper case  character string of length 1..6 that is the name of the comet.  </td>
+</tr><tr> <td> Line 2: </td> <td> An upper case character string of length 1..6 that is the name of the group.  </td>
+</tr></tbody></table>
+
+<p><b>NOTE</b>: The input file has a newline at the end of each line
+but does not have a "return".  Sometimes, programmers code for
+the Windows paradigm of "return" followed by "newline"; don't do
+that!  Use simple input routines like "readln" (for Pascal) and,
+for C/C++,  "fscanf" and "fid&gt;&gt;string".
+
+</p><h3>SAMPLE INPUT (file ride.in) </h3>
+
+<pre>COMETQ
+HVNGAT
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing either the word "GO" or the word "STAY".
+
+<h3>SAMPLE OUTPUT (file ride.out)</h3>
+
+<pre>GO
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="ride" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,105 @@
+
+<!-- saved from url=(0061)http://competition.binus.ac.id/contest/team/problem.php?id=22 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>INC 2016 - B. Compact Bag</title>
+
+<style>
+body, p, li, td {
+	font-family: "Arial";
+	font-size: 12pt;
+	line-height: 1.5;
+}
+li {
+	padding-bottom: 10px;
+}
+.norm{
+	font-family: "Cambria Math";
+	font-size: 13pt;
+}
+.block{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;	
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2016</h3>
+<h2>Problem B</h2>
+<h1>Compact Bag</h1>
+Time Limit: 1 second
+</center>
+<br>
+
+<p>In mathematics, a <i>bag</i> (or multiset) refers to a collection of objects/elements. This concept is similar to <i>set</i>, but it allows multiple instances of the same object. For example, {2, 4, 4} and {2, 2, 4} are two different bags even though they are the same set of {2, 4}.</p>
+
+<p>Similar to subset, <i>subbag</i> is a partial bag where each element of it is taken from a bag. For example, follows are all different subbags of a bag {2, 4, 4}:
+</p><ul>
+<li>{ } – empty bag (&#8709;)</li>
+<li>{2}</li>
+<li>{4}</li>
+<li>{2, 4}</li>
+<li>{4, 4}</li>
+<li>{2, 4, 4}</li>
+</ul>
+<p></p>
+
+<p>Likewise, the size of a bag or subbag is the number of objects in the bag/subbag.</p>
+
+<p>Given a bag B of N elements and a threshold integer K, your task is to determine the size of the largest-size subbag of B where the difference between any two elements in that subbag is no more than K.</p>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (T &#8804; 100) denoting the number of cases. Each case begins with two integers: N and K (1 &#8804; N &#8804; 1,000; 0 &#8804; K &#8804; 2,000,000,000) denoting the size of the given bag and the threshold integer as explained in the problem statement, respectively. The next line contains N integers B<sub>i</sub> (-1,000,000,000 &#8804; B<sub>i</sub> &#8804; 1,000,000,000) representing the elements in the bag.</p>
+
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number, starts from 1, and <font face="Courier New">Y</font> is the output for that particular case.</p>
+
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td align="center">
+<table border="0" cellspacing="1" cellpadding="4" width="700">
+<tbody><tr><th align="left" width="*" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF">
+<pre>4
+3 1
+2 4 4
+3 2
+2 4 4
+7 3
+19 17 21 21 -10 17 18
+9 10
+20 100 100 20 20 103 20 105 100
+</pre>
+</td><td bgcolor="#FFFFFF">
+<pre>Case #1: 2
+Case #2: 3
+Case #3: 4
+Case #4: 5
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+<br><br>
+<p><i>Explanation for 1<sup>st</sup> sample case</i></p>
+<p>The largest subbag is {4, 4} of size 2. We cannot have {2, 4, 4} as the answer because the difference between 2 and 4 is 2, which is larger than 1.</p>
+<br>
+<p><i>Explanation for 2<sup>nd</sup> sample case</i></p>
+<p>The largest subbag is {2, 4, 4} of size 3.</p>
+<br>
+<p><i>Explanation for 3<sup>rd</sup> sample case</i></p>
+<p>The largest subbag is {19, 17, 17, 18} of size 4.</p>
+<br>
+<p><i>Explanation for 4<sup>th</sup> sample case</i></p>
+<p>The largest subbag is {100, 100, 103, 105, 100} of size 5. The largest difference between any two elements in this subbag is 5 (100 and 105), and it's no more than 10.</p>
+<br>
+
+
+<br><br>
+</com:tcontent><script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>

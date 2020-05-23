@@ -1,0 +1,419 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Flood Fill
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Flood%20Fill_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Flood Fill
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problem: Connected Fields</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Farmer John's fields are broken into fields, with paths between
+some of them. Unfortunately, some fields are not reachable from
+other fields via the paths.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Define a <i>superfield</i> is a collection of fields that are
+all reachable from each other. Calculate the number of superfields.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The Abstraction</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given: a undirected graph
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The <i>component</i> of a graph is a maximal-sized (though not
+necessarily maximum) subgraph which is connected.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Calculate the component of the graph.
+
+<br><img src="Flood%20Fill_files/flood1.gif"><br>
+
+This graph has three components: {1,4,8}, {2,5,6,7,9}, and {3}.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The Algorithm: Flood Fill</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Flood fill can be performed three basic ways: depth-first,
+breadth-first, and breadth-first scanning. The basic idea is to
+find some node which has not been assigned to a component and to
+calculate the component which contains. The question is how to
+calculate the component.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> In the depth-first formulation, the algorithm looks at each
+step through all of the neighbors of the current node, and, for
+those that have not been assigned to a component yet, assigns them
+to this component and recurses on them.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> In the breadth-first formulation, instead of recursing on the
+newly assigned nodes, they are added to a queue.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> In the breadth-first scanning formulation, every node has two
+values: component and visited. When calculating the component, the
+algorithm goes through all of the nodes that have been assigned to
+that component but not visited yet, and assigns their neighbors to
+the current component.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The depth-first formulation is the easiest to code and debug,
+but can require a stack as big as the original graph. For explicit
+graphs, this is not so bad, but for implicit graphs, such as the
+problem presented has, the numbers of nodes can be very large.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The breadth-formulation does a little better, as the queue is
+much more efficient than the run-time stack is, but can still run
+into the same problem. Both the depth-first and breadth-first
+formulations run in N + M time, where N is the number of vertices
+and M is the number of edges.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The breadth-first scanning formulation, however, requires very
+little extra space. In fact, being a little tricky, it requires no
+extra space. However, it is slower, requiring up to N*N + M time,
+where N is the number of vertices in the graph.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Pseudocode for Breadth-First Scanning</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This code uses a trick to not use extra space, marking nodes to
+be visited as in component -2 and actually assigning them to the
+current component when they are actually visited.
+
+<br>
+<tt><font size="2"> <br>
+#&nbsp;component(i)&nbsp;denotes&nbsp;the<br>
+#&nbsp;component&nbsp;that&nbsp;node&nbsp;i&nbsp;is&nbsp;in<br>
+&nbsp;1&nbsp;function&nbsp;flood_fill(new_component)&nbsp;<br><br>
+&nbsp;2&nbsp;do<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;num_visited&nbsp;=&nbsp;0<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;for&nbsp;all&nbsp;nodes&nbsp;i<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;component(i)&nbsp;=&nbsp;-2<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_visited&nbsp;=&nbsp;num_visited&nbsp;+&nbsp;1<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component(i)&nbsp;=&nbsp;new_component<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;all&nbsp;neighbors&nbsp;j&nbsp;of&nbsp;node&nbsp;i<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;component(j)&nbsp;=&nbsp;nil<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component(j)&nbsp;=&nbsp;-2<br>
+11&nbsp;until&nbsp;num_visited&nbsp;=&nbsp;0&nbsp;<br><br>
+12&nbsp;function&nbsp;find_components&nbsp;<br><br>
+13&nbsp;&nbsp;num_components&nbsp;=&nbsp;0<br>
+14&nbsp;&nbsp;for&nbsp;all&nbsp;nodes&nbsp;i<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;component(node&nbsp;i)&nbsp;=&nbsp;nil<br>
+16&nbsp;&nbsp;for&nbsp;all&nbsp;nodes&nbsp;i<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;component(node&nbsp;i)&nbsp;is&nbsp;nil<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_components&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_components&nbsp;+&nbsp;1<br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component(i)&nbsp;=&nbsp;-2<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flood_fill(component<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_components)<br>
+</font></tt>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Running time of this algorithm is O(<i>N <sup> 2</sup></i>),
+where <i>N</i> is the numbers of nodes. Every edge is traversed
+twice (once for each end-point), and each node is only marked once.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Execution Example</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Consider the graph from above.
+
+<br><img src="Flood%20Fill_files/flood1.gif"><br>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The algorithm starts with all nodes assigned to no component.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Going through the nodes in order first node not assigned to
+any component yet is vertex 1. Start a new component (component 1)
+for that node, and set the component of node 1 to -2 (any nodes
+not shown are unassigned).
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center"><b>1</b></td>  <td align="center"><b>-2</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Now, in the 
+<tt>flood_fill</tt> code, the first time through the
+
+<tt>do</tt> loop, it finds the node 1 is assigned to component -2.
+Thus, it reassigns it to component 1, signifying that it has
+been visited, and then assigns its neighbors (node 4) to component -2.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center"><b>1</b></td>  <td align="center"><b>1</b></td> </tr>
+<tr> <td align="center"><b>4</b></td>  <td align="center"><b>-2</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">As the loop through all the nodes continues, it finds that node 4
+is also assigned to component -2, and processes it appropriately
+as well.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>4</b></td>  <td align="center"><b>1</b></td> </tr>
+<tr> <td align="center"><b>8</b></td>  <td align="center"><b>-2</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Node 8 is the next to be processed.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>8</b></td>  <td align="center"><b>1</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Now, the 
+<tt>for</tt> loop continues, and finds no more nodes
+that have not been assigned yet. Since the 
+<tt>until</tt> clause is
+not satisfied (
+<tt>num_visited</tt> = 3), it tries again. This time,
+no nodes are found, so the function exits and component 1 is complete.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The search for unassigned nodes continues, finding node 2. A new
+component (component 2) is allocated, node 2 is marked as in component
+-2, and 
+<tt>flood_fill</tt> is called.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>2</b></td>  <td align="center"><b>-2</b></td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Node 2 is found as marked in component -2, and is processed.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>7</b></td>  <td align="center"><b>-2</b></td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>9</b></td>  <td align="center"><b>-2</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Next, node 7 is processed.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>5</b></td>  <td align="center"><b>-2</b></td> </tr>
+<tr> <td align="center"><b>7</b></td>  <td align="center"><b>2</b></td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">9</td>  <td align="center">-2</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Then node 9 is processed.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">5</td>  <td align="center">-2</td> </tr>
+<tr> <td align="center">7</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center"><b>9</b></td>  <td align="center"><b>2</b></td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The terminating condition does not hold (
+<tt>num_visited</tt> =
+3), so the search through for nodes assigned to component -2 starts
+again.  Node 5 is the first one found.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">5</td>  <td align="center">2</td> </tr>
+<tr> <td align="center"><b>6</b></td>  <td align="center"><b>-2</b></td> </tr>
+<tr> <td align="center">7</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">9</td>  <td align="center">2</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Node 6 is the next node found to be in component -2.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">5</td>  <td align="center">2</td> </tr>
+<tr> <td align="center"><b>6</b></td>  <td align="center"><b>2</b></td> </tr>
+<tr> <td align="center">7</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">9</td>  <td align="center">2</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> No more nodes are found assigned to component -2, but the terminating
+condition does not hold, so one more pass through the nodes is performed,
+finding no nodes assigned to component -2.  Thus, the search for
+unassigned nodes continue from node 2, finding node 3 unassigned.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center"><b>3</b></td>  <td align="center"><b>-2</b></td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">5</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">6</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">7</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">9</td>  <td align="center">2</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Node 3 is processed.
+
+</font></p><center>
+<table border="1">
+<tbody><tr> <td align="center">Node</td> <td align="center">Component</td> </tr>
+<tr> <td align="center">1</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">2</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">3</td>  <td align="center">3</td> </tr>
+<tr> <td align="center">4</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">5</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">6</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">7</td>  <td align="center">2</td> </tr>
+<tr> <td align="center">8</td>  <td align="center">1</td> </tr>
+<tr> <td align="center">9</td>  <td align="center">2</td> </tr>
+</tbody></table>
+</center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> From here, the algorithm eventually terminates, as there are no more
+nodes assigned to component -2 and no unassigned nodes.  The three
+components of the graph have been determined, along with the component
+to which each node belongs.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Problem Cues</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Generally, these types of problem are fairly clear. If it asks
+for sets of "connected" things, it's probably asking for components,
+in which case flood fill works very well. Often, this is a step in
+solving the complete problem.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Extensions</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The notion of ``components'' becomes muddied when you go to
+directed graphs.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> However, the same flooding idea can be used to determine the
+points which are reachable from any given point even in a directed
+graph. At each recursive step, if the point isn't marked already,
+mark the point as reachable and recurse on all of its neighbors.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Note that to determine which points can reach a given point in
+a directed graph can be solved the same, by looking at every arc
+backwards.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problems</font></h4>
+
+<h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Company Ownership [abridged, IOI 93]</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given: A weighted directed graph, with weights between 0 and 100.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Some vertex A ``owns'' another vertex B if:
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> A = B </li>
+
+<li> There is an arc from A to B with weight more than 50.</li>
+
+<li> There exists some set of vertices <i>C <sub> 1</sub></i>
+through <i>C <sub> k</sub></i> such that A owns <i>C <sub> 1</sub></i>
+through <i>C <sub> k</sub></i>, and each vertex has an arc of weight
+<i>x <sub> 1</sub></i> through <i>x <sub> k</sub></i> to vertex B,
+and <i>x <sub> 1</sub></i> + <i>x <sub> 2</sub></i> + ... + <i>x
+<sub> k</sub></i> &gt; 50.
+
+</li></font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Find all (a,b) pairs such that a owns b.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Analysis: This can be solved via an adaptation of the calculating
+the vertices reachable from a vertex in a directed graph.  To
+calculate which vertices vertex A owns, keep track of the ``ownership
+percentage'' for each node. Initialize them all to zero.  Now, at
+each recursive step, mark the node as owned by vertex A and add
+the weight of all outgoing arcs to the ``ownership percentages.''
+For all percentages that go above 50, recurse into those vertices.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Street Race [IOI 95]</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given: a directed graph, and a start point and an end point.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Find all points p that any path from the start point to the
+end must travel through p.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Analysis: The easiest algorithm is to remove each point in
+turn, and check to see if the end point is reachable from the start
+point.  This runs in O(N (M + N)) time. Since the original problem
+stated that M &lt;= 100, and N &lt;= 50, this will run in time easily.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Cow Tours [1999 USACO National Championship, abridged]</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The diameter of a connected graph is defined as the maximum
+distance between any two nodes of the graph, where the distance
+between two nodes is defined as the length of the shortest path.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given a set of points in the plane, and the connections between
+those points, find the two points which are currently not in the
+same component, such that the diameter of the resulting component
+is minimized.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Analysis: Find the components of the original graph, using the
+method described above. Then, for each pair of points not in the
+same component, try placing a connection between them. Find the pair that
+minimizes the diameter.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Connected Fields</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Farmer John contracted out the building of a new barn.
+Unfortunately, the builder mixed up the plans of Farmer John's barn
+with another set of plans. Farmer John's plans called for a barn
+that only had one room, but the building he got might have many
+rooms.  Given a grid of the layout of the barn, tell Farmer John
+how many rooms it has.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Analysis: The graph here is on the non-wall grid locations,
+with edge between adjacent non-wall locations, although the graph
+should be stored as the grid, and not transformed into some other
+form, as the grid is so compact and easy to work with.
+
+</font></p></div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

@@ -1,0 +1,78 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 26: Electric Fences</title> </head><body 
+background="fence3_files/bg3.jpg">
+<img src="fence3_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Electric Fences</font></b><br>
+<b>Kolstad &amp; Schrijvers</b>
+</center>
+
+<p> Farmer John has decided to construct electric fences.  He has
+fenced his fields into a number of bizarre shapes and now must find
+the optimal place to locate the electrical supply to each of the
+fences.
+
+</p><p> A single wire must run from some point on each and every fence
+to the source of electricity.  Wires can run through other fences
+or across other wires.  Wires can run at any angle.  Wires can run
+from any point on a fence (i.e., the ends or anywhere in between)
+to the electrical supply.
+
+</p><p> Given the locations of all F (1 &lt;= F &lt;= 150) fences 
+(fences
+are always parallel to a grid axis and run from one integer gridpoint
+to another, 0 &lt;= X,Y &lt;= 100), your program must calculate
+both the total length of wire required to connect every fence to
+the central source of electricity and also the optimal location for
+the electrical source.
+
+</p><p> The optimal location for the electrical source might be anywhere
+in Farmer John's field, not necessarily on a grid point.
+
+</p><h3>PROGRAM NAME: fence3</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p> The first line contains F, the number of fences.<br> F subsequent
+lines each contain two X,Y pairs  each of which denotes the endpoints
+of a fence.
+
+</p><h3>SAMPLE INPUT (file fence3.in)</h3>
+<pre>3
+0 0 0 1
+2 0 2 1
+0 3 2 3
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p> On a single line, print three space-separated floating point
+numbers, each with a single decimal place.  Presume that your
+computer's output library will round the number correctly.
+
+</p><p> The three numbers are:
+</p><ul>
+<li> the X value of the optimal location for the electricity,
+</li><li> the Y value for the optimal location for the electricity, and
+</li><li> the total (minimum) length of the wire required.
+</li></ul>
+
+<h3>SAMPLE OUTPUT (file fence3.out)</h3>
+<pre>1.0 1.6 3.7
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="fence3" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

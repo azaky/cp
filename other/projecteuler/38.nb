@@ -1,0 +1,166 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      5488,        157]
+NotebookOptionsPosition[      5067,        137]
+NotebookOutlinePosition[      5411,        152]
+CellTagsIndexPosition[      5368,        149]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 38", "Title",
+ CellChangeTimes->{{3.536307860091487*^9, 3.5363078717555914`*^9}, {
+  3.536311497177764*^9, 3.536311497232767*^9}}],
+
+Cell["\<\
+Take the number 192 and multiply it by each of 1, 2, and 3:
+
+192 \[Times] 1 = 192
+192 \[Times] 2 = 384
+192 \[Times] 3 = 576
+By concatenating each product we get the 1 to 9 pandigital, 192384576. We \
+will call 192384576 the concatenated product of 192 and (1,2,3)
+
+The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, \
+and 5, giving the pandigital, 918273645, which is the concatenated product of \
+9 and (1,2,3,4,5).
+
+What is the largest 1 to 9 pandigital 9-digit number that can be formed as \
+the concatenated product of an integer with (1,2, ... , n) where n > 1?\
+\>", "Text",
+ CellChangeTimes->{
+  3.536307883326804*^9, {3.536311499721703*^9, 3.5363115398727455`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ans", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"n", "=", "2"}], ",", 
+   RowBox[{"n", "\[LessEqual]", "9"}], ",", 
+   RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"k", "=", 
+      SuperscriptBox["10", 
+       RowBox[{
+        RowBox[{"\[LeftFloor]", 
+         FractionBox["9", "n"], "\[RightFloor]"}], "-", "1"}]]}], ",", 
+     RowBox[{"k", "\[LessEqual]", 
+      RowBox[{
+       SuperscriptBox["10", 
+        RowBox[{"\[LeftCeiling]", 
+         FractionBox["9", "n"], "\[RightCeiling]"}]], "-", "1"}]}], ",", 
+     RowBox[{"k", "++"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"list", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", "=", "1"}], ",", 
+        RowBox[{"i", "\[LessEqual]", "n"}], ",", 
+        RowBox[{"i", "++"}], ",", 
+        RowBox[{"list", "=", 
+         RowBox[{"Join", "[", 
+          RowBox[{"list", ",", 
+           RowBox[{"IntegerDigits", "[", 
+            RowBox[{"k", "*", "i"}], "]"}]}], "]"}]}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Length", "[", "list", "]"}], "\[NotEqual]", "9"}], "||", 
+         RowBox[{"MemberQ", "[", 
+          RowBox[{"list", ",", "0"}], "]"}]}], ",", 
+        RowBox[{"Goto", "[", "next", "]"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", "=", "1"}], ",", 
+        RowBox[{"i", "\[LessEqual]", "9"}], ",", 
+        RowBox[{"i", "++"}], ",", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"MemberQ", "[", 
+            RowBox[{"list", ",", "i"}], "]"}]}], ",", 
+          RowBox[{"Goto", "[", "next", "]"}]}], "]"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ans", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"ans", ",", 
+         RowBox[{"Sum", "[", 
+          RowBox[{
+           RowBox[{
+            SuperscriptBox["10", 
+             RowBox[{"9", "-", "i"}]], "\[Times]", 
+            RowBox[{"list", "[", 
+             RowBox[{"[", "i", "]"}], "]"}]}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", "9"}], "}"}]}], "]"}]}], "]"}]}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"Label", "[", "next", "]"}], ";"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "ans", "]"}]}], "Input",
+ CellChangeTimes->{{3.5363115693527207`*^9, 3.5363115932493987`*^9}, {
+  3.5363116326617317`*^9, 3.536311691117469*^9}, {3.5363117368557024`*^9, 
+  3.536311785683071*^9}, {3.5363118258178644`*^9, 3.5363118357747564`*^9}, {
+  3.5363119047473307`*^9, 3.5363119699717674`*^9}, {3.5363120035104866`*^9, 
+  3.53631207885957*^9}, {3.536312171259191*^9, 3.5363122683780756`*^9}, {
+  3.536312671060556*^9, 3.536312718638545*^9}, {3.536312758150365*^9, 
+  3.5363127926080437`*^9}, {3.536312823400511*^9, 3.5363128479578457`*^9}, {
+  3.5363128916141896`*^9, 3.536312913216566*^9}, {3.536312956589916*^9, 
+  3.5363129878533535`*^9}, {3.536398918941618*^9, 3.5363989205796213`*^9}}],
+
+Cell[BoxData["932718654"], "Print",
+ CellChangeTimes->{
+  3.5363127211476817`*^9, {3.536312763183628*^9, 3.5363127931230707`*^9}, {
+   3.5363128487068872`*^9, 3.536312913676567*^9}, {3.536312965378747*^9, 
+   3.536312990243489*^9}, 3.5363236394662457`*^9, 3.5363989618104935`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{707, 505},
+WindowMargins->{{192, Automatic}, {38, Automatic}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 157, 2, 83, "Title"],
+Cell[739, 26, 707, 17, 245, "Text"],
+Cell[CellGroupData[{
+Cell[1471, 47, 3285, 80, 290, "Input"],
+Cell[4759, 129, 280, 4, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

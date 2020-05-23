@@ -1,0 +1,123 @@
+
+<!-- saved from url=(0061)http://competition.binus.ac.id/contest/team/problem.php?id=21 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>INC 2016 - A. String Matching</title>
+
+<style>
+body, p, li, td {
+	font-family: "Arial";
+	font-size: 12pt;
+	line-height: 1.5;
+}
+li {
+	padding-bottom: 10px;
+}
+.norm{
+	font-family: "Cambria Math";
+	font-size: 13pt;
+}
+.block{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;	
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2016</h3>
+<h2>Problem A</h2>
+<h1>String Matching</h1>
+Time Limit: 1 second
+</center>
+<br>
+
+<p>String matching is an important problem where we want to find whether a string (or sometimes called <i>pattern</i>) can be found within a larger string. In other words, whether a pattern P exists as a substring of string S. Naively, we can solve this problem by iterating through all possible substrings of S in O(|S|<sup>2</sup>) time, but usually the length of S and P are quite large such that
+a quadratic time-complexity solution like this is not fast enough. This problem has been studied extensively (e.g., in computational biology) and many algorithms have been proposed to solve this problem. You may have heard (or better, familiar with) some of these well-known algorithms: Knuth-Morris-Prat (KMP) algorithm, Rabin-Karp algorithm, and	 Aho-Corasick algorithm. These algorithms can solve the string matching problem in linear time-complexity.</p>
+
+<p>Red is the founder of a new start-up game developer company. When Red developed his first game with his team, Red found the exact problem which he has learnt back in his undergraduate study, the string matching problem. However, being an ignorant person, Red did not pay much attention on this subject and managed to barely pass the exam. Red delegated this problem to one of his new programmer which also is a fresh-graduate, with the hope that this new guy still remember the linear time-complexity solution for this problem.</p>
+
+<p>Unfortunately, instead of implementing a (correct) string matching algorithm, this new guy implemented a wrong one:
+</p><ol>
+<li>Let P be the pattern and S be the string.</li>
+<li>If |P| &gt; |S|, then output "NO" and terminate.</li>
+<li>If P is a prefix of S, then output "YES" and terminate; otherwise</li>
+<li>Let x be the smallest index where P<sub>x</sub> &#8800; S<sub>x</sub>,</li>
+<li>Update S as suffix of S starting from index x + 1, then back to step 2.</li>
+</ol>
+<p></p>
+
+<p>Knowing that his solution is linear time-complexity, this new guy is confident that this solution works. However, of course you, being a competitive programmer, realize that this solution is simply wrong.</p>
+
+<p>For example, let P = "ABABC" and S = "ABABABCABA".</p>
+
+<style>
+font.wrong { color: red; font-weight: bold; }
+font.okay  { font-weight: bold; }
+font.skip  { color: grey; }
+</style>
+
+<p>First round:</p>
+<pre>  S: ABABABCABA
+  P: <font class="okay">ABAB</font><font class="wrong">C</font>
+</pre>
+
+<p>P is not a prefix of S and P<sub>4</sub> &#8800; S<sub>4</sub> (x = 4 in 0-based index), so update S as suffix of S starting from index 4 + 1 (= 5): <font class="skip">ABABA</font>BCABA &#8594; BCABA.</p>
+
+<p>Second round:</p>
+<pre>  S: BCABA
+  P: <font class="wrong">A</font>BABC
+</pre>
+
+<p>P is not a prefix of S and P<sub>0</sub> &#8800; S<sub>0</sub> (x = 0 in 0-based index), so update S as suffix of S starting from index 0 + 1 (= 1): <font class="skip">B</font>CABA &#8594; CABA.</p>
+
+<p>Third round:</p>
+<pre>  S: CABA
+  P: ABABC
+</pre>
+
+<p>|S| is lower than |P| (4 &lt; 5), so output "NO" and terminate.</p>
+
+<p>Therefore, this algorithm will produce "NO" output for P = ABABC and S = ABABABCABA, even though we can find P in S: AB(ABABC)ABA.</p>
+
+<p>You want to analyze the damages caused by this algorithm, so, as the first step, you should reproduce this algorithm. Given a pattern P and a string S, output whether P exists in S according to the aforementioned algorithm.</p>
+
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (T &#8804; 100) denoting the number of cases. Each case contains two string P and S separated by a single space denoting the pattern and the string, respectively. P and S consist of uppercase alphabetic characters only (A-Z) and have length between 1 and 20,000 characters.</p>
+
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number, starts from 1, and <font face="Courier New">Y</font> is the output of the algorithm described in the problem statement (YES or NO).</p>
+
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td align="center">
+<table border="0" cellspacing="1" cellpadding="4" width="700">
+<tbody><tr><th align="left" width="*" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF">
+<pre>5
+ABABC ABABABCABA
+ABC ABABCAB
+ICPC ACMICPCJAKARTA
+BABAT BABABABABAT
+INC INC
+</pre>
+</td><td bgcolor="#FFFFFF">
+<pre>Case #1: NO
+Case #2: NO
+Case #3: YES
+Case #4: YES
+Case #5: YES
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+
+<br><br>
+</com:tcontent><script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>

@@ -1,0 +1,179 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6094,        170]
+NotebookOptionsPosition[      5646,        149]
+NotebookOutlinePosition[      6016,        165]
+CellTagsIndexPosition[      5973,        162]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 23", "Title",
+ CellChangeTimes->{{3.5341350494142647`*^9, 3.5341350570876427`*^9}}],
+
+Cell["\<\
+A perfect number is a number for which the sum of its proper divisors is \
+exactly equal to the number. For example, the sum of the proper divisors of \
+28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect number.
+
+A number n is called deficient if the sum of its proper divisors is less than \
+n and it is called abundant if this sum exceeds n.
+
+As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest \
+number that can be written as the sum of two abundant numbers is 24. By \
+mathematical analysis, it can be shown that all integers greater than 28123 \
+can be written as the sum of two abundant numbers. However, this upper limit \
+cannot be reduced any further by analysis even though it is known that the \
+greatest number that cannot be expressed as the sum of two abundant numbers \
+is less than this limit.
+
+Find the sum of all the positive integers which cannot be written as the sum \
+of two abundant numbers.\
+\>", "Text",
+ CellChangeTimes->{{3.5341349777990475`*^9, 3.534135042640067*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"limit", " ", "=", " ", "28123"}], ";", " ", 
+   RowBox[{"ans", " ", "=", " ", "0"}], ";", " ", 
+   RowBox[{"k", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Generating", " ", "all", " ", "abundant", " ", "numbers", " ", "within", 
+    " ", "the", " ", "limit"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"For", " ", "[", 
+    RowBox[{
+     RowBox[{"i", "=", "1"}], ",", " ", 
+     RowBox[{"i", "\[LessEqual]", "limit"}], ",", " ", 
+     RowBox[{"i", "++"}], ",", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"DivisorSigma", "[", 
+         RowBox[{"1", ",", "i"}], "]"}], ">", 
+        RowBox[{"2", "*", "i"}]}], ",", 
+       RowBox[{
+        RowBox[{"k", "++"}], ";", 
+        RowBox[{
+         RowBox[{"abundant", "[", "k", "]"}], "=", "i"}]}]}], "]"}]}], "]"}], 
+   ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Calculating", " ", "answer"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", " ", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", " ", 
+    RowBox[{"i", "\[LessEqual]", 
+     RowBox[{"2", "*", "limit"}]}], ",", " ", 
+    RowBox[{"i", "++"}], ",", 
+    RowBox[{
+     RowBox[{"can", "[", "i", "]"}], "=", "False"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", " ", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", " ", 
+    RowBox[{
+     RowBox[{"2", "*", 
+      RowBox[{"abundant", "[", "i", "]"}]}], "\[LessEqual]", "limit"}], ",", 
+    " ", 
+    RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", " ", "[", 
+     RowBox[{
+      RowBox[{"j", "=", "i"}], ",", " ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"abundant", "[", "i", "]"}], "+", 
+        RowBox[{"abundant", "[", "j", "]"}]}], "\[LessEqual]", "limit"}], ",",
+       " ", 
+      RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"can", "[", 
+        RowBox[{
+         RowBox[{"abundant", "[", "i", "]"}], "+", 
+         RowBox[{"abundant", "[", "j", "]"}]}], "]"}], "=", "True"}]}], 
+     "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", " ", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", " ", 
+    RowBox[{"i", "\[LessEqual]", "limit"}], ",", 
+    RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"If", " ", "[", 
+     RowBox[{
+      RowBox[{"!", 
+       RowBox[{"can", "[", "i", "]"}]}], ",", 
+      RowBox[{"ans", "+=", "i"}]}], "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "ans", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.534135090098277*^9, 3.5341353167356215`*^9}, {
+   3.5341353861594343`*^9, 3.5341358040468836`*^9}, {3.534135846896984*^9, 
+   3.5341358803410397`*^9}, {3.5341369446860924`*^9, 3.534136992464864*^9}, {
+   3.534137174071966*^9, 3.5341371871649427`*^9}, 3.5341374641285458`*^9, {
+   3.5341375283649087`*^9, 3.534137529913997*^9}, {3.534137627080946*^9, 
+   3.5341376988620515`*^9}, {3.53413778380191*^9, 3.5341378097383933`*^9}, {
+   3.5341378955456886`*^9, 3.5341378956704884`*^9}, {3.536323834593421*^9, 
+   3.5363238759113274`*^9}, {3.536323938922811*^9, 3.536324014618183*^9}, {
+   3.5363240992554846`*^9, 3.5363241738998356`*^9}, {3.536324326312026*^9, 
+   3.5363243424626837`*^9}, {3.536399436879783*^9, 3.5363995070331063`*^9}, {
+   3.5363995387791624`*^9, 3.5363995764064283`*^9}, {3.536399690412429*^9, 
+   3.536399704546054*^9}, {3.536399740706917*^9, 3.53639974228252*^9}}],
+
+Cell[BoxData["4179871"], "Print",
+ CellChangeTimes->{
+  3.5363244135199194`*^9, 3.5363244899260726`*^9, 3.5363993583495903`*^9, 
+   3.5363994484862037`*^9, {3.5363994916202793`*^9, 3.536399515285521*^9}, {
+   3.5363995873742476`*^9, 3.5363995984970675`*^9}, 3.536399737290511*^9, 
+   3.5363998114842415`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{24, Automatic}, {Automatic, 30}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 110, 1, 83, "Title"],
+Cell[692, 25, 1049, 19, 209, "Text"],
+Cell[CellGroupData[{
+Cell[1766, 48, 3541, 90, 232, "Input"],
+Cell[5310, 140, 308, 5, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

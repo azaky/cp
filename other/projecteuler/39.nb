@@ -1,0 +1,202 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6436,        193]
+NotebookOptionsPosition[      5843,        167]
+NotebookOutlinePosition[      6248,        184]
+CellTagsIndexPosition[      6205,        181]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 39", "Title",
+ CellChangeTimes->{{3.5341350494142647`*^9, 3.5341350570876427`*^9}, {
+  3.5363068912555747`*^9, 3.5363068912945766`*^9}}],
+
+Cell["\<\
+If p is the perimeter of a right angle triangle with integral length sides, \
+{a,b,c}, there are exactly three solutions for p = 120.
+
+{20,48,52}, {24,45,51}, {30,40,50}
+
+For which value of p \[LessEqual] 1000, is the number of solutions maximised?\
+\>", "Text",
+ CellChangeTimes->{{3.5341349777990475`*^9, 3.534135042640067*^9}, {
+  3.53630620763696*^9, 3.5363062452099915`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "0"}], ",", 
+    RowBox[{"i", "\[LessEqual]", "1000"}], ",", 
+    RowBox[{"i", "++"}], ",", 
+    RowBox[{
+     RowBox[{"perim", "[", "i", "]"}], "=", "0"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "3"}], ",", 
+    RowBox[{"i", "\[LessEqual]", "333"}], ",", 
+    RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j", "=", 
+       RowBox[{"i", "+", "1"}]}], ",", 
+      RowBox[{
+       RowBox[{"i", "+", "j"}], "\[LessEqual]", "666"}], ",", 
+      RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"k", "=", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox["i", "2"], "+", 
+          SuperscriptBox["j", "2"]}]]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"Element", "[", 
+          RowBox[{"k", ",", "Integers"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{"perim", "[", 
+           RowBox[{"i", "+", "j", "+", "k"}], "]"}], "++"}]}], "]"}]}]}], 
+     "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"max", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"i", "=", "0"}], ",", 
+   RowBox[{"i", "\[LessEqual]", "1000"}], ",", 
+   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"perim", "[", "i", "]"}], ">", 
+      RowBox[{"perim", "[", "max", "]"}]}], ",", 
+     RowBox[{"max", "=", "i"}]}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"max", ",", "\"\< \>\"", ",", 
+    RowBox[{"perim", "[", "max", "]"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5363063055503097`*^9, 3.536306446876607*^9}, {
+  3.536306479043084*^9, 3.536306528231477*^9}, {3.5363065588419294`*^9, 
+  3.536306675773884*^9}, {3.536306717818929*^9, 3.536306728580712*^9}, {
+  3.536306804788846*^9, 3.5363068401791296`*^9}, {3.5363088514034214`*^9, 
+  3.5363088562146883`*^9}, {3.536323564637807*^9, 3.5363236018557067`*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"840", "\[InvisibleSpace]", "\<\" \"\>", "\[InvisibleSpace]", "8"}],
+  SequenceForm[840, " ", 8],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.5363066040449686`*^9, 3.5363066175822926`*^9}, {
+   3.5363066494217243`*^9, 3.536306668310941*^9}, 3.536306739259093*^9, {
+   3.5363068092312813`*^9, 3.5363068438453245`*^9}, 3.536308859590865*^9, {
+   3.536323562318674*^9, 3.5363235708479548`*^9}, 3.5363236207413816`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"list", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "3"}], ",", 
+    RowBox[{"i", "\[LessEqual]", "250"}], ",", 
+    RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j", "=", 
+       RowBox[{"i", "+", "1"}]}], ",", 
+      RowBox[{
+       RowBox[{"i", "+", "j", "+", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox["i", "2"], "+", 
+          SuperscriptBox["j", "2"]}]]}], "\[LessEqual]", "1000"}], ",", 
+      RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         SqrtBox[
+          RowBox[{
+           SuperscriptBox["i", "2"], "+", 
+           SuperscriptBox["j", "2"]}]], "\[Element]", "Integers"}], ",", 
+        RowBox[{"list", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"list", ",", 
+           RowBox[{"i", "+", "j", "+", 
+            SqrtBox[
+             RowBox[{
+              SuperscriptBox["i", "2"], "+", 
+              SuperscriptBox["j", "2"]}]]}]}], "]"}]}]}], "]"}]}], "]"}]}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Commonest", "[", "list", "]"}]}], "Input",
+ CellChangeTimes->{{3.5363981137123556`*^9, 3.5363982093571234`*^9}, {
+  3.5363982417427807`*^9, 3.5363982436459837`*^9}, {3.5363982789030457`*^9, 
+  3.5363983431469593`*^9}, {3.53639838908904*^9, 3.536398490021217*^9}, {
+  3.5363985648857484`*^9, 3.536398597177805*^9}, {3.5363986759589434`*^9, 
+  3.5363987307057033`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", "840", "}"}]], "Output",
+ CellChangeTimes->{
+  3.536398215628335*^9, 3.5363982477175913`*^9, 3.5363982842226553`*^9, {
+   3.5363983195909176`*^9, 3.536398335721346*^9}, {3.536398397591055*^9, 
+   3.5363984224418983`*^9}, 3.536398453657553*^9, 3.536398496994429*^9, {
+   3.536398575634167*^9, 3.536398602076214*^9}, {3.5363986805765514`*^9, 
+   3.5363987347149105`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{144, Automatic}, {Automatic, 30}},
+Magnification->1.100000023841858,
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 163, 2, 90, "Title"],
+Cell[745, 26, 390, 9, 122, "Text"],
+Cell[CellGroupData[{
+Cell[1160, 39, 2168, 58, 226, "Input"],
+Cell[3331, 99, 467, 8, 24, "Print"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3835, 112, 1580, 42, 151, "Input"],
+Cell[5418, 156, 397, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

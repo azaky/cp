@@ -1,0 +1,87 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=TiRGviIoJfu&S=cowxor -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Cow XOR</title>
+</head>
+
+<body background="./cowxor_files/bg3.jpg">
+<img src="./cowxor_files/cow1.jpg" width="742" height="118">
+
+<center>
+<b><font size="6">Cow XOR</font></b><br>
+Adrian Vladu -- 2005</center>
+
+<p>Farmer John is stuck with another problem while feeding his cows.
+All of his N (1 &#8804; N &#8804; 100,000) cows (numbered 1..N) are
+lined up in front of the barn, sorted by their rank in their social
+hierarchy.  Cow #1 has the highest rank; cow #N has the least rank.
+Every cow had additionally been assigned a non-unique integer number
+in the range 0..(2<sup>21</sup> - 1).
+
+</p><p>Help FJ choose which cows will be fed first by selecting a
+sequence of consecutive cows in the line such that the bitwise "xor"
+between their assigned numbers has the maximum value.  If there are
+several such sequences, choose the sequence for which its last cow
+has the highest rank. If there still is a tie, choose the shortest
+sequence.
+
+</p><h3>TIME LIMIT: 0.5 sec</h3>
+
+<h3>PROGRAM NAME: cowxor</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<ul><li> Line 1: A single integer N
+</li><li> Lines 2..N+1: N integers ranging from 0 to 2<sup>21</sup> - 1, representing the cows' assigned 
+numbers.  Line j describes cow of social hierarchy j-1.
+</li></ul>
+
+<h3>SAMPLE INPUT (file cowxor.in)</h3>
+
+<pre>5
+1
+0
+5
+4
+2
+</pre>
+
+<h3>INPUT DETAILS:</h3>
+
+There are 5 cows. Cow #1 had been assigned with 1; cow #2 with 0; cow #3 
+with 5; cow #4 with 4; cow #5 with 2.
+
+<h3>OUTPUT FORMAT</h3>
+
+<ul><li> Line 1: Three space-separated integers, respectively: the maximum requested value, 
+the position where the sequence begins, the position where the sequence 
+ends.
+</li></ul>
+
+<h3>SAMPLE OUTPUT (file cowxor.out) </h3>
+
+<pre>6 4 5
+</pre>
+
+<h3>OUTPUT DETAILS:</h3>
+
+4 xor 2 = 6
+(001) xor (010) = (011)
+
+
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="TiRGviIoJfu">
+<input type="hidden" name="S" value="cowxor">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=TiRGviIoJfu"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+</body></html>

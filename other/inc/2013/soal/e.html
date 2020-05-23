@@ -1,0 +1,101 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - E</title>
+
+<style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem E</h2>
+<h1>XOR</h1>
+Time Limit: 2 seconds
+</center>
+<br>
+
+<p>XOR or Exclusive OR (often written with symbol &#8853;) is one of the basic
+ binary operator for computer. It takes two inputs and produces one 
+output, just like AND (symbol &amp;) and OR (symbol |). If two bits are 
+XORed, the results will be:</p>
+<pre>  A  B   A &#8853; B
+  0  0  -  0
+  0  1  -  1
+  1  0  -  1
+  1  1  -  0</pre>
+<p>In other word, if two bits have the same value then the output is 0, otherwise it's 1.</p>
+
+<p>For example, 25 &#8853; 12 = 21.</p>
+<pre>   25 = 1 1 0 0 1
+   12 = 0 1 1 0 0
+   -------------- &#8853;
+   21 = 1 0 1 0 1
+</pre>
+<p>The binary representation of 25 is 11001 and 12 is 1100. If we XOR 25 and 12, we will get 21 (10101).</p>
+
+<p>As a side note, both C/C++ and Java have this binary XOR operator and they used caret symbol (^), e.g., 25 ^ 12 .</p>
+
+<p>Binary operator XOR satisfies both the property of being commutative,
+ A &#8853; B = B &#8853; A, and the property of being associative, A &#8853; (B &#8853; C) = (A &#8853;
+ B) &#8853; C. Therefore, if we have a list of integers and XOR all of them 
+(in any arbitrary order), we will get a same single integer. This single
+ integer is often referred as the XOR value. For example, let S = {15, 
+20, 4, 7}, then the XOR value of S is 15 &#8853; 20 &#8853; 4 &#8853; 7 = 24. You can XOR S
+ in any order you like and you will always get the same value, which is 
+24.</p>
+
+<p>In this problem, you are given a list of N non-negative integers S; your task is to determine how many <strong>continuous subsequence</strong> of the list which XOR value is equal to zero.</p>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with one integer N (1 &#8804; N &#8804; 20,000) in
+ a line. The next line contains N integers A<sub>i</sub> (0 &#8804; A<sub>i</sub> &#8804; 2<sup>31</sup>-1) in a line each separated by a single space. These numbers represent the given list S.</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1, and <font face="Courier New">Y</font> is the number of continuous sub-sequence of S which XOR value is equal to zero.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+4
+15 40 4 7
+3
+0 0 0
+7
+5 4 1 11 10 3 2
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 0
+Case #2: 6
+Case #3: 4
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+<p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>There are 4 continuous sub-sequences which XOR value are zero:
+</p><ul>
+<li>1<sup>st</sup> to 3<sup>rd</sup> element: 5 &#8853; 4 &#8853; 1 = 0.</li>
+<li>1<sup>st</sup> to 7<sup>th</sup> element: 5 &#8853; 4 &#8853; 1 &#8853; 11 &#8853; 10 &#8853; 3 &#8853; 2 = 0.</li>
+<li>3<sup>rd</sup> to 5<sup>th</sup> element: 1 &#8853; 11 &#8853; 10 = 0.</li>
+<li>4<sup>th</sup> to 7<sup>th</sup> element: 11 &#8853; 10 &#8853; 3 &#8853; 2 = 0.</li>
+</ul>
+<p></p>
+
+
+<br><br>
+</com:tcontent></body></html>

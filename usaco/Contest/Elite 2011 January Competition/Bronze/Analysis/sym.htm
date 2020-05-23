@@ -1,0 +1,239 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 sym Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="sym_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'sym' Analysis</h2>
+<h4>by Andre Kessler</h4>
+<p>The first thing we notice is that this problem contains a lot of
+symmetry.  Specifically, after placing the cow in the center of the
+field, we're left with four identical fields. Each of these fields
+are of size (N-1)/2 x (M-1)/2, so this gives us a recursive equation
+to describe the number of cows needed:<br>
+
+</p><div><div id="highlighter_356103" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="cpp plain">cows (N, M) = 1
+ + 4 * cows ((N-1)/2, (M-1)/2))</code></div></div></td></tr></tbody></table></div></div>
+<p>Our base case is that if either N or M is even, 0 cows are
+required. Note that this also takes care of the case where we need
+to tile a 1xM field because (1-1)/2=0 is even. Sample code implementing
+this recursion is shown below.
+
+</p><div><div id="highlighter_481921" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div
+ class="line number18 index17 alt1">18</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code class="cpp
+ preprocessor">#include &lt;cstdio&gt;</code></div><div class="line 
+number2 index1 alt1"><code class="cpp preprocessor">#include 
+&lt;cstdlib&gt;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div
+ class="line number4 index3 alt1"><code class="cpp color1 bold">FILE</code>
+ <code class="cpp plain">*fin = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"sym.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *fout = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"sym.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number5 index4 alt2">&nbsp;</div><div
+ class="line number6 index5 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">N, M;</code></div><div class="line number7 
+index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code 
+class="cpp color1 bold">long</code> <code class="cpp color1 bold">long</code>
+ <code class="cpp plain">cows (</code><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">n, </code><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">m) {</code></div><div class="line number9 
+index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(n % 2 == 0 
+|| m % 2 == 0)</code></div><div class="line number10 index9 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">1 + 4 * 
+cows (n / 2, m / 2);</code></div><div class="line number12 index11 alt1"><code
+ class="cpp plain">}</code></div><div class="line number13 index12 alt2">&nbsp;</div><div
+ class="line number14 index13 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">main () {</code></div><div class="line number15
+ index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d %d"</code><code class="cpp plain">, &amp;N, 
+&amp;M);</code></div><div class="line number16 index15 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fprintf</code> <code class="cpp plain">(fout, </code><code
+ class="cpp string">"%lld\n"</code><code class="cpp plain">, cows (N, 
+M));</code></div><div class="line number17 index16 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">return</code> <code class="cpp plain">0;</code></div><div 
+class="line number18 index17 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p>There are actually at least two other alternate approaches which
+do not involve recursion. Our only limitation is the number of times
+we can divide N and M by 2 before getting an even number, so there
+should be a closed form expression for the number of cows. Indeed,
+there is: each time we subdivide the field further, we add
+4<sup>k-1</sup> cows where k is the number of times we've divided
+N and M by 2. The total number of ways is then 1 + 4 + 4<sup>2</sup>
++ ... + 4<sup>k-1</sup> = (4<sup>k</sup> - 1) / (4 - 1). This leads
+to the short iterative solution below:
+
+</p><div><div id="highlighter_756829" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div
+ class="line number18 index17 alt1">18</div><div class="line number19 
+index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div
+ class="line number21 index20 alt2">21</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code class="cpp
+ preprocessor">#include &lt;cstdio&gt;</code></div><div class="line 
+number2 index1 alt1"><code class="cpp preprocessor">#include 
+&lt;cstdlib&gt;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div
+ class="line number4 index3 alt1"><code class="cpp color1 bold">FILE</code>
+ <code class="cpp plain">*fin = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"sym.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *fout = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"sym.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number5 index4 alt2">&nbsp;</div><div
+ class="line number6 index5 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">N, M;</code></div><div class="line number7 
+index6 alt2"><code class="cpp color1 bold">long</code> <code class="cpp 
+color1 bold">long</code> <code class="cpp plain">total;</code></div><div
+ class="line number8 index7 alt1">&nbsp;</div><div class="line number9 
+index8 alt2"><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">main () {</code></div><div class="line number10 index9 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d %d"</code><code class="cpp plain">, &amp;N, 
+&amp;M);</code></div><div class="line number11 index10 alt2">&nbsp;</div><div
+ class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">while</code> <code class="cpp plain">(N % 2 
+&amp;&amp; M % 2)</code></div><div class="line number13 index12 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">{</code></div><div class="line number14 index13 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">total = 4 * total + 1;</code></div><div class="line 
+number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">N /= 2;</code></div><div class="line number16 index15
+ alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">M /= 2;</code></div><div class="line number17 index16
+ alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">}</code></div><div class="line number18 index17 alt1">&nbsp;</div><div
+ class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fprintf</code> <code class="cpp plain">(fout,
+ </code><code class="cpp string">"%lld\n"</code><code class="cpp plain">,
+ total);</code></div><div class="line number20 index19 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">return</code> <code class="cpp plain">0;</code></div><div 
+class="line number21 index20 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p>We can do even better. Let's look at the binary representations
+of N and M.  We're trying to find the number of times we can divide
+either of these numbers by 2 before getting an even number. Suppose
+N=38 and M=47, so N=100111 and M=101111. Subtracting 1 and dividing
+by 2 is equivalent to just "chopping off" the last binary digit,
+so the number we're looking for is min(trailing ones in N, trailing
+ones in M). C/C++ users have access to GNU's handy <a 
+href="http://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">__builtin_ctz()</a>
+function, which returns the number of trailing zeros in a given
+integer. To find the number of trailing ones, we can just look at
+the bitwise complement ~N (that's just N with all bits toggled; for
+example, N=100111 becomes ~N=011000) and then count the number of
+trailing zeros with the __builtin_ctz function. Putting all of this
+together gives us the slick one-line solution shown below.
+
+</p><div><div id="highlighter_224170" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="cpp preprocessor">#include
+ &lt;cstdio&gt;</code></div><div class="line number2 index1 alt1"><code 
+class="cpp preprocessor">#include &lt;cstdlib&gt;</code></div><div 
+class="line number3 index2 alt2"><code class="cpp preprocessor">#include
+ &lt;cmath&gt;</code></div><div class="line number4 index3 alt1"><code 
+class="cpp preprocessor">#include &lt;algorithm&gt;</code></div><div 
+class="line number5 index4 alt2"><code class="cpp keyword bold">using</code>
+ <code class="cpp keyword bold">namespace</code> <code class="cpp plain">std;</code></div><div
+ class="line number6 index5 alt1">&nbsp;</div><div class="line number7 
+index6 alt2"><code class="cpp color1 bold">FILE</code> <code class="cpp 
+plain">*fin = </code><code class="cpp functions bold">fopen</code> <code
+ class="cpp plain">(</code><code class="cpp string">"sym.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *fout = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"sym.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number8 index7 alt1">&nbsp;</div><div
+ class="line number9 index8 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">N, M;</code></div><div class="line number10 
+index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">main () {</code></div><div
+ class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d %d"</code><code class="cpp plain">, &amp;N, 
+&amp;M);</code></div><div class="line number13 index12 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fprintf</code> <code class="cpp plain">(fout, </code><code
+ class="cpp string">"%.Lf\n"</code><code class="cpp plain">, </code><code
+ class="cpp functions bold">pow</code> <code class="cpp plain">((</code><code
+ class="cpp color1 bold">long</code> <code class="cpp color1 bold">double</code><code
+ class="cpp plain">) 4.0,</code></div><div class="line number14 index13 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">min (__builtin_ctz (~N), __builtin_ctz (~M))) / 3);</code></div><div
+ class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number16 index15 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="sym_files/shCore.js"></script>
+<script type="text/javascript" src="sym_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="sym_files/shBrushJava.js"></script>
+<link href="sym_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="sym_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+</body></html>

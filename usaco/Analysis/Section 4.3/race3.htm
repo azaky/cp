@@ -1,0 +1,277 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 33: Street Race</title> </head><body background="race3_files/bg3.jpg">
+<img src="race3_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Street Race</font></b><br>
+Hal Burch
+</center>
+
+<p>The simplest algorithm to solve this is to use the flood fill
+algorithm.  A location is unavoidable if and only if removing it
+creates a graph where the finish point is not reachable from the
+beginning point.  A location is a splitting point if and only
+the set of points reachable from the location and the set of
+points reachable from the beginning point without going
+through that location are disjoint.
+
+</p><p>To use the flood fill algorithm to determine the set of
+all reachable points that do not go through a given location,
+mark the location as visited before the flood fill starts.
+This guarantees that whenever the flood fill checks arc
+into that location, it will not continue flooding on arcs
+out of that location, since the algorithm will think that
+the flooding has already occurred.
+
+</p><p>Each flood fill takes at most 50*50 = 2,500 operations (an
+adjacency list would get this count down, but, for this problem,
+it doesn't matter).  There are a maximum of 3 flood fills done
+per point (1 to determine if it's unavoidable, plus 2 more to
+determine if it's a splitting point), for a total of 150 flood
+fills, or 375,000 operations.  This will certainly run within
+the time limits.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+#define MAXL 50
+int conn[MAXL][MAXL];
+int nloc;
+
+int flg[MAXL];
+
+int touched[MAXL];
+int otouched[MAXL];
+
+/* mark all the points reachable from this location */
+void flood_fill(int l)
+ {
+  int lv;
+
+  /* we've already flood fill from this place, no need to do again */
+  if (touched[l]) return;
+
+  /* mark as visited and reachable */
+  touched[l] = 1;
+
+  /* recurse on each connected location */
+  for (lv = 0; lv &lt; nloc; lv++)
+    if (conn[l][lv]) flood_fill(lv);
+ }
+
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv, lv2;
+  int p;
+  int f;
+
+  if ((fin = fopen("race3.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("race3.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  nloc = 0;
+  while (1)
+   {
+    fscanf (fin, "%d", &amp;p);
+    if (p == -1) break; /* end of file */
+    if (p == -2) nloc++; /* new location */
+    else conn[nloc][p] = 1; /* new arc */
+   }
+  f = 0;
+  /* for each location */
+  for (lv = 1; lv &lt; nloc-1; lv++)
+   {
+    /* clear reachable array */
+    memset(touched, 0, sizeof(touched));
+
+    /* don't allow it to flood fill thru this location */
+    touched[lv] = 1;
+
+    /* find all the locations reachable from start not using
+       this location */
+    flood_fill(0);
+
+    if (!touched[nloc-1]) 
+     { /* we can't reach finish, this is unavoidable */
+      flg[lv] = 1; 
+      f++;
+     } else flg[lv] = 0;
+   }
+  fprintf (fout, "%i", f); /* output count of unavoidable locs */
+  /* output unavoidable locations */
+  for (lv = 1; lv &lt; nloc; lv++)
+    if (flg[lv]) fprintf (fout, " %i", lv);
+  fprintf (fout, "\n");
+
+  f = 0;
+  for (lv = 1; lv &lt; nloc-1; lv++)
+    if (flg[lv]) /* a splitting point must be unavoidable */
+     {
+      /* determine everything reachable from this location */
+      memset(touched, 0, sizeof(touched));
+      flood_fill(lv);
+      /* store that data in otouched */
+      memcpy(otouched, touched, sizeof(otouched));
+
+      /* determine everything reachable from the beginning, not
+         using this location */
+      memset(touched, 0, sizeof(touched));
+      touched[lv] = 1;
+      flood_fill(0);
+
+      /* if any point is reachable in both flood fills,
+         this location is not a splitting */
+      for (lv2 = 0; lv2 &lt; nloc; lv2++)
+        if (touched[lv2] &amp;&amp; otouched[lv2] &amp;&amp; lv != lv2) break;
+      if (lv2 &gt;= nloc) /* no point was found */
+       { /* this location is a splitting point */
+        flg[lv] = 1;
+	f++;
+       } else flg[lv] = 0;
+     }
+  fprintf (fout, "%i", f); /* count of splitting points */
+  /* output splitting points themselves */
+  for (lv = 1; lv &lt; nloc-1; lv++)
+    if (flg[lv]) fprintf (fout, " %i", lv);
+  fprintf (fout, "\n");
+ }
+</pre>
+
+<p><i>Zhang Yunxiao writes:</i> I found the analysis can be improved
+in that only the unavoidable points need to be verified to see if
+they're splitting points. In a "well-formed" course, the unavoidable
+points are spliting points when all the points "after" the unavoidable
+points have no route to the points "before" the unavoidable points.
+ 
+</p><pre>program race3;
+  label
+    out;
+  var
+    np,nb,ns:byte;
+    {number of points, spliting points and unavoidable points,respectively}
+    i,j,k:byte;
+    x:shortint;
+    sol,dtt:array[1..50]of byte;
+    {record of unavoidable and splitting points, respectively}
+    graph:array[0..50]of array[0..50]of bytebool;
+    mark:array[0..50]of bytebool; {floodfill}
+    dcount:array[1..50]of byte;
+    depth:array[0..50]of byte;
+    st:array[1..150]of byte;
+    ok:bytebool;
+  procedure bfs;
+    var
+      s,t,i,j:integer;
+      line:array[1..500]of byte;
+    begin
+      s:=1;t:=1;line[1]:=0;depth[0]:=1;
+      repeat
+        for i:=0 to np do
+          if graph[line[s]][i]and (depth[line[s]]+1&lt;depth[i]) then
+            begin
+              inc(t);
+              line[t]:=i;
+              depth[i]:=depth[line[s]]+1;
+            end;
+        inc(s);
+      until s&gt;t;
+    end;
+
+{ Judge whether the point is indispensable.
+*also can be replaced by a BFS procedure, but a DFS
+will be more efficient.* }
+
+  procedure try(step:byte);
+    var
+      i:byte;
+    begin
+      for i:=1 to np do
+        begin
+          if not mark[i] and graph[st[step]][i] then
+            if i=np then
+              ok:=true
+            else
+              begin
+                st[step+1]:=i;mark[i]:=true;try(step+1);
+              end;
+          if ok then exit;
+        end;
+    end;
+  begin
+    assign(input,'race3.in');
+    reset(input);
+    read(x);
+    i:=0;
+    while x&lt;&gt;-1 do
+      begin
+        if x&lt;&gt;-2 then graph[i][x]:=(i&lt;&gt;x)
+          else inc(i);
+        read(x);
+      end;
+    close(input);
+    np:=i-1;
+    for i:=0 to 50 do depth[i]:=255;
+    bfs; {determine the depth}
+    st[1]:=0;
+    for i:=1 to np-1 do
+      begin
+        fillchar(mark,sizeof(mark),0);
+        mark[i]:=true;
+        ok:=false;
+        mark[0]:=true;
+        try(1);
+        if not ok then
+          begin
+            inc(ns);sol[ns]:=i;
+          end;
+      end;
+    sol[ns+1]:=50;
+    depth[50]:=255;
+    for i:=1 to ns do
+      begin
+        ok:=true;
+        for k:=0 to np-1 do if graph[sol[i]][k] and(depth[sol[i]]&gt;depth[k]) then
+          begin
+            ok:=false; goto out;
+          end;
+        for j:=2 to np do
+          if depth[j]&gt;depth[sol[i]] then
+            begin
+              for k:=0 to np-1 do if graph[j][k] and(depth[sol[i]]&gt;depth[k]) then
+                begin
+                  ok:=false; goto out;
+                end;
+            end;
+out:    if ok then {record the splitting points}
+          begin
+            inc(nb);dtt[nb]:=sol[i]
+          end;
+      end;
+    assign(output,'race3.out');
+    rewrite(output);
+    write(ns);
+    for i:=1 to ns do write(' ',sol[i]);
+    writeln;
+    write(nb);
+    for i:=1 to nb do write(' ',dtt[i]);
+    writeln;
+    close(output);
+  end.
+</pre>
+
+<br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

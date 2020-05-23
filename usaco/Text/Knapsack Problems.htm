@@ -1,0 +1,248 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Knapsack Problems
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Knapsack%20Problems_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Knapsack Problems
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Prerequisite modules </font></h4>
+
+<ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Greedy</li>
+<li>Dynamic Programming</li>
+<li>Recursive Descent</li>
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problem: Tape Recording</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Farmer John's favorite hobby is creating a tape containing some of
+Bessie's favorite music to listen to while she's being milked.  The
+amount of milk that Bessie produces is dependent on the songs that
+Bessie listens to while being milked.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given a collection of songs, each represented by a pair of integers,
+the length of the song (in seconds), the amount of milk Bessie produces
+while she's listening to that song, and the total amount of time that
+it takes to milk Bessie, find the set of songs such that their total
+length is no more than the time it takes to milk Bessie and they
+maximize Bessie's milk production.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The Abstraction</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given, A collection of objects, each which a size, a value (i.e.,
+weight), and the total `space' available, find the set of objects which
+maximizes the sum of the value of the set, but whose sum of size is
+constrained by some limit.  The total number/size of any particular item
+used in the set cannot exceed its availability.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Problem Viewpoint </font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The general way to view a knapsack problem is that of a bag of
+limited capacity, which is to be filled while maximizing the value of
+the objects in it.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For the problem above, the tape which Bessie will listen to while
+being milked is the ``knapsack,'' while the songs are the ``objects to
+be placed within the knapsack.''
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Three Knapsack Problems</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The knapsack problem style has three forms:
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Fractional knapsack problem<br> A fractional knapsack problem is
+one in which you are allowed to place fractional objects in the
+knapsack.  For example, if the objects were crude oil, airplane fuel,
+and kerosene and your knapsack a bucket, it might make sense to take
+0.473 liter of the crude oil, 0.263 liter of the airplane fuel, and
+0.264 liter of the kerosene.  This is the easiest form of the knapsack
+problem to solve.</li>
+
+<li>Integer Knapsack problem<br>
+ In integer knapsack problems, only complete objects can be inserted
+into the knapsack.  The example problem is of this form: partial songs
+aren't allowed. </li>
+
+<li>Multiple knapsack problem<br>
+ In the multiple knapsack problem, more than one knapsack is to be
+filled.  If fractional objects are allowed, this is the same as having
+one large knapsack with capacity equal to the sum of all the available
+knapsacks, so this term will only be used to  refer to the case of
+multiple integer knapsacks.  </li>
+ 
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Fractional knapsack problem</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The fractional knapsack problem is the easiest of the three to
+solve, as the greedy solution works:
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> Find the object which has the highest ``value density'' (value
+of object / size).</li>
+
+<li> If the total amount of capacity remaining exceeds the availability of
+that object, put all of it in the knapsack and iterate. </li>
+
+<li> If the amount of capacity is less than the availability of the
+object, use as much as possible and terminate. </li>
+
+<li> This algorithm runs in <i>N log N</i> since it must sort the objects
+first based on value density and then put them into the knapsack in
+decreasing order until the capacity is used.  It's normally easier to
+not sort them but rather just keep finding the highest value density
+not used each time, which gives a O(<i>N <sup>2</sup></i>) algorithm.
+</li>
+</font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Side note:  For problems of this class, it's rare to have both size
+and availability, as you can do a trivial transformation to have
+all the objects of size 1, and the availability be the product of
+the original size and availability (dividing the value by the
+original size, of course).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Extensions:  The value and availability of the objects can be
+real numbers without a problem in this case.  The fractional size
+issue is also trivial to handle by this algorithm.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Integer knapsack problem</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This is slightly more difficult, but is solvable using dynamic
+programming if the knapsack is small enough.
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>
+Do dynamic programming on the maximum value that a knapsack of each
+size can have in it.</li>
+
+<li>
+Update this array for an object of size S by traversing the array
+in reverse order (of capacity), and seeing if placing the current
+object into the knapsack of size K yields a better set than the
+current best knapsack of size K+S.</li>
+
+<li>
+This algorithm runs in <i>K  x  N</i> time, where <i>K</i> is the size of
+the knapsack, and <i>N</i> is the sum of availability of objects.</li>
+
+<li>
+If the knapsack is too large to allocate this array, recursive
+descent is the method of choice, as this problem is NP-complete.
+Of course, recursive descent can run for a very long time in a
+large knapsack being filled with small objects.</li>
+
+</font></ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Extensions:
+
+</font><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>
+Fractional values are not a problem; the array just becomes an
+array of real numbers instead of integers.  Fractional availability
+doesn't affect things, as you can, without loss of generality,
+truncate the number (if you have 3.5 objects, you can only use 3).</li>
+
+<li> Fractional size is a pain, as it makes the problem recursive descent.</li>
+
+<li> If the sizes are all the same, the problem can be solved greedily,
+picking the objects in decreasing value order until the knapsack
+is full.</li>
+
+<li> If the values are all 1.0, then again greedy works, selecting the
+objects in increasing size order until the knapsack is full.</li>
+
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Multiple knapsack problem</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> With multiple knapsacks of any size, the state space is too
+large to use the DP solution from the integer knapsack algorithm.
+Thus, recursive descent is the method to solve this problem.
+
+Extensions:
+
+</font></p><ul>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li> With recursive descent, extensions are generally easy.
+Fractional sizes and values are no problem, nor is another evaluation
+function.  </li>
+
+<li> If the values are all one, then if the maximum number of
+objects that can be placed in all the knapsacks is n, then there
+is such a solution which uses the n smallest objects.  This can
+greatly reduce the search time.</li>
+
+</font></ul>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problems</font></h4>
+
+<h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Score Inflation [1998 USACO National Championship]</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">You are trying to design a contest which has the maximum number of
+points (&lt;10,000).  Given the length of the contest, a group of
+problems, the problem lengths, and the point value of each problem,
+find the contest which has the maximum number of points (which
+satisfies the length constraint).
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Analysis: This is an integer knapsack problem, where the knapsack
+is the contest, the sizes are the length of problems, and the values
+are the point values.  The limit on knapsack (contest) size is
+small enough that the DP solution will work in memory.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Fence Rails [1999 USACO Spring Open]</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Farmer John is trying to construct a fence around his field.  He
+has installed the posts already, so he knows the length requirement
+of the rails.  The local lumber store has dropped off some boards
+(up to 50) of varying length.  Given the length of the boards from
+the lumber store, and the lengths of rails that Farmer John needs,
+calculate the maximum numbers of rails that Farmer John can create.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Analysis: This is a multiple knapsack problem, where the knapsacks
+are the boards from the store, and the objects are the rails that
+Farmer John needs.  The size of the objects are just the length,
+and the value is just one.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Since the values are all one, you know that if there is a solution
+using any K rails, there is a solution using the K smallest rails,
+which helps the recursive descent solver quite a bit.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Filling your Tank</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">You're in the middle of Beaver County, at the only city within 100
+miles with a gas station, trying to fill up your tank so you can
+get to Rita Blanca.  Fortunately, this town has a couple of gas
+stations, but they all seem to be almost out of gas.  Given the
+price of gasoline at each station, and the amount of gas each one
+has, calculate how much gasoline to buy from each station in order
+to minimize the total cost.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Analysis: This is an fractional knapsack problem, where your knapsack
+is your gas tank, and the objects are gasoline.
+
+</font></p></div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=7AqCTfVI4hm">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

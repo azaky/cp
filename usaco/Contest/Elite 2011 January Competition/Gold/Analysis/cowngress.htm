@@ -1,0 +1,262 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 cowngress Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="cowngress_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'cowngress' Analysis</h2>
+<h4>by Neal Wu</h4>
+<p>The given problem is a twist on the well-known <a 
+href="http://en.wikipedia.org/wiki/2-satisfiability">2-SAT problem</a>, 
+which
+is actually solvable in linear time. We first give the solution for 
+binary
+2-SAT (solvable vs. impossible) and then explain how to extend this to 
+the
+given problem.</p>
+
+<p>To solve 2-SAT we build an "implication graph" consisting of 2N 
+vertices and
+2M edges. This includes two vertices for each bill, one representing the
+ bill
+passing and the other representing it failing; we will denote these as 
+"b" and
+"not b". The edges simply follow from the assertions given by each cow: 
+if a
+cow states YES for x and NO for y, this is equivalent to "not x" implies
+ "not
+y" and "y" implies "x," so we add two directed edges representing this.</p>
+
+<p>We claim that no contradictions in the implication graph occur (a
+"contradiction" consisting of both "x" implies "not x" and "not x" 
+implies "x"
+for some x) if and only if the 2-SAT instance is solvable. Indeed, 
+clearly a
+contradiction implies that the instance is unsolvable, and the other 
+direction
+is intuitive as well: since the paths of the graph give us all possible
+implications, it makes sense that the only possible contradiction is of 
+this
+form. We present a construction (from Michael Cohen) in the case of no
+contradictions:</p>
+
+<p>Determine the <a 
+href="http://en.wikipedia.org/wiki/Strongly_connected_component">strongly
+connected
+ components</a> of the graph, which decompose it into a directed
+acyclic graph. We repeat the following algorithm: take any component 
+with no
+remaining dependencies (such as the last component in the topological 
+sort),
+and mark down the result of every node in the component, removing the 
+negation
+of each node as well. Since no component contains a contradiction this 
+leads to
+a solution without contradictions.</p>
+
+<p>Once we know whether or not to output "IMPOSSIBLE", to solve the 
+given
+problem we do the following for each bill:</p>
+
+<ul>
+<li>If b implies not b, then b must be 'N'.</li>
+<li>If not b implies b, then b must be 'Y'.</li>
+<li>Otherwise, it is possible to choose both in our construction. This 
+is true
+because choosing x results in a contradiction iff it implies not x (if x
+implies y implies not y, then by the contrapositive of x implies y, not y
+implies not x, so x implies not x).</li>
+</ul>
+
+<p>This results in an O(NM) solution overall, as below:</p>
+
+<div><div id="highlighter_27814" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div
+ class="line number56 index55 alt1">56</div><div class="line number57 
+index56 alt2">57</div><div class="line number58 index57 alt1">58</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="cpp preprocessor">#include &lt;cstdio&gt;</code></div><div
+ class="line number2 index1 alt1"><code class="cpp preprocessor">#include
+ &lt;bitset&gt;</code></div><div class="line number3 index2 alt2"><code 
+class="cpp preprocessor">#include &lt;vector&gt;</code></div><div 
+class="line number4 index3 alt1"><code class="cpp keyword bold">using</code>
+ <code class="cpp keyword bold">namespace</code> <code class="cpp plain">std;</code></div><div
+ class="line number5 index4 alt2">&nbsp;</div><div class="line number6 
+index5 alt1"><code class="cpp color1 bold">FILE</code> <code class="cpp 
+plain">*in = </code><code class="cpp functions bold">fopen</code> <code 
+class="cpp plain">(</code><code class="cpp string">"cowngress.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *out = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"cowngress.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number7 index6 alt2">&nbsp;</div><div
+ class="line number8 index7 alt1"><code class="cpp keyword bold">const</code>
+ <code class="cpp color1 bold">int</code> <code class="cpp plain">MAXN =
+ 1005, MAXM = 4005;</code></div><div class="line number9 index8 alt2">&nbsp;</div><div
+ class="line number10 index9 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">N, M;</code></div><div class="line number11 
+index10 alt2"><code class="cpp plain">bitset &lt;2 * MAXN&gt; imply [2 *
+ MAXN];</code></div><div class="line number12 index11 alt1"><code 
+class="cpp plain">vector &lt;</code><code class="cpp color1 bold">int</code><code
+ class="cpp plain">&gt; adj [2 * MAXN];</code></div><div class="line 
+number13 index12 alt2">&nbsp;</div><div class="line number14 index13 
+alt1"><code class="cpp keyword bold">void</code> <code class="cpp plain">dfs
+ (</code><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">num, </code><code class="cpp color1 bold">int</code> <code 
+class="cpp plain">loc)</code></div><div class="line number15 index14 
+alt2"><code class="cpp plain">{</code></div><div class="line number16 
+index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">imply [num][loc] = </code><code class="cpp keyword 
+bold">true</code><code class="cpp plain">;</code></div><div class="line 
+number17 index16 alt2">&nbsp;</div><div class="line number18 index17 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) adj [loc].size (); i++)</code></div><div class="line number19 
+index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(!imply 
+[num][adj [loc][i]])</code></div><div class="line number20 index19 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">dfs (num, adj [loc][i]);</code></div><div class="line
+ number21 index20 alt2"><code class="cpp plain">}</code></div><div 
+class="line number22 index21 alt1">&nbsp;</div><div class="line number23
+ index22 alt2"><code class="cpp color1 bold">int</code> <code class="cpp
+ plain">main ()</code></div><div class="line number24 index23 alt1"><code
+ class="cpp plain">{</code></div><div class="line number25 index24 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fscanf</code> <code class="cpp plain">(in, </code><code 
+class="cpp string">"%d %d"</code><code class="cpp plain">, &amp;N, 
+&amp;M);</code></div><div class="line number26 index25 alt1">&nbsp;</div><div
+ class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; M; i++)</code></div><div class="line number28 index27 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">{</code></div><div class="line number29 index28 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">b, c;</code></div><div
+ class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">char</code> <code class="cpp plain">vb, vc;</code></div><div
+ class="line number31 index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(in, </code><code
+ class="cpp string">"%d %c %d %c"</code><code class="cpp plain">, 
+&amp;b, &amp;vb, &amp;c, &amp;vc); b--; c--;</code></div><div 
+class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">b = 2 * b + (vb == </code><code class="cpp string">'Y'</code>
+ <code class="cpp plain">? 0 : 1);</code></div><div class="line number33
+ index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">c = 2 * c + (vc == </code><code class="cpp string">'Y'</code>
+ <code class="cpp plain">? 0 : 1);</code></div><div class="line number34
+ index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">adj [b ^ 1].push_back (c);</code></div><div 
+class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">adj [c ^ 1].push_back (b);</code></div><div 
+class="line number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number37 index36 alt2">&nbsp;</div><div
+ class="line number38 index37 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; 2 * N; i++)</code></div><div class="line number39 index38 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">dfs (i, i);</code></div><div class="line number40 
+index39 alt1">&nbsp;</div><div class="line number41 index40 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">for</code> <code class="cpp plain">(</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i &lt;
+ 2 * N; i += 2)</code></div><div class="line number42 index41 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(imply [i][i
+ + 1] &amp;&amp; imply [i + 1][i])</code></div><div class="line number43
+ index42 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number44 index43 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputs</code> <code class="cpp plain">(</code><code
+ class="cpp string">"IMPOSSIBLE\n"</code><code class="cpp plain">, out);</code></div><div
+ class="line number45 index44 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number46 index45 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number47 index46 alt2">&nbsp;</div><div
+ class="line number48 index47 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; 2 * N; i += 2)</code></div><div class="line number49 index48 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(imply [i][i
+ + 1])</code></div><div class="line number50 index49 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputc</code> <code class="cpp plain">(</code><code
+ class="cpp string">'N'</code><code class="cpp plain">, out);</code></div><div
+ class="line number51 index50 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">else</code> <code class="cpp keyword bold">if</code>
+ <code class="cpp plain">(imply [i + 1][i])</code></div><div class="line
+ number52 index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputc</code> <code class="cpp plain">(</code><code
+ class="cpp string">'Y'</code><code class="cpp plain">, out);</code></div><div
+ class="line number53 index52 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">else</code></div><div class="line number54 
+index53 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputc</code> <code class="cpp plain">(</code><code
+ class="cpp string">'?'</code><code class="cpp plain">, out);</code></div><div
+ class="line number55 index54 alt2">&nbsp;</div><div class="line 
+number56 index55 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputc</code> <code class="cpp plain">(</code><code
+ class="cpp string">'\n'</code><code class="cpp plain">, out);</code></div><div
+ class="line number57 index56 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number58 index57 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="cowngress_files/shCore.js"></script>
+<script type="text/javascript" src="cowngress_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="cowngress_files/shBrushJava.js"></script>
+<link href="cowngress_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="cowngress_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+</body></html>

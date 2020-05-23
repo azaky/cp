@@ -1,0 +1,138 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 103: Big Barn</title> </head><body 
+background="bigbrn_files/bg3.jpg">
+<img src="bigbrn_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Big Barn</font></b><br>
+<b>Alex Schwendner</b>
+</center>
+
+<p>The key to this problem is that if one can place the corners of 
+square
+barns of sizes i, j, and k and points (a-1,b-1), (a-1,b), and (a,b-1), 
+then
+the largest barn that one can place at point (a,b) is a barn of size
+min(i+1,j+1,k+1). To see this, look at the diagrams below.
+</p><pre>.....#....
+..#.......
+#.*-----*.
+..|.....|.
+..|.....|#
+..|.....|.   a barn of size 7 at 8,8
+..|.....|.
+..|.....|.
+..*-----*.
+......#...
+
+.....#....
+..#.......
+#.........
+..........
+.........#
+......*--*   a barn of size 4 at 7,8
+......|..|
+......|..|
+......*--*
+......#...
+
+.....#....
+..#.......
+#.........
+..........
+.........#
+..........   a barn of size 2 at 8,7
+..........
+..........
+.......**.
+......#**.
+
+.....#....
+..#.......
+#.........
+..........
+.........#
+..........   thus, a barn of size min(7+1,4+1,2+1) = min(8,5,3) = 3 at 8,8
+..........
+.......*-*
+.......|.|
+......#*-*
+</pre>
+
+And here's a solution:
+<pre>#include &lt;fstream.h&gt;
+#include &lt;string.h&gt;
+
+inline int 
+min (const int &amp;a, const int &amp;b, const int &amp;c)
+{
+    int     d = (a &lt; b) ? a : b;
+    return ((c &lt; d) ? c : d);
+}
+
+const int SIZE = 1000;
+
+int     n;
+
+bool    tree[SIZE][SIZE];
+short   maxBarnDP[SIZE][SIZE];
+
+inline int 
+maxBarn (const int &amp;x, const int &amp;y)
+{
+    if (x &lt; 0 || y &lt; 0 || x &gt;= n || y &gt;= n) {
+	return (0);
+    }
+    if (maxBarnDP[x][y] != -1) {
+	return (maxBarnDP[x][y]);
+    }
+
+    return (maxBarnDP[x][y] = tree[x][y] ? 0 : (1 + min (maxBarn (x - 1, y), maxBarn (x, y - 1), maxBarn (x - 1, y - 1))));
+}
+
+int 
+main ()
+{
+
+    for (int i = 0; i &lt; SIZE; ++i) {
+	for (int j = 0; j &lt; SIZE; ++j) {
+	    tree[i][j] = false;
+	    maxBarnDP[i][j] = -1;
+	}
+    }
+
+    int     t;
+    int     x, y;
+    ifstream filein ("bigbrn.in");
+    filein &gt;&gt; n &gt;&gt; t;
+    for (int i = 0; i &lt; t; ++i) {
+	filein &gt;&gt; x &gt;&gt; y;
+	--x;
+	//1-&gt;0
+	    -- y;
+	//1-&gt;0
+	    tree[x][y] = true;
+    }
+    filein.close ();
+
+    int     best = 0;
+    for (int i = 0; i &lt; n; ++i) {
+	for (int j = 0; j &lt; n; ++j) {
+	    if (best &lt; maxBarn (i, j)) {
+		best = maxBarn (i, j);
+	    }
+	}
+    }
+
+    ofstream fileout ("bigbrn.out");
+    fileout &lt;&lt; best &lt;&lt; endl;
+    fileout.close ();
+
+    return (0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

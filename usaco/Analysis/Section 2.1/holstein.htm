@@ -1,0 +1,109 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 62: Healthy Holsteins</title> </head><body 
+background="holstein_files/bg3.jpg">
+<img src="holstein_files/cow1.jpg" width="742" height="118">
+
+<center>
+<b><font size="7">Health Holsteins</font></b><br>
+Hal Burch
+</center>
+
+<p>Since there are only 15 feeds, and for each feed we can either give
+zero or one scopes of it, there are 2<sup>15</sup> possible `feed
+mixtures' the cows can be fed, which is only 32,768.  Therefore, try
+all combinations and pick which of the legal combinations uses
+the least number of feeds.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+
+#define MAXV 25
+#define MAXF 15
+
+int req[MAXV]; /* the vitamin requirements */
+int numv; /* number of vitamins */
+
+int feeds[MAXF][MAXV]; /* the vitamin within each feed */
+int numf; /* number of feeds */
+
+int best; /* the minimum number of feeds to use found thus far */
+int bestf[MAXF]; /* the set */
+
+int curf[MAXF]; /* the current set of feeds being considered */
+
+void find_feed(int fcnt, int fid)
+ { /* fcnt is the number of feeds in the current mixture,
+      fid is the identifier of the first feed to try adding (last feed + 1) */
+  int lv;
+
+  /* check if the requirement has been met */
+  for (lv = 0; lv &lt; numv; lv++)
+    if (req[lv] &gt; 0) break; 
+  if (lv &gt;= numv)
+   { /* all the requirements are met */
+    /* we know this is better, since we wouldn't have checked it otherwise
+       (see below) */
+    best = fcnt;
+    for (lv = 0; lv &lt; best; lv++)
+      bestf[lv] = curf[lv];
+    return;
+   }
+
+  while (fid &lt; numf &amp;&amp; fcnt+1 &lt; best)
+   { /* try adding each feed to the mixture */
+     /* the fcnt+1 &lt; best ensures that we stop if there's no hope
+	in finding a better solution than one found already */
+
+    /* add the vitamins from this feed */
+    for (lv = 0; lv &lt; numv; lv++)
+      req[lv] -= feeds[fid][lv]; 
+    curf[fcnt] = fid; /* put it in the list */
+
+    find_feed(fcnt+1, fid+1); 
+
+    /* undo adding the vitamins */
+    for (lv = 0; lv &lt; numv; lv++)
+      req[lv] += feeds[fid][lv];
+
+    /* next feed */
+    fid++;
+   }
+ }
+
+int main(void) 
+ {
+  FILE *fin, *fout;
+  int lv, lv2;
+
+  fin = fopen("holstein.in", "r");
+  fout = fopen("holstein.out", "w");
+  assert(fin);
+  assert(fout);
+
+  fscanf (fin, "%d", &amp;numv);
+  for (lv = 0; lv &lt; numv; lv++)
+    fscanf (fin, "%d", &amp;req[lv]);
+  fscanf (fin, "%d", &amp;numf);
+  for (lv = 0; lv &lt; numf; lv++)
+    for (lv2 = 0; lv2 &lt; numv; lv2++)
+      fscanf (fin, "%d", &amp;feeds[lv][lv2]);
+
+  best = numf+1;
+  find_feed(0, 0);
+
+  fprintf (fout, "%i", best);
+  for (lv = 0; lv &lt; best; lv++) 
+    fprintf (fout, " %i", bestf[lv]+1);
+  fprintf (fout, "\n");
+  return 0;
+ }
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

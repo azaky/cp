@@ -1,0 +1,158 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - I</title>
+
+<style>
+body, td {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem I</h2>
+<h1>Power Crisis</h1>
+Time Limit: 2 seconds
+</center>
+<br>
+
+<p>Jakarta is the largest city in Indonesia which deals with a large 
+power consumption. It often suffers from blackout as PLN (the state 
+electricity company) has difficulty in maintaining a stable electricity 
+power for the city. It was so bad such that a breakdown in one of PLN's 
+electric substation is enough to force a single area to lit up candles 
+for one long night. In order to overcome this problem, PLN comes up with
+ a plan to build yet the largest power plant in Indonesia. The power 
+plant will be located at the east coast of Java and provide sufficient 
+electricity power to Jakarta through series of cables.</p>
+
+<p>There are N stations numbered from 1 to N. Station 1 is set as the 
+power plant and station N as Jakarta. These stations are connected with 
+cables that transmit electricity power from one station to another. Each
+ cable transmits power in one specific direction (e.g. electricity power
+ only travels in cable C from station A to station B and not the other 
+way around). As each cable is made of an expensive special material, it 
+consists of two important properties that have to be considered: a 
+capacity of C<sub>i</sub> and a minimum required power of L<sub>i</sub>. These two properties define that a cable i has to transmit at least L<sub>i</sub> power and is not able to transmit more than C<sub>i</sub> power. A failure in transmitting power less than L<sub>i</sub> will result in a fast deterioration of cable i. </p>
+
+<p>While the power plant is able to generate any amount of electricity 
+power and Jakarta is able to receive any amount of electricity power 
+happily, PLN requires an equilibrium constraint to be applied to all 
+stations (excepts for the power plant and Jakarta). Equilibrium 
+constraint defines that the total amount of incoming power should be 
+equal to the total amount of outgoing power from the station. So take 
+note that there are 2 types of constraints that they have to maintain:
+</p><ol>
+<li>equilibrium constraint for all stations (excepts for the power plant and Jakarta)</li>
+<li>the electricity power which is transmitted on each cable is between L<sub>i</sub> and C<sub>i</sub>, inclusive.</li>
+</ol>
+It is also possible for any station to transmit power not from the power
+ plant as long as it still maintains its equilibrium constraint (see 5<sup>th</sup> sample input for clarity).<p></p>
+
+<p>The blueprint of the plan is prepared and money is not a problem. 
+However, they are still not sure whether the plan is feasible. They 
+wonder whether it is possible to transmit all these power from the power
+ plant to Jakarta such that all cables satisfy their L<sub>i</sub> power
+ requirement while maintaining the equilibrium constraint for all 
+stations (except for the power plant and Jakarta). Can you help them?</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with two integers N and M (2 &#8804; N &#8804; 50)
+ denoting the number of stations and cables respectively. All stations 
+are numbered from 1 to N with station 1 as power plant and station N as 
+Jakarta. The following M lines each contains four integers A<sub>i</sub>, B<sub>i</sub>, L<sub>i</sub> and C<sub>i</sub> (1 &#8804; A<sub>i</sub>, B<sub>i</sub> &#8804; N; A<sub>i</sub> &#8800; N; B<sub>i</sub> &#8800; 1; A<sub>i</sub> &#8800; B<sub>i</sub>; 0 &#8804; L<sub>i</sub> &#8804; C<sub>i</sub> &#8804; 100) representing a cable which able to transmit electricity power from station A<sub>i</sub> to station B<sub>i</sub> with minimum required power L<sub>i</sub> and the maximum capacity C<sub>i</sub>. You may assume that there is at most one cable which able to transmit electricity power from station A<sub>i</sub> to station B<sub>i</sub> for all pair of A<sub>i</sub> and B<sub>i</sub>.</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1 and  <font face="Courier New">Y</font> is either " <font face="Courier New">YES</font>" or " <font face="Courier New">NO</font>" (without quotes) denoting whether the plan is feasible or not.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>5
+3 2
+1 2 1 5
+2 3 4 10
+3 2
+1 2 1 3
+2 3 4 10
+4 5
+1 2 1 8
+1 3 2 5
+2 3 5 6
+2 4 2 10
+3 4 4 10
+4 5
+1 2 2 10
+1 3 2 4
+2 3 3 7
+2 4 7 15
+3 4 8 10
+5 5
+1 2 0 1
+2 3 2 10
+3 4 0 10
+4 2 0 10
+3 5 0 1
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: YES
+Case #2: NO
+Case #3: YES
+Case #4: NO
+Case #5: YES
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>S1 (station 1) can transmit either 4 or 5 electricity power to S2, and S2 further transfer it to S3.</p><p><br>
+</p><p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>S1 can transmit at most 3 electricity power to S2. However, S2 needs 
+to transfer at least 4 power to S3. Therefore, this plan is not 
+feasible.</p><p><br>
+</p><p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>Here is a possible electricity power transmission:
+</p><ul>
+<li>S1 to S2: 7</li>
+<li>S1 to S3: 2</li>
+<li>S2 to S3: 5</li>
+<li>S2 to S4: 2</li>
+<li>S3 to S4: 7</li>
+</ul>
+<p><br>
+</p><p><i>Explanation for the 4<sup>th</sup> sample input.</i></p>
+<p>S1 can transmit at most 10 electricity power to S2 and S2 will divide
+ the electricity power to S3 (3 electricity power) and S4 (7 electricity
+ power) to fulfill the minimum power requirement. Meanwhile S1 can 
+transmit at most 4 electricity power to S3 and remember that S3 already 
+received 3 electricity power from S2. However, S3 needs to transmit a 
+minimal of 8 electricity power to S4, but it has only a total of 7 
+incoming electricity power (4 from S1 and 3 from S2). Thus, the plan is 
+not feasible.</p><p><br>
+</p><p><i>Explanation for the 5<sup>th</sup> sample input.</i></p>
+<p></p>
+<p>There are 5 stations, 5 cables and each cable has minimum required power and maximum capacity L<sub>i</sub>..C<sub>i</sub> (e.g., 2..10 means L<sub>i</sub>=2 and C<sub>i</sub>=10)
+ as shown in Figure 1. The red arrow (2-3-4-2) corresponds to the 
+transmitted electricity power of 2. As you might have noticed, these 
+power do not come from the power plant (station 1); however, the 
+equilibrium constraint is maintained and all cables satisfy their 
+minimum required power and maximum capacity. Therefore, the power 
+transmission in Figure 1 is a valid one.</p>
+<table border="0" cellpadding="2" cellspacing="0">
+<tbody><tr><td align="center"><img src="i_files/i-1.gif" height="134" width="300"><br><small>Figure 1</small></td></tr>
+</tbody></table>
+
+
+<br><br>
+</com:tcontent></body></html>

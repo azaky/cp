@@ -1,0 +1,112 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 17: Canada Tour</title> </head><body 
+background="tour_files/bg3.jpg">
+<img src="tour_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Canada Tour</font></b><br>
+</center>
+
+<p> You have won a contest sponsored by an airline. The prize is a 
+ticket
+to travel around Canada, beginning in the most western point served by 
+this
+airline, then traveling only from west to east until you reach the most
+eastern point served, and then coming back only from east to west until
+you reach the starting city.  No city may be visited more than once, 
+except
+for the starting city, which must be visited exactly twice (at the
+beginning and the end of the trip).  You are not allowed to use any 
+other
+airline or any other means of transportation.
+
+</p><p> Given a list of cities served by the airline and a list of 
+direct
+flights between pairs of cities, find an itinerary which visits as many
+cities as possible and satisfies the above conditions beginning with the
+first city and visiting the last city on the list and returning to the
+first city.
+
+</p><h3>PROGRAM NAME: tour</h3>
+
+<h3>INPUT FORMAT</h3>
+<table>
+<tbody><tr><td> Line 1:
+    </td><td>
+The number N of cities served by the airline and the number V of direct
+flights that will be listed. N will be a positive integer not larger 
+than
+100. V is any positive integer. 
+</td></tr>
+
+<tr><td>Lines 2..N+1:</td><td>Each line contains a name of a city served
+ by the
+airline.  The names are ordered from west to east in the input file.  
+There
+are no two cities in the same meridian. The name of each city is a 
+string
+of, at most, 15 digits and/or characters of the Latin alphabet; there 
+are
+no spaces in the name of a city.
+</td></tr>
+
+<tr><td>Lines N+2..N+2+V-1:</td><td>
+Each line contains two names of cities (taken from the supplied list),
+separated by a single blank space.  This pair is connected by a direct,
+two-way airline flight.
+</td></tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file tour.in)</h3>
+
+<pre>8 9	
+Vancouver		
+Yellowknife	
+Edmonton
+Calgary
+Winnipeg
+Toronto	
+Montreal
+Halifax	
+Vancouver Edmonton
+Vancouver Calgary	
+Calgary Winnipeg
+Winnipeg Toronto
+Toronto Halifax
+Montreal Halifax
+Edmonton Montreal
+Edmonton Yellowknife
+Edmonton Calgary
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<table>
+<tbody><tr><td>Line 1:</td><td>The number M of different cities visited 
+in the optimal
+itinerary.  Output 1 if no itinerary is possible.
+</td></tr></tbody></table>
+
+<h3>SAMPLE OUTPUT (file tour.out)</h3>
+
+<pre>7
+</pre>
+
+<p>Namely: Vancouver, Edmonton, Montreal, Halifax, Toronto, Winnipeg,
+Calgary, and Vancouver (but that's not a different city).
+
+<br>
+</p><hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="tour" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

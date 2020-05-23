@@ -1,0 +1,63 @@
+Problem 1: Crazy Fences [Brian Dean, 2012]
+
+Setelah berkunjung ke museum seni modern, Petani John memutuskan untuk mendesain ulang
+ladang miliknya dengan mengatur semua N (1 <= N <= 1000) pagarnya.
+Tiap pagar dideskripsikan sebagai segmen garis dalam bidang 2D. Jika dua pagar bertemu,
+mereka bertemu di titik ujung pagar masing-masing. Tiap pagar menyentuh tepat dua pagar lain,
+satu ditiap masing-masing titik ujung.
+
+Petani John memiliki C sapi (1 <= C <= 1000) di ladangnya. Tiap sapi terletak di sebuah titik
+dalam bidang 2D yang tidak terletak pada pagar manapun, dan tidak ada dua sapi yang terletak pada
+titik yang sama. Dua sapi dikatakan dalam komunitas yang sama jika salah satu sapi dapat
+berjalan ke sapi lain tanpa menyentuh pagar manapun. Bantu PJ menentukan ukuran dari
+komunitas terbesar.
+
+PROBLEM NAME: crazy
+
+INPUT FORMAT:
+
+* Baris 1: Dua buah bilangan bulat N dan C dipisahkan spasi.
+
+* Baris 2..1+N: tiap baris berisi empat bilangan bulat: x1, y1, x2, y2,
+		mendeskripsikan sebuah pagar dari titik (x1,y1) ke (x2,y2). Tiap
+		koordinat adalah bilangan bulat dalam rentang 0..1,000,000.
+
+* Baris 2+N..1+N+C: Tiap baris berisi dua bilangan bulat x dan y
+		yang mendeskripsikan lokasi seekor sapi. Koordinat adalah bilangan
+		bulat dalam rentang 0..1,000,000.
+
+SAMPLE INPUT (file crazy.in):
+
+10 4
+0 0 10 0
+10 0 10 10
+0 0 0 10
+10 10 0 10
+8 8 9 8
+9 8 8 9
+8 9 8 8
+2 7 3 2
+3 2 7 5
+7 5 2 7
+15 3
+1 4
+4 5
+7 1
+
+INPUT DETAILS:
+
+Terdapat 10 pagar dan 4 sapi. Pagar membentuk sebuah kotak berisi dua
+segitiga.
+
+OUTPUT FORMAT:
+
+* Baris 1: Jumlah sapi dalam komunitas terbesar.
+
+SAMPLE OUTPUT (file crazy.out):
+
+2
+
+OUTPUT DETAILS:
+
+Sapi #2 dan #4 berada pada komunitas yang sama. Sapi #1 dan #3 memiliki
+komunitas sendiri dengan jumlah anggota 1.

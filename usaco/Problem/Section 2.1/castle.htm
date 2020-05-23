@@ -1,0 +1,136 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 10: The Castle</title> </head><body 
+background="castle_files/bg3.jpg">
+<img src="castle_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">The Castle</font></b><br>
+<b>IOI'94 - Day 1</b>
+</center>
+
+<p> In a stroke of luck almost beyond imagination, Farmer John was
+sent a ticket to the Irish Sweepstakes (really a lottery) for his
+birthday.  This ticket turned out to have only the winning number
+for the lottery!  Farmer John won a fabulous castle in the Irish
+countryside.
+
+</p><p> Bragging rights being what they are in Wisconsin, Farmer John
+wished to tell his cows all about the castle.  He wanted to know
+how many rooms it has and how big the largest room was.  In fact,
+he wants to take out a single wall to make an even bigger room.
+
+</p><p> Your task is to help Farmer John know the exact room count and
+sizes.
+
+</p><p>The castle floorplan is divided into M (wide) by N (1 
+&lt;=M,N&lt;=50)
+square modules.  Each such module can have between zero and four
+walls.  Castles always have walls on their "outer edges" to keep
+out the wind and rain.
+
+</p><p>Consider this annotated floorplan of a castle:
+</p><pre>     1   2   3   4   5   6   7
+   #############################
+ 1 #   |   #   |   #   |   |   #
+   #####---#####---#---#####---#   
+ 2 #   #   |   #   #   #   #   #
+   #---#####---#####---#####---#
+ 3 #   |   |   #   #   #   #   #   
+   #---#########---#####---#---#
+ 4 # -&gt;#   |   |   |   |   #   #   
+   ############################# 
+
+#  = Wall     -,|  = No wall
+-&gt; = Points to the wall to remove to
+     make the largest possible new room
+</pre>
+
+<p>By way of example, this castle sits on a 7 x 4 base.  A "room" 
+includes
+any set of connected "squares" in the floor plan.  This floorplan 
+contains
+five rooms (whose sizes are 9, 7, 3, 1, and 8 in no particular order).
+
+</p><p>Removing the wall marked by the arrow merges a pair of rooms to
+make the largest possible room that can be made by removing a single
+wall.
+
+</p><p> The castle always has at least two rooms and always has a wall
+that can be removed.
+
+</p><h3>PROGRAM NAME: castle</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p>The map is stored in the form of numbers, one number for each module,
+M numbers on each of N lines to describe the floorplan.  The input
+order corresponds to the numbering in the example diagram above.
+
+</p><p>Each module number tells how many of the four walls exist and
+is the sum of up to four integers:
+</p><ul>
+<li>1: wall to the west </li>
+<li>2: wall to the north </li>
+<li>4: wall to the east </li>
+<li>8: wall to the south </li>
+</ul>
+<p>Inner walls are defined twice; a wall to the south in module 1,1
+is also indicated as a wall to the north in module 2,1.
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> Two space-separated integers: M and N</td>
+</tr><tr> <td> Line 2..: </td> <td>M x N integers, several per line.
+</td>
+</tr></tbody></table>
+
+</p><h3>SAMPLE INPUT (file castle.in) </h3>
+
+<pre>7 4
+11 6 11 6 3 10 6
+7 9 6 13 5 15 5
+1 10 12 7 13 7 5
+13 11 10 8 10 12 13
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>The output contains several lines:
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> The number of rooms the castle has.
+</td></tr><tr> <td> Line 2: </td> <td> The size of the largest room</td>
+ </tr>
+<tr> <td> Line 3: </td> <td> The size of the largest room creatable by 
+removing one wall
+</td>
+</tr><tr> <td> Line 4: </td> <td> The single wall to remove to make the
+largest room possible</td> </tr>
+</tbody></table>
+</p><p>Choose the optimal wall to remove from the set of optimal walls
+by choosing the module farthest to the west (and then, if still
+tied, farthest to the south). If still tied, choose 'N' before 'E'.
+Name that wall by naming the module that borders it on either the
+west or south, along with a direction of N or E giving the location
+of the wall with respect to the module.
+
+</p><h3>SAMPLE OUTPUT (file castle.out)</h3>
+
+<pre>5
+9
+16
+4 1 E
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="castle" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

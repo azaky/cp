@@ -1,0 +1,79 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 102: Agri-Net</title> </head><body 
+background="agrinet_files/bg3.jpg">
+<img src="agrinet_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Agri-Net</font></b><br>
+<b>Russ Cox</b>
+</center>
+
+<p> Farmer John has been elected mayor of his town!  One of his campaign
+promises was to bring internet connectivity to all farms in the area.
+He needs your help, of course.
+
+</p><p> Farmer John ordered a high speed connection for his farm and is
+going to share his connectivity with the other farmers.  To minimize
+cost, he wants to lay the minimum amount of optical fiber to connect
+his farm to all the other farms.
+
+</p><p> Given a list of how much fiber it takes to connect each pair of
+farms, you must find the minimum amount of fiber needed to connect them
+all together.  Each farm must connect to some other farm such that a
+packet can flow from any one farm to any other farm.
+
+</p><p>The distance between any two farms will not exceed 100,000.
+
+
+</p><h3>PROGRAM NAME: agrinet</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> The number of farms, N (3 &lt;= N 
+&lt;=
+		             100).  </td> </tr>
+<tr> <td> Line 2..end: </td> <td>
+The subsequent lines contain the N x N connectivity matrix, where each
+element shows the distance from on farm to another. Logically, they are
+N lines of N space-separated integers.  Physically, they are limited in
+length to 80 characters, so some lines continue onto others.  Of course,
+the diagonal will be 0, since the distance from farm i to itself is not
+interesting for this problem.
+</td> </tr>
+
+</tbody></table>
+
+<h3>SAMPLE INPUT (file agrinet.in) </h3>
+
+<pre>4
+0 4 9 21
+4 0 8 17
+9 8 0 16
+21 17 16 0
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>The single output contains the integer length that is the sum of the
+minimum length of fiber required to connect the entire set of farms.
+
+</p><h3>SAMPLE OUTPUT (file agrinet.out)</h3>
+
+<pre>28
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="LY9oWTzoc4b" type="hidden">
+<input name="S" value="agrinet" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=LY9oWTzoc4b"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

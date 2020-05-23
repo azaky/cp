@@ -1,19 +1,36 @@
+# ignore all but whitelisted files
 *
 !*/
+!.gitignore
 
+# source codes
 !*.c
 !*.cpp
 !*.cc
 !*.h
+!*.pas
+!*.pp
 !*.java
 !*.py
 !*.js
-!*.go
+# mathematica notebook (for project euler)
+!*.nb
 
+# input/output files
 !*.in
 !*.out
 !*.txt
 
+# problems / materials
+!*.pdf
+!*.doc
+!*.docx
+!*.html
+!*.htm
+!*.png
+!*.jpg
+!*.gif
+
+# other
 !cpcc
 !vscodesnippets.json
-!.gitignore

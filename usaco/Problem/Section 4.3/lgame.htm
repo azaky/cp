@@ -1,0 +1,101 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 47: Letter Game</title> </head><body background="lgame_files/bg3.jpg">
+<img src="lgame_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Letter Game</font></b><br>
+IOI 1995
+</center>
+
+<center>
+<img src="lgame_files/lgame.gif" align="BOTTOM">
+<br>
+Figure 1: Each of the 26 lowercase letters and its value
+</center>
+
+<p> Letter games are popular at home and on television.  In one version of
+the game, every letter has a value, and you collect letters to form one or
+more words giving the highest possible score.  Unless you have `a way with
+words', you will try all the words you know, sometimes looking up the
+spelling, and then compute the scores.  Obviously, this can be done more
+accurately by computer.
+
+</p><p> Given the values in Figure 1, a list of words, and the letters
+collected:  find the highest scoring words or pairs of words that can be
+formed.
+
+</p><h3>PROGRAM NAME: lgame</h3>
+
+<h3>INPUT FORMAT</h3>
+
+One line with a string of lowercase letters (from `<tt>a</tt>' to
+`<tt>z</tt>').  The string consists of at least&nbsp;3 and at most 7
+letters in arbitrary order.
+
+<h3>SAMPLE INPUT (file lgame.in) </h3>
+
+<pre>prmgroa
+</pre>
+
+<h3>DICTIONARY FORMAT</h3>
+
+At most 40,000 lines, each containing a string of at least&nbsp;3 and at
+most&nbsp;7 lowercase letters.  At the end of this file is a line with a
+single period (`<tt>.</tt>').  The file is sorted alphabetically and
+contains no duplicates.
+
+<h3>SAMPLE DICTIONARY (file <a href="http://ace.delos.com/usaco/lgame.dict">lgame.dict</a>) </h3>
+
+<pre>profile
+program
+prom
+rag
+ram
+rom
+.
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>On the first line, your program should write the highest possible score,
+and on each of the following lines, all the words and/or word pairs from
+file <tt>lgame.dict</tt> with this score.  Sort the output alphabetically
+by first word, and if tied, by second word.  A letter must not occur more
+often in an output line than in the input line.  Use the letter values
+given in Figure 1.
+
+</p><p> When a combination of two words can be formed with the given letters,
+the words should be printed on the same line separated by a space.  The
+two words should be in alphabetical order; for example, do not write
+`<tt>rag prom</tt>', only write `<tt>prom rag</tt>'.  A pair in an output
+line may consist of two identical words.
+
+</p><h3>SAMPLE OUTPUT (file lgame.out)</h3>
+<p>This output uses the tiny dictionary above, not the <tt>lgame.dict</tt>
+dictionary.
+
+</p><pre>24
+program
+prom rag
+</pre>
+
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="twKWh2IAGUk" type="hidden">
+<input name="S" value="lgame" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

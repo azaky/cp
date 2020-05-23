@@ -1,0 +1,61 @@
+Problem 3: Milk Routing [Brian Dean, 2012]
+
+Ladang Petani John memiliki jaringan lawas dari M pipa (1 <= M <= 500)
+untuk memompa susu dari kandang ke tangki penyimpanan susu. Dia ingin 
+membuang dan mengupdate sebagian besar pipa tahun depan, tapi dia ingin
+menyisakan tepat satu rute, sehingga dia masih bisa memompa susu dari
+kandang ke tangki penyimpanan.
+
+Jaringan pipa terdiri dari N titik perpotongan (1 <= N <= 500), berupa
+titik ujung dari sejumlah pipa. Potongan nomor 1 adalah kandang, potongan nomor
+N adalah tangki penyimpanan. Tiap M pipa dua-arah berada diantara sepasang titik potong,
+dan memiliki latensi (jumlah waktu yang dibutuhkan susu untuk mencapai ujung
+pipa dari ujung lain) dan kapasitas (jumlah susu tiap satuan waktu yang
+bisa dipompa melalui pipa dalam kondisi normal). Berberapa pipa dapat terhubung
+diantara pasangan titik yang sama.
+
+Untuk tiap rute yang menghubungkan kandang ke tangki, latensi dari rute adalah
+jumlah latensi pipa pada rute tersebut, dan kapasitas dari rute adalah minimum
+kapasitas dari pipa-pipa pada rute (seperti semacam leher botol yang membatasi kecepatan susu
+yang dapat dipompa). Jika PJ ingin mengirim X satuan susu melalui rute pipa
+dengan latensi L dan kapasitas C, waktu yang dibutuhkan adalah L + X/C.
+
+Diberikan struktur jaringan pipa PJ, tentukan sebuah rute dari kandang ke
+tangki yang bisa memompa X satuan susu dengan waktu minimum yang dibutuhkan.
+
+PROBLEM NAME: mroute
+
+INPUT FORMAT:
+
+* Baris 1: Tiga bilangan bulat dipisahkan spasi N M X (1 <= X <= 1,000,000).
+        
+* Baris 2..1+M: Tiap baris mendeskripsikan pipa menggunakan 4 bilangan bulat: I J L C
+		I dan J (1 <= I,J <= N) adalah titik potong pada ujung pipa. L dan C
+		(1 <= L,C <= 1,000,000) adalah latensi dan kapasitas pipa.
+
+SAMPLE INPUT (file mroute.in):
+
+3 3 15
+1 2 10 3
+3 2 10 2
+1 3 14 1
+
+INPUT DETAILS:
+
+PJ ingin mengiri 15 satuan susu melalui jaringan pipanya. Pipa #1 menghubungkan
+titik 1 (kandang) dan 2, latensinya 10 dan kapasitasnya 3. Pipa #2 dan #3
+diartikan dengan cara yang sama.
+
+OUTPUT FORMAT:
+
+* Baris 1: Waktu minimum yang dibutuhkan PJ untuk mengirim susu
+		pada sebuah rute, dibulatkan ke bawah menuju bilangan bulat terdekat.
+		
+SAMPLE OUTPUT (file mroute.out):
+
+27
+
+OUTPUT DETAILS:
+
+Rute 1->3 membutuhkan 14 + 15/1 = 29 satuan waktu. Rute 1->2->3 membutuhkan
+20 + 15/2 = 27.5 satuan waktu, dan ini optimal.

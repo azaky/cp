@@ -1,0 +1,113 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3298,        104]
+NotebookOptionsPosition[      2854,         83]
+NotebookOutlinePosition[      3225,         99]
+CellTagsIndexPosition[      3182,         96]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 41", "Title",
+ CellChangeTimes->{{3.536307860091487*^9, 3.5363078717555914`*^9}}],
+
+Cell["\<\
+We shall say that an n-digit number is pandigital if it makes use of all the \
+digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital and is \
+also prime.
+
+What is the largest n-digit pandigital prime that exists?\
+\>", "Text",
+ CellChangeTimes->{3.536307883326804*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"list", "=", 
+   RowBox[{"Permutations", "[", 
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "7"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"i", "=", 
+    RowBox[{"7", "!"}]}], ",", 
+   RowBox[{"i", ">", "0"}], ",", 
+   RowBox[{"i", "--"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"num", "=", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["10", 
+         RowBox[{"7", "-", "k"}]], "*", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", ",", "k"}], "]"}], "]"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"k", ",", "1", ",", "7"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"PrimeQ", "[", "num", "]"}], ",", 
+      RowBox[{
+       RowBox[{"Print", "[", "num", "]"}], ";", 
+       RowBox[{"Break", "[", "]"}]}]}], "]"}]}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.5363086229006205`*^9, 3.5363086233546467`*^9}, {
+  3.5363094725559654`*^9, 3.5363096943771725`*^9}, {3.5363097796309304`*^9, 
+  3.5363098072460346`*^9}, {3.536309853312338*^9, 3.5363098589510446`*^9}, {
+  3.5363098964319267`*^9, 3.536309908863397*^9}, {3.536310104325987*^9, 
+  3.536310210878291*^9}, {3.53631024088811*^9, 3.536310253639208*^9}, {
+  3.536310296635496*^9, 3.5363103360750837`*^9}, {3.536310372378228*^9, 
+  3.536310381611456*^9}, {3.5363104402104387`*^9, 3.536310451653634*^9}, {
+  3.5363106285641193`*^9, 3.5363106383426247`*^9}, {3.536312468875933*^9, 
+  3.5363125693073206`*^9}, {3.536400009310613*^9, 3.5364000187921553`*^9}}],
+
+Cell[BoxData["7652413"], "Print",
+ CellChangeTimes->{{3.536312545422939*^9, 3.5363125737263274`*^9}, 
+   3.5363235483324776`*^9, 3.5363975551552477`*^9, 3.536400019518197*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{168, Automatic}, {Automatic, 60}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 108, 1, 83, "Title"],
+Cell[690, 25, 294, 7, 83, "Text"],
+Cell[CellGroupData[{
+Cell[1009, 36, 1639, 39, 98, "Input"],
+Cell[2651, 77, 175, 2, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -1,0 +1,100 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 43: Telecowmunication</title> </head><body 
+background="telecow_files/bg3.jpg">
+<img src="telecow_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Telecowmunication</font></b><br>
+</center>
+
+<p> Farmer John's cows like to keep in touch via email so they have 
+created
+a network of cowputers so that they can intercowmunicate. These machines
+route email so that if there exists a sequence of c cowputers a1, a2, 
+...,
+a(c) such that a1 is connected to a2, a2 is connected to a3, and so on 
+then
+a1 and a(c) can send email to one another.
+
+</p><p> Unfortunately, a cow will occasionally step on a cowputer or 
+Farmer
+John will drive over it, and the machine will stop working. This means 
+that
+the cowputer can no longer route email, so connections to and from that
+cowputer are no longer usable.
+
+</p><p> Two cows are pondering the minimum number of these accidents 
+that can
+occur before they can no longer use their two favorite cowputers to send
+email to each other. Write a program to calculate this minimal value for
+them, and to calculate a set of machines that corresponds to this 
+minimum.
+
+</p><p>
+For example the network: 
+</p><pre>               1*
+              /  
+             3 - 2*
+</pre>
+shows 3 cowputers connected with 2 lines. We want to send messages 
+between
+1 with 2. Direct lines connect 1-3 and 2-3. If cowputer 3 is down, them
+there is no way to get a message from 1 to 2.
+
+<h3>PROGRAM NAME: telecow</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table>
+<tbody><tr><td>Line 1</td><td> Four space-separated integers: N, M, c1, 
+and c2.  N is
+the number of computers (1 &lt;= N &lt;= 100), which are numbered 1..N. 
+ M is
+the number of connections between pairs of cowputers (1 &lt;= M &lt;= 
+600).  The
+last two numbers, c1 and c2, are the id numbers of the cowputers that 
+the
+questioning cows are using.  Each connection is unique and bidirectional
+(if c1 is connected to c2, then c2 is connected to c1).  There can be at
+most one wire between any two given cowputers.  Computer c1 and c2
+will not have a direction connection.
+
+</td></tr><tr><td>Lines 2..M+1</td><td> The subsequent M lines contain 
+pairs of cowputers
+id numbers that have connections between them.
+</td></tr></tbody></table>
+
+<h3>SAMPLE INPUT (file telecow.in)</h3>
+<pre>3 2 1 2
+1 3
+2 3
+</pre>
+<h3>OUTPUT FORMAT</h3>
+<p>
+Generate two lines of output.  The first line is the minimum number
+of cowputers that can be down before terminals c1 &amp; c2 are no
+longer connected. The second line is a minimal-length sorted list
+of cowputers that will cause c1 &amp; c2 to no longer be connected.
+Note that neither c1 nor c2 can go down.  In case of ties, the
+program should output the set of computers that, if interpreted as
+a base N number, is the smallest one.
+
+</p><h3>SAMPLE OUTPUT (file telecow.out)</h3>
+<pre>1
+3
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="telecow" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,61 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Analysis 108: Your Ride Is Here</title>
+</head><body background="ride_files/bg3.jpg">
+<img src="ride_files/cow1.jpg" width="742" height="118">
+
+<center>
+<h1>Analysis: Your Ride Is Here</h1>
+</center>
+
+<p> This is probably the easiest problem in the entire set of lessons.
+An `ad hoc' problem, no particular algorithms or tricks are needed
+save one:  one must be careful to get all 72 characters of input
+without processing the newline on the end!
+
+</p><p> Here is a prototype solution:
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+int
+hash(char *s)
+{
+	int i, h;
+
+	h = 1;
+	for(i=0; s[i] &amp;&amp; isalpha(s[i]); i++)
+		h = ((s[i]-'A'+1)*h) % 47;
+	return h;
+}
+
+void
+main(void)
+{
+	FILE *in, *out;
+	char comet[100], group[100];  /* bigger than necessary, room for newline */
+
+	in = fopen("input.txt", "r");
+	out = fopen("output.txt", "w");
+
+	fgets(comet, sizeof comet, in);
+	fgets(group, sizeof group, in);
+
+	if(hash(comet) == hash(group))
+		fprintf(out, "GO\n");
+	else
+		fprintf(out, "STAY\n");
+	exit (0);
+}
+</pre>
+
+<p>Solutions generally run in under 0.01 seconds.
+
+<br><br>
+</p><center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+</body></html>

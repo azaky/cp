@@ -1,0 +1,65 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 14: Money Systems</title> </head><body background="money_files/bg3.jpg">
+<img src="money_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Money Systems</font></b><br>
+Russ Cox
+</center>
+
+<p>We use dynamic programming to count the number of ways to make n
+cents with the given coins.  If we denote the value of the kth coin by
+c_k, then the recurrence is:
+</p><pre>   nway(n, k) = no. of ways to make n cents with the first k types of coins
+   nway(n, k) = nway(n, k-1) + nway(n-c_k, k)
+</pre>
+<p>This just says the number of ways to make n cents with the first k
+coins is the number of ways to make n cents using the first k-1 coins
+(i.e., without using the kth coin) plus the number of ways to make
+n-c_k cents using the first k coins.  For the second set of ways, we
+then add the kth coin to arrive at a total of n cents.
+
+</p><p>We keep track of the number of ways to total "n" cents in "nway",
+updating the array as we read the value of each coin.
+
+</p><pre>/*
+PROG: money
+ID: rsc001
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+#define MAXTOTAL 10000
+
+long long nway[MAXTOTAL+1];
+
+void
+main(void)
+{
+	FILE *fin, *fout;
+	int i, j, n, v, c;
+
+	fin = fopen("money.in", "r");
+	fout = fopen("money.out", "w");
+	assert(fin != NULL &amp;&amp; fout != NULL);
+
+	fscanf(fin, "%d %d", &amp;v, &amp;n);
+
+	nway[0] = 1;
+	for(i=0; i&lt;v; i++) {
+		fscanf(fin, "%d", &amp;c);
+
+		for(j=c; j&lt;=n; j++)
+			nway[j] += nway[j-c];
+	}
+
+	fprintf(fout, "%lld\n", nway[n]);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

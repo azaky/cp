@@ -1,0 +1,131 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - D</title>
+
+<style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem D</h2>
+<h1>Hongkong Boss War</h1>
+Time Limit: 4 seconds
+</center>
+<br>
+
+<p>
+Last month, Windarik was fired from his job as a secret agent. He was 
+not depressed though. He thought it was a good start to pursue his dream
+ job as a professional gamer. Windarik started his practice with a 
+current famous MMORPG (Massively Multiplayer Online Role-playing Game) 
+called "Hongkong Boss War". 
+</p>
+<strong>What is this game about?</strong><br>
+<p>
+This game is all about beating bad bosses that live in Hongkong 
+underground quarter. The underground quarter consists of several levels 
+where each level is led by one boss. New player has to start from the 
+lowest level and beat the boss in each level sequentially in order to 
+proceed to the next level boss.   
+</p>
+<strong>How to beat a boss?</strong><br>
+<p>
+Each boss is vulnerable against two particular weapons. A player can only win the fight if he has one of those two weapons. 
+</p>
+<strong>How to get a weapon?</strong><br>
+<p>
+A player has to go for a quest in order to get a weapon. Player can 
+always play any quest at any given time as there are no pre-requisites 
+for each quest. When the player wins a quest, he gets to choose one of 
+the two weapons that are provided as the reward. Of course, the weapon 
+choices are known prior to the quest. A player has to be careful in 
+choosing the weapon because the other weapon which is rejected as a 
+reward will not appear in any other quest anymore. Indeed, the fun 
+aspect of playing this game is in the strategy of choosing the correct 
+reward in order to defeat as many bosses as possible. 
+</p>
+<strong>What is the main purpose of the game?</strong><br>
+<p>
+To beat the final boss at the highest level. Rumour said that once a 
+player win the game, they will get rich instantly. Of course it is only a
+ rumour, but it is worth a try, isn't it. 
+</p>
+<p>Okay, Windarik is ready to play and win, but he is too lazy to think.
+ He gave you the list of quests with their two weapon rewards and the 
+list of bosses for each level along with their weakness. He commanded 
+you, again, as his unpaid intern, to tell him: what is the highest 
+possible level he can complete in this game? </p>
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 1,000) the 
+number of cases. Each case begins with two integers Q and B (1 &#8804; Q, B &#8804; 
+100) denoting the number of quests and bosses in this game. The next Q 
+lines each contains two integers C<sub>i</sub> and D<sub>i</sub> (1 &#8804; C<sub>i</sub>, D<sub>i</sub> &#8804; 2 * Q) denoting the two weapons choice for the i<sup>th</sup>
+ quest. All weapons are number from 1 to 2 * Q and will appear exactly 
+once in the list of quest. The next B lines each contains two integers E<sub>i</sub> and F<sub>i</sub> (1 &#8804; E<sub>i</sub>, F<sub>i</sub> &#8804; 2 * Q) denoting the weakness of the boss in i<sup>th</sup>
+ level. Note that some bosses might share the same weakness with other 
+bosses in different levels. It is also possible for a boss to have its E<sub>i</sub> equals to its F<sub>i</sub>, which means it is only vulnerable against one particular weapon.</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1, and <font face="Courier New">Y</font> is the highest possible level any player can get in Boss Castle.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+4 5
+4 1
+8 5
+2 6
+3 7
+4 3
+8 1
+4 8
+4 2
+6 3
+2 5
+1 2
+3 4
+1 3
+2 4
+1 4
+3 2
+1 2
+1 2
+1 2
+1 1
+2 2
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 5
+Case #2: 3
+Case #3: 1
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+<br><br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>Choosing the first weapon on each quest (4, 8, 2, 3) can bring the 
+player to level 5 (defeating all bosses from level 1 to level 5).</p><br>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>Choosing the weapon 1 from the 1<sup>st</sup> quest and weapon 4 from the 2<sup>st</sup> quest allows the player to defeat all bosses from level 1 up to level 3.</p><br>
+<p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>The boss on level-1 is only vulnerable to weapon 1, while the boss on
+ level-2 is only vulnerable to weapon 2. However, the player can only 
+get either weapon 1 or weapon 2, not both.</p><br>
+
+<br><br>
+</com:tcontent></body></html>

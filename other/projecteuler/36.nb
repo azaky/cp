@@ -1,0 +1,154 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4398,        145]
+NotebookOptionsPosition[      3869,        121]
+NotebookOutlinePosition[      4212,        136]
+CellTagsIndexPosition[      4169,        133]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 36", "Title",
+ CellChangeTimes->{{3.5341350494142647`*^9, 3.5341350570876427`*^9}, {
+  3.536301158714125*^9, 3.53630115897614*^9}}],
+
+Cell[TextData[{
+ "The decimal number, 585 = ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["1001001001", "2"], TraditionalForm]]],
+ " (binary), is palindromic in both bases.\n\nFind the sum of all numbers, \
+less than one million, which are palindromic in base 10 and base 2.\n\n\
+(Please note that the palindromic number, in either base, may not include \
+leading zeros.)"
+}], "Text",
+ CellChangeTimes->{{3.5341349777990475`*^9, 3.534135042640067*^9}, {
+  3.536301167310182*^9, 3.5363011868584905`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"pal", "[", "x_", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"s", "=", 
+        RowBox[{"ToString", "[", "x", "]"}]}], ",", 
+       RowBox[{"t", "=", 
+        RowBox[{"ToString", "[", 
+         RowBox[{"BaseForm", "[", 
+          RowBox[{"x", ",", "2"}], "]"}], "]"}]}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"t", " ", "=", " ", 
+       RowBox[{"StringDrop", "[", 
+        RowBox[{"t", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"StringPosition", "[", 
+             RowBox[{"t", ",", "\"\<\\n\>\""}], "]"}], "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "1"}], "]"}], "]"}], ",", 
+           RowBox[{"StringLength", "[", "t", "]"}]}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"s", "==", 
+        RowBox[{"StringReverse", "[", "s", "]"}]}], " ", "&&", " ", 
+       RowBox[{"t", "\[Equal]", 
+        RowBox[{"StringReverse", "[", "t", "]"}]}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Total", "[", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "1000000"}], "]"}], ",", "pal"}], "]"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.536301208683976*^9, 3.536301321777738*^9}, {
+   3.5363015250194416`*^9, 3.536301559845845*^9}, {3.5363016327457542`*^9, 
+   3.5363016328547564`*^9}, 3.536301982354149*^9}],
+
+Cell[BoxData["872187"], "Output",
+ CellChangeTimes->{3.5363020064831147`*^9, 3.5363237277112565`*^9, 
+  3.5363991916622972`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"pal", "[", "x_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IntegerDigits", "[", "x", "]"}], "\[Equal]", 
+     RowBox[{"Reverse", "[", 
+      RowBox[{"IntegerDigits", "[", "x", "]"}], "]"}]}], "&&", 
+    RowBox[{
+     RowBox[{"IntegerDigits", "[", 
+      RowBox[{"x", ",", "2"}], "]"}], "\[Equal]", 
+     RowBox[{"Reverse", "[", 
+      RowBox[{"IntegerDigits", "[", 
+       RowBox[{"x", ",", "2"}], "]"}], "]"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Total", "[", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "1000000"}], "]"}], ",", "pal"}], "]"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.536301792358381*^9, 3.5363018979479656`*^9}}],
+
+Cell[BoxData["872187"], "Output",
+ CellChangeTimes->{3.5363019064316297`*^9, 3.536323795215022*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{877, 505},
+WindowMargins->{{48, Automatic}, {Automatic, 60}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 158, 2, 83, "Title"],
+Cell[740, 26, 502, 11, 101, "Text"],
+Cell[CellGroupData[{
+Cell[1267, 41, 1552, 42, 132, "Input"],
+Cell[2822, 85, 128, 2, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2987, 92, 752, 22, 72, "Input"],
+Cell[3742, 116, 99, 1, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -1,0 +1,11 @@
+2 ababababa
+2 babababab
+3 abbabbabb
+3 abaaabbba
+3 abbbabaaa
+3 babababba
+3 abbababba
+3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+2 xabcabacbacba
+2 ababa
+2 babab

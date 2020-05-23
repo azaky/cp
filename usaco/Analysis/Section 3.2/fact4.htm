@@ -1,0 +1,71 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 20: Factorials</title> </head><body 
+background="fact4_files/bg3.jpg">
+<img src="fact4_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Factorials</font></b><br>
+Russ Cox
+</center>
+
+<p>The insight for this problem is that 0's at the end of a number
+come from it being divisible by 10, or equivalently, by 2 and 5.
+Furthermore, there are always more 2s than 5s in a factorial.
+
+</p><p>To get the last digit of the factorial, we can run a loop to 
+calculate
+it modulo 10, as long as we don't include any 2s or 5s in the product.
+Of course, we want to exclude the same number of 2s and 5s, so that all
+we're really doing is ignoring 10s.  So after the loop, we need to
+multiply in any extra 2s that didn't have 5s to cancel them out.
+
+</p><pre>/*
+PROG: fact4
+ID: rsc001
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+void
+main(void)
+{
+	FILE *fin, *fout;
+	int n2, n5, i, j, n, digit;
+
+	fin = fopen("fact4.in", "r");
+	fout = fopen("fact4.out", "w");
+	assert(fin != NULL &amp;&amp; fout != NULL);
+
+	fscanf(fin, "%d", &amp;n);
+	digit = 1;
+	n2 = n5 = 0;
+	for(i=2; i&lt;=n; i++) {
+		j = i;
+		while(j%2 == 0) {
+			n2++;
+			j /= 2;
+		}
+		while(j%5 == 0) {
+			n5++;
+			j /= 5;
+		}
+		digit = (digit * j) % 10;
+	}
+
+	for(i=0; i&lt;n2-n5; i++)
+		digit = (digit * 2) % 10;
+
+	fprintf(fout, "%d\n", digit);
+	exit(0);
+}
+
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

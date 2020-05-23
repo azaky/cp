@@ -1,0 +1,129 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 cropcir Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="cropcir_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'cropcir' Analysis</h2>
+<h4>by Rob Kolstad</h4>
+<p>This task features a straightforward double-nested loop to compare
+the distance between each pair of circles.  Since N &lt;= 400, an
+approach that scales as O(N<sup>2</sup>) will finish easily within the 
+execution
+time limits.
+
+</p><p>A cleverer approach would exploit the fact that dist(circle_i,
+circle_j) = dist (circle_j, circle_i) but the complexity doesn't
+improve a solution when N is much smaller than 2000.
+
+</p><div><div id="highlighter_671148" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div
+ class="line number18 index17 alt1">18</div><div class="line number19 
+index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div
+ class="line number21 index20 alt2">21</div><div class="line number22 
+index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div
+ class="line number24 index23 alt1">24</div><div class="line number25 
+index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div
+ class="line number27 index26 alt2">27</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code class="cpp
+ preprocessor">#include &lt;stdio.h&gt;</code></div><div class="line 
+number2 index1 alt1"><code class="cpp preprocessor">#include 
+&lt;stdlib.h&gt;</code></div><div class="line number3 index2 alt2"><code
+ class="cpp preprocessor">#include &lt;math.h&gt;</code></div><div 
+class="line number4 index3 alt1"><code class="cpp plain">main() {</code></div><div
+ class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">FILE</code> <code class="cpp plain">*fin = </code><code
+ class="cpp functions bold">fopen</code> <code class="cpp plain">(</code><code
+ class="cpp string">"cropcir.in"</code><code class="cpp plain">, </code><code
+ class="cpp string">"r"</code><code class="cpp plain">);</code></div><div
+ class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">FILE</code> <code class="cpp plain">*fout = </code><code
+ class="cpp functions bold">fopen</code> <code class="cpp plain">(</code><code
+ class="cpp string">"cropcir.out"</code><code class="cpp plain">, </code><code
+ class="cpp string">"w"</code><code class="cpp plain">);</code></div><div
+ class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">n, i, j, 
+x[400], y[400], r[400], noverlap;</code></div><div class="line number8 
+index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">/* input */</code></div><div class="line number10 
+index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d"</code><code class="cpp plain">, &amp;n);</code></div><div
+ class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(i = 0; i 
+&lt; n; i++)</code></div><div class="line number12 index11 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d%d%d"</code><code class="cpp plain">, &amp;x[i], 
+&amp;y[i], &amp;r[i]);</code></div><div class="line number13 index12 
+alt2">&nbsp;</div><div class="line number14 index13 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">/* find overlaps */</code></div><div class="line 
+number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(i = 0; i 
+&lt; n; i++) {</code></div><div class="line number16 index15 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">noverlap = 0;</code></div><div class="line number17 
+index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(j = 0; j 
+&lt; n; j++) {</code></div><div class="line number18 index17 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(i == j) </code><code
+ class="cpp keyword bold">continue</code><code class="cpp plain">;</code></div><div
+ class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">x2 = 
+x[i]-x[j];</code></div><div class="line number20 index19 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">y2 = 
+y[i]-y[j];</code></div><div class="line number21 index20 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">double</code> <code class="cpp plain">dist = </code><code
+ class="cpp functions bold">sqrt</code> <code class="cpp plain">((</code><code
+ class="cpp color1 bold">double</code><code class="cpp plain">)x2*x2 + (</code><code
+ class="cpp color1 bold">double</code><code class="cpp plain">)y2*y2);</code></div><div
+ class="line number22 index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(dist &lt;= 
+r[i]+r[j]) noverlap++;</code></div><div class="line number23 index22 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number24 index23 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fprintf</code> <code class="cpp plain">(fout,
+ </code><code class="cpp string">"%d\n"</code><code class="cpp plain">, 
+noverlap);</code></div><div class="line number25 index24 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number26 index25 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">exit</code> <code class="cpp plain">(0);</code></div><div
+ class="line number27 index26 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="cropcir_files/shCore.js"></script>
+<script type="text/javascript" src="cropcir_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="cropcir_files/shBrushJava.js"></script>
+<link href="cropcir_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="cropcir_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+</body></html>

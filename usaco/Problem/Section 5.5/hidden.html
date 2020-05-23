@@ -1,0 +1,82 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+
+<title>Hidden Password</title>
+</head><body background="hidden_files/bg3.jpg">
+<img src="hidden_files/cow1.jpg" height="118" width="742">
+
+<center> <h1>Hidden Password</h1> </center>
+<center>ACM South Eastern Europe -- 2003</center>
+
+
+<p>Sometimes the programmers have very strange ways of hiding their
+passwords.  Billy "Hacker" Geits chooses a string S composed of L (5
+&lt;= L &lt;= 100,000) lowercase letters ('a'..'z') with length L. Then he
+makes and sorts all L-1 one-letter left cyclic shifts of the string.
+He then takes as a password one prefix of the lexicographically first
+of the obtained strings (including S).
+
+</p><p>For example consider the string "alabala". The sorted cyclic
+one-letter left shifts (including the initial string) are:
+
+</p><p><br>                aalabal
+<br>                abalaal
+<br>                alaalab
+<br>                alabala
+<br>                balaala
+<br>                laalaba
+<br>                labalaa
+
+</p><p>Lexicographically, first string is 'aalabal'. The first letter of this
+string ('a') is the 'a' that was in position 6 in the initial string
+(counting the first letter in the string as position 0).
+
+</p><p>Write a program that, for given string S, finds the start position of
+the first letter of the sorted list of cyclic shifts of the string.
+If the first element appears more than once in the sorted list, then
+the program should output the smallest possible initial position.
+
+</p><h3>PROGRAM NAME: hidden</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<ul><li> Line 1: A single integer: L
+</li><li> Line 2..?: All L characters of the the string S, broken across lines such that
+each line has 72 characters except the last one, which might have
+fewer.
+</li></ul>
+
+<h3>SAMPLE INPUT (file hidden.in)</h3>
+
+<pre>7
+alabala
+
+</pre>
+
+
+<h3>OUTPUT FORMAT</h3>
+
+<ul><li> Line 1: A single integer that is the start position of the first letter, as
+described above.
+</li></ul>
+
+<h3>SAMPLE OUTPUT (file hidden.out) </h3>
+
+<pre>6
+</pre>
+
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="IvIn7TchG8N" type="hidden">
+<input name="S" value="hidden" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=IvIn7TchG8N"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

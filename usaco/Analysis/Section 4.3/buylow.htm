@@ -1,0 +1,213 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 87: Buy Low, Buy Lower</title> </head><body background="buylow_files/bg3.jpg">
+<img src="buylow_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Buy Low, Buy Lower</font></b><br>
+Hal Burch
+</center>
+
+<p>For simplicity, let a<sub>i</sub> be the i-th price, and
+l<sub>i</sub> be the length of the longest sequence of prices that ends
+with the i-th price.  Clearly, l<sub>1</sub> = 1.  More generally,
+l<sub>i</sub> = g+1, where g is the length of the longest sequence which
+ends before the i-th price and whose last element is higher than
+a<sub>i</sub> (0 if no such number exists).  These can be calculated
+using dynamic programming.
+
+</p><p>To determine the number of (distinct) maximum sequences, the same
+trick will work.  For each value j such that j &lt; i, a<sub>j</sub> &gt;
+a<sub>i</sub>, and l<sub>j</sub> = l<sub>i</sub> - 1, for each sequence
+of maximum length that ends with the j-th price, the i-th price can be
+postpending to create a maximum length sequence that ends with the i-th
+price.  To avoid double counting sequences, note that is k &lt; i,
+a<sub>k</sub> = a<sub>i</sub>, and l<sub>k</sub> = l<sub>i</sub>, then
+any sequence which k can be postpended to and create a maximum sequence,
+i can be postpended to as well.  Thus, for each value, add in only the
+count for the most recent occurence.  Determining the number of maximum
+length sequences can be done in the same manner.
+
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* our bignum structure will store 6 digits per struct */
+/* the numbers will also be stored in INCREASING significance */
+/* thus 86,376,576 is represented as 376576 -&gt; 86 */
+typedef struct BIGNUM *bignum_t;
+struct BIGNUM
+ {
+  int val;
+  bignum_t next;
+ };
+
+int num[5000]; /* the numbers (prices) */
+int len[5000]; /* the length of the maximum sequence which ends here */
+int nlen; /* number of numbers */
+
+bignum_t cnt[5000]; /* the number of maximal sequences which end here */
+
+/* allocate a bignum_t */
+bignum_t get_big(void)
+ { /* because the bignum structure is so small, we'll allocate them
+      in blocks */
+  static bignum_t block;
+  static int size = 0;
+  if (size == 0)
+   { /* no more structures left, allocate a new block */
+    block = (bignum_t)malloc(sizeof(*block)*128);
+    size = 128;
+   }
+  size--;
+  return block++;
+ }
+
+/* initialize a bignum to this value */
+void init_big(bignum_t *num, int val)
+ {
+  *num = get_big(); /* allocate space */
+
+  /* initialize */
+  (*num)-&gt;val = val;
+  (*num)-&gt;next = NULL;
+ }
+
+/* add b to a (a &lt;- a+b) */
+void add(bignum_t a, bignum_t b)
+ {
+  int c; /* carry */
+  
+  c = 0;
+  while (b || c) /* while either there's more b, or there's a carry */
+   {
+    a-&gt;val += c; /* add the carry */
+    if (b) a-&gt;val += b-&gt;val; /* add b, if there's more b */
+
+    /* if a-&gt;val is too large, we need to carry */
+    c = (a-&gt;val / 1000000);
+    a-&gt;val = (a-&gt;val % 1000000);
+
+    if (b) b = b-&gt;next;
+    if (!a-&gt;next &amp;&amp; (b || c))
+     { /* allocate if we need to */
+      a-&gt;next = get_big();
+      a = a-&gt;next;
+
+      /* initialize the allocated space to 0 */
+      a-&gt;val = 0;
+      a-&gt;next = NULL;
+     } else a = a-&gt;next;
+   }
+ }
+
+/* output the number v to the FILE f. no leading spaces or trailing newline */
+void out_num(FILE *f, bignum_t v)
+ {
+  if (v-&gt;next)  /* not at first digits */
+   {
+    out_num(f, v-&gt;next); /* output the more significant digits */
+    fprintf (f, "%06i", v-&gt;val); /* output these digits, 0 padding is necc */
+   }
+  else 
+    fprintf (f, "%i", v-&gt;val); /* most significant digits, no 0-padding */
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv, lv2;
+  int c;
+  int max;
+  int l;
+  bignum_t ans;
+
+  if ((fin = fopen("buylow.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("buylow.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+   
+  fscanf (fin, "%d", &amp;nlen);
+
+  for (lv = 0; lv &lt; nlen; lv++)
+    fscanf (fin, "%d", &amp;num[lv]);
+
+  /* use dynamic programming to determine maximum length */
+  for (lv = 0; lv &lt; nlen; lv++)
+   {
+    max = 1;
+
+    /* for each number before this one and greater than it,
+       we create a new sequence by postpending this one.
+       Find the maximum sequence that can created this way */
+    for (lv2 = lv-1; lv2 &gt;= 0; lv2--)
+      if (num[lv2] &gt; num[lv] &amp;&amp; len[lv2]+1 &gt; max) max = len[lv2]+1;
+
+    len[lv] = max; 
+   }
+
+  /* calculate the number of unique sequences ending at each location
+     that are the maximum length that a sequence ending there can be */
+  for (lv = 0; lv &lt; nlen; lv++)
+   {
+    /* if the length is 1, then there's only the number itself, so 1 seq */
+    if (len[lv] == 1) init_big(&amp;cnt[lv], 1);
+    else
+     {
+      init_big(&amp;cnt[lv], 0);
+      l = -1;
+      max = len[lv]-1; /* the length of the sequence without this last num */
+
+      /* otherwise, for each distinct value before it such that it
+         is both greater than this value and has maximal length to
+	 that location of one less, add it's count to this one */
+      /* note that for each value, we add the number of sequences to
+         it's MOST RECENT occurance in order to get all the sequences */
+      for (lv2 = lv-1; lv2 &gt;= 0; lv2--)
+        if (len[lv2] == max &amp;&amp; num[lv2] &gt; num[lv] &amp;&amp; num[lv2] != l)
+	 { /* if this is of the right length, greater than our number,
+	      and not the same value as the last thing added */
+	  add(cnt[lv], cnt[lv2]);
+	  l = num[lv2];
+	 }
+     }
+   }
+
+  /* compute the maximum number of maximum sequences */
+
+  /* same algorithm as the previous section */
+
+  /* find maximum length */
+  max = 0;
+  for (lv = 0; lv &lt; nlen; lv++)
+    if (len[lv] &gt; max) max = len[lv];
+
+  /* add together number of maximum sequences ending at each location,
+     making sure not to doubly count sequences (using same trick as before) */
+  init_big(&amp;ans, 0);
+  l = -1;
+  for (lv = nlen-1; lv &gt;= 0; lv--)
+    if (len[lv] == max &amp;&amp; num[lv] != l) 
+     {
+      add(ans, cnt[lv]);
+      l = num[lv];
+     }
+
+  /* output answer */
+  fprintf (fout, "%i ", max);
+  out_num(fout, ans);
+  fprintf (fout, "\n");
+
+  return 0;
+ }
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

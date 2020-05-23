@@ -1,0 +1,109 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - F</title>
+
+<style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem F</h2>
+<h1>PASS Me Not</h1>
+Time Limit: 3 seconds
+</center>
+<br>
+
+<p>Given a sequence of N unique integers, you should choose K integers 
+from the sequence in one or more PASS such that each integer you choose 
+is strictly larger than any previous integer that has been chosen.</p>
+<p>One PASS consists of reading and considering each number one by one strictly from left to right.</p>
+
+<p>For example, let A = {2, 5, 6, 1, 4, 3} and K = 4. There are couple ways to achieve the goals:
+</p><ul>
+<li>
+<pre>1<sup>st</sup> PASS: 2 3    {<u>2</u>, 5, 6, 1, 4, <u>3</u>}
+2<sup>nd</sup> PASS: 4      {2, 5, 6, 1, <u>4</u>, 3}
+3<sup>rd</sup> PASS: 5      {2, <u>5</u>, 6, 1, 4, 3}
+</pre>
+Here we performed 3 PASSes: {2, 3}, {4}, {5} and the chosen sequence of integers is: 2, 3, 4, 5.
+</li>
+<li>
+<pre>1<sup>st</sup> PASS: 1
+2<sup>nd</sup> PASS: 2 3
+3<sup>rd</sup> PASS: 5
+</pre>
+Here we performed 3 PASSes: {1}, {2, 3}, {5}.
+</li>
+<li>
+<pre>1<sup>st</sup> PASS: 1 3
+2<sup>nd</sup> PASS: 5 6
+</pre>
+Here we performed 2 PASSes: {1, 3}, {5, 6}. Apparently, this corresponds
+ to the minimum number of PASS we need to achieve the goal.
+</li>
+<br>
+<li>...and many other ways</li>
+</ul>
+In the example above, the minimum number of PASS we need to achieve the goal is 2 (shown by 3<sup>rd</sup> example).
+<p></p>
+
+<p>Your goal in this problem is to find the minimum number of PASS 
+needed to achieve the goal, i.e. choosing K integers from the given 
+sequence such that each integer you choose is strictly larger than any 
+previous integers that has been chosen.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 50) the number
+ of cases. Each case begins with two integers N and K (1 &#8804; K &#8804; N &#8804; 
+2,000; K &#8804; 100). The next line contains N integers A<sub>i</sub> (1 &#8804; A<sub>i</sub> &#8804; 1,000,000,000) representing the given sequence of integers. You may assume all integers in the sequence are unique.</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1, and <font face="Courier New">Y</font> is the minimum number of PASS needed to achieve the goal for that case.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>4
+6 4
+2 5 6 1 4 3
+6 3
+2 5 6 1 4 3
+5 5
+5 4 3 2 1
+6 6
+2 3 6 1 4 5
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 2
+Case #2: 1
+Case #3: 5
+Case #4: 3
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>The longest increment subsequence of {2, 5, 6, 1, 4, 3} is {2, 5, 6} 
+which already has a length of 3. So, we only need one PASS to achieve 
+the goal.</p><br>
+<p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>The sequence is given in decreasing order, so we can only choose one integer in each PASS.</p><br>
+<p><i>Explanation for the 4<sup>th</sup> sample input.</i></p>
+<p>The corresponding PASS: {1}, {2, 3, 4, 5}, {6}</p><p>
+
+
+<br><br>
+</p></com:tcontent></body></html>

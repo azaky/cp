@@ -1,0 +1,443 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO FEB11 lostcows Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="lostcows_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO FEB11 Problem 'lostcows' Analysis</h2>
+<h4>by Jelle van den Hooff</h4>
+<p>The Lost Cows is a complicated graph problem. The problem's roots lie
+ in complexity theory 
+where 
+instead of a farm with pastures and signs we try to synchronize a finite
+ state machine. The cute result 
+in complexity theory is that if a synchronizing sequence exists, then 
+such a sequence can be 
+constructed with length O(N^3).</p>
+
+<p>Here, you are asked to not only find such a sequence but also do so 
+efficiently. The first 
+observation to 
+make is that keeping track of all states (which pastures are currently 
+occupied) is infeasible since 2^N 
+is way too large. A second idea is that no matter what signs you 
+instruct the cows to follow, never will 
+the number of occupied pastures increase. But it can decrease!</p>
+
+<p>A way to decrease the number of occupied pastures is by getting two 
+cows to meet up. Since it is 
+guaranteed that a synchronizing sequence exists for all the N cows, it 
+should certainly be possible to 
+get two cows to end up in the same pasture. </p>
+
+<p>If you only keep track of which pastures the pair occupies there are N
+ choose 2 or N*(N-1)/2 
+possible 
+states. Consider these states as vertices, and the transitions between 
+states by following signs as 
+edges. Since any pair of vertices can be synchronized, there exists a 
+path from any of the state vertices 
+to the state where both cows are at the barn. </p>
+
+<p>All paths can be precomputed in time O(N^2 M) by doing a 'reverse' 
+BFS from the goal, as N^2 M 
+is the 
+number of transition edges. An implementation detail is finding these 
+N^2 M edges; a solution is 
+to do so implicitly in the BFS. If you consider the N^2 states you might
+ arrive in after a transition, you 
+can then loop through all pairs incoming edges per sign.</p>
+
+<p>Now we can synchronize all the cows by repeatedly merging two cows 
+not on the same pasture; 
+we are 
+almost done. When merging two cows, you know where those cows will end 
+up. But where will the 
+other cows end up? To quickly simulate this we can precompute using 
+dynamic programming where a 
+cow X will end up after Y and Z are merged.</p>
+
+My implementation:
+<div><div id="highlighter_955906" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div
+ class="line number56 index55 alt1">56</div><div class="line number57 
+index56 alt2">57</div><div class="line number58 index57 alt1">58</div><div
+ class="line number59 index58 alt2">59</div><div class="line number60 
+index59 alt1">60</div><div class="line number61 index60 alt2">61</div><div
+ class="line number62 index61 alt1">62</div><div class="line number63 
+index62 alt2">63</div><div class="line number64 index63 alt1">64</div><div
+ class="line number65 index64 alt2">65</div><div class="line number66 
+index65 alt1">66</div><div class="line number67 index66 alt2">67</div><div
+ class="line number68 index67 alt1">68</div><div class="line number69 
+index68 alt2">69</div><div class="line number70 index69 alt1">70</div><div
+ class="line number71 index70 alt2">71</div><div class="line number72 
+index71 alt1">72</div><div class="line number73 index72 alt2">73</div><div
+ class="line number74 index73 alt1">74</div><div class="line number75 
+index74 alt2">75</div><div class="line number76 index75 alt1">76</div><div
+ class="line number77 index76 alt2">77</div><div class="line number78 
+index77 alt1">78</div><div class="line number79 index78 alt2">79</div><div
+ class="line number80 index79 alt1">80</div><div class="line number81 
+index80 alt2">81</div><div class="line number82 index81 alt1">82</div><div
+ class="line number83 index82 alt2">83</div><div class="line number84 
+index83 alt1">84</div><div class="line number85 index84 alt2">85</div><div
+ class="line number86 index85 alt1">86</div><div class="line number87 
+index86 alt2">87</div><div class="line number88 index87 alt1">88</div><div
+ class="line number89 index88 alt2">89</div><div class="line number90 
+index89 alt1">90</div><div class="line number91 index90 alt2">91</div><div
+ class="line number92 index91 alt1">92</div><div class="line number93 
+index92 alt2">93</div><div class="line number94 index93 alt1">94</div><div
+ class="line number95 index94 alt2">95</div><div class="line number96 
+index95 alt1">96</div><div class="line number97 index96 alt2">97</div><div
+ class="line number98 index97 alt1">98</div><div class="line number99 
+index98 alt2">99</div><div class="line number100 index99 alt1">100</div><div
+ class="line number101 index100 alt2">101</div><div class="line 
+number102 index101 alt1">102</div><div class="line number103 index102 
+alt2">103</div><div class="line number104 index103 alt1">104</div><div 
+class="line number105 index104 alt2">105</div><div class="line number106
+ index105 alt1">106</div><div class="line number107 index106 alt2">107</div><div
+ class="line number108 index107 alt1">108</div><div class="line 
+number109 index108 alt2">109</div><div class="line number110 index109 
+alt1">110</div><div class="line number111 index110 alt2">111</div><div 
+class="line number112 index111 alt1">112</div><div class="line number113
+ index112 alt2">113</div><div class="line number114 index113 alt1">114</div><div
+ class="line number115 index114 alt2">115</div><div class="line 
+number116 index115 alt1">116</div><div class="line number117 index116 
+alt2">117</div><div class="line number118 index117 alt1">118</div><div 
+class="line number119 index118 alt2">119</div><div class="line number120
+ index119 alt1">120</div><div class="line number121 index120 alt2">121</div><div
+ class="line number122 index121 alt1">122</div><div class="line 
+number123 index122 alt2">123</div><div class="line number124 index123 
+alt1">124</div><div class="line number125 index124 alt2">125</div><div 
+class="line number126 index125 alt1">126</div><div class="line number127
+ index126 alt2">127</div><div class="line number128 index127 alt1">128</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="cpp preprocessor">#include &lt;cstdio&gt;</code></div><div
+ class="line number2 index1 alt1"><code class="cpp preprocessor">#include
+ &lt;cstring&gt;</code></div><div class="line number3 index2 alt2"><code
+ class="cpp preprocessor">#include &lt;iostream&gt;</code></div><div 
+class="line number4 index3 alt1"><code class="cpp preprocessor">#include
+ &lt;queue&gt;</code></div><div class="line number5 index4 alt2"><code 
+class="cpp preprocessor">#include &lt;vector&gt;</code></div><div 
+class="line number6 index5 alt1">&nbsp;</div><div class="line number7 
+index6 alt2"><code class="cpp keyword bold">using</code> <code 
+class="cpp keyword bold">namespace</code> <code class="cpp plain">std;</code></div><div
+ class="line number8 index7 alt1">&nbsp;</div><div class="line number9 
+index8 alt2"><code class="cpp preprocessor">#define foreach(i, v) for 
+(typeof((v).begin()) i = (v).begin(); i != (v).end(); i++)</code></div><div
+ class="line number10 index9 alt1">&nbsp;</div><div class="line number11
+ index10 alt2"><code class="cpp keyword bold">const</code> <code 
+class="cpp color1 bold">int</code> <code class="cpp plain">MAXN = 205, 
+MAXM = 205;</code></div><div class="line number12 index11 alt1">&nbsp;</div><div
+ class="line number13 index12 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">n, m;</code></div><div class="line number14 
+index13 alt1">&nbsp;</div><div class="line number15 index14 alt2"><code 
+class="cpp comments">// prev[N][M] stores all farms which lead to farm N
+ after following sign M</code></div><div class="line number16 index15 
+alt1"><code class="cpp plain">vector&lt;</code><code class="cpp color1 
+bold">int</code><code class="cpp plain">&gt; prev[MAXN][MAXM]; </code></div><div
+ class="line number17 index16 alt2"><code class="cpp comments">// 
+bfs_queue stores states as int pairs when doing the reverse BFS from the
+ barn</code></div><div class="line number18 index17 alt1"><code 
+class="cpp plain">queue&lt; pair&lt;</code><code class="cpp color1 bold">int</code><code
+ class="cpp plain">, </code><code class="cpp color1 bold">int</code><code
+ class="cpp plain">&gt; &gt; bfs_queue;</code></div><div class="line 
+number19 index18 alt2"><code class="cpp comments">// 
+sign_to_follow[X][Y] has the sign to folllow when merging X and Y</code></div><div
+ class="line number20 index19 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">sign_to_follow[MAXN][MAXN];</code></div><div 
+class="line number21 index20 alt2"><code class="cpp comments">// 
+simulate_merge[Z][X][Y] stores where Z will end up after merging X and Y</code></div><div
+ class="line number22 index21 alt1"><code class="cpp plain">unsigned </code><code
+ class="cpp color1 bold">char</code> <code class="cpp plain">simulate_merge[MAXN][MAXN][MAXN];</code></div><div
+ class="line number23 index22 alt2"><code class="cpp comments">// 
+sign[X][Y] stores where sign Y at pasture X points to</code></div><div 
+class="line number24 index23 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">sign[MAXN][MAXM];</code></div><div class="line 
+number25 index24 alt2">&nbsp;</div><div class="line number26 index25 
+alt1"><code class="cpp comments">// occupied[X] is true if pasture X is 
+occupied at the current simulation step</code></div><div class="line 
+number27 index26 alt2"><code class="cpp color1 bold">bool</code> <code 
+class="cpp plain">occupied[MAXN], new_occupied[MAXN];</code></div><div 
+class="line number28 index27 alt1">&nbsp;</div><div class="line number29
+ index28 alt2"><code class="cpp color1 bold">int</code> <code class="cpp
+ plain">main() {</code></div><div class="line number30 index29 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp functions bold">freopen</code><code
+ class="cpp plain">(</code><code class="cpp string">"lostcows.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">, stdin);</code></div><div class="line number31 
+index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code 
+class="cpp functions bold">freopen</code><code class="cpp plain">(</code><code
+ class="cpp string">"lostcows.out"</code><code class="cpp plain">, </code><code
+ class="cpp string">"w"</code><code class="cpp plain">, stdout);</code></div><div
+ class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp plain">ios_base::sync_with_stdio(</code><code class="cpp 
+keyword bold">false</code><code class="cpp plain">);</code></div><div 
+class="line number33 index32 alt2">&nbsp;</div><div class="line number34
+ index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code 
+class="cpp comments">// read input</code></div><div class="line number35
+ index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code 
+class="cpp plain">cin &gt;&gt; n &gt;&gt; m;</code></div><div 
+class="line number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">j = 0; j 
+&lt; m; j++)</code></div><div class="line number37 index36 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">for</code> <code class="cpp plain">(</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i &lt;
+ n; i++) {</code></div><div class="line number38 index37 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">cin &gt;&gt; sign[i][j];</code></div><div class="line 
+number39 index38 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sign[i][j]--;</code></div><div class="line number40 
+index39 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">prev[sign[i][j]][j].push_back(i);</code></div><div 
+class="line number41 index40 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number42 index41 alt1">&nbsp;</div><div
+ class="line number43 index42 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp comments">// compute sign_to_follow using a BFS</code></div><div
+ class="line number44 index43 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp functions bold">memset</code><code class="cpp plain">(sign_to_follow,
+ 255, </code><code class="cpp keyword bold">sizeof</code><code 
+class="cpp plain">(sign_to_follow));</code></div><div class="line 
+number45 index44 alt2">&nbsp;</div><div class="line number46 index45 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp 
+comments">// mark the barn as the end point</code></div><div class="line
+ number47 index46 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp plain">sign_to_follow[0][0] = -2;</code></div><div 
+class="line number48 index47 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp plain">bfs_queue.push(make_pair(0, 0));</code></div><div 
+class="line number49 index48 alt2">&nbsp;</div><div class="line number50
+ index49 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code 
+class="cpp comments">// the barn is the end state, so the cow at pasture
+ i will stay there</code></div><div class="line number51 index50 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp keyword bold">for</code>
+ <code class="cpp plain">(</code><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">i = 0; i &lt; n; i++)</code></div><div 
+class="line number52 index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">simulate_merge[i][0][0] = i;</code></div><div 
+class="line number53 index52 alt2">&nbsp;</div><div class="line number54
+ index53 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">while</code> <code class="cpp plain">(!bfs_queue.empty())
+ {</code></div><div class="line number55 index54 alt2"><code class="cpp 
+spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">// a 
+and b are currently occupied</code></div><div class="line number56 
+index55 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">a = 
+bfs_queue.front().first;</code></div><div class="line number57 index56 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">b = 
+bfs_queue.front().second;</code></div><div class="line number58 index57 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">bfs_queue.pop();</code></div><div class="line number59
+ index58 alt2">&nbsp;</div><div class="line number60 index59 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+comments">// consider all previously followed signs</code></div><div 
+class="line number61 index60 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">prev_sign = 
+0; prev_sign &lt; m; prev_sign++) {</code></div><div class="line 
+number62 index61 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">foreach(prev_a_iterator, prev[a][prev_sign])</code></div><div
+ class="line number63 index62 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">foreach(prev_b_iterator, prev[b][prev_sign]) {</code></div><div
+ class="line number64 index63 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">prev_a = 
+*prev_a_iterator;</code></div><div class="line number65 index64 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">prev_b = 
+*prev_b_iterator;</code></div><div class="line number66 index65 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(prev_a &gt;
+ prev_b)</code></div><div class="line number67 index66 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">swap(prev_a, prev_b);</code></div><div class="line 
+number68 index67 alt1">&nbsp;</div><div class="line number69 index68 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(sign_to_follow[prev_a][prev_b]
+ == -1) {</code></div><div class="line number70 index69 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sign_to_follow[prev_a][prev_b] = prev_sign;</code></div><div
+ class="line number71 index70 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">bfs_queue.push(make_pair(prev_a, prev_b));</code></div><div
+ class="line number72 index71 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number73 index72 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">}</code></div><div class="line number74 index73 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number75 index74 alt2">&nbsp;</div><div
+ class="line number76 index75 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// if we are not at the barn, precompute the merge
+ simulation</code></div><div class="line number77 index76 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">if</code> <code class="cpp plain">(a != 0 || b != 0) {</code></div><div
+ class="line number78 index77 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">move = 
+sign_to_follow[a][b];</code></div><div class="line number79 index78 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">next_a = 
+sign[a][move];</code></div><div class="line number80 index79 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">next_b = 
+sign[b][move];</code></div><div class="line number81 index80 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">if</code> <code class="cpp plain">(next_a &gt; 
+next_b)</code></div><div class="line number82 index81 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">swap(next_a, next_b);</code></div><div class="line 
+number83 index82 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; n; i++)</code></div><div class="line number84 index83 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">simulate_merge[i][a][b] = 
+simulate_merge[sign[i][move]][next_a][next_b];</code></div><div 
+class="line number85 index84 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number86 index85 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div
+ class="line number87 index86 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number88 index87 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp comments">// now compute the actual synchronizing sequence</code></div><div
+ class="line number89 index88 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp plain">first = </code><code class="cpp keyword bold">true</code><code
+ class="cpp plain">;</code></div><div class="line number90 index89 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">fill(occupied,
+ occupied + n, </code><code class="cpp keyword bold">true</code><code 
+class="cpp plain">);</code></div><div class="line number91 index90 alt2">&nbsp;</div><div
+ class="line number92 index91 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">while</code> <code class="cpp plain">(</code><code
+ class="cpp keyword bold">true</code><code class="cpp plain">) {</code></div><div
+ class="line number93 index92 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// a and b will contain a pair to be merged</code></div><div
+ class="line number94 index93 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">a = -1, b = 
+-1;</code></div><div class="line number95 index94 alt2"><code class="cpp
+ spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">for</code>
+ <code class="cpp plain">(</code><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">i = 1; i &lt; n; i++)</code></div><div 
+class="line number96 index95 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(occupied[i])
+ { </code></div><div class="line number97 index96 alt2"><code class="cpp
+ spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">if</code> <code class="cpp plain">(a == -1)</code></div><div
+ class="line number98 index97 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">a = i;</code></div><div class="line number99 index98 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">else</code> <code class="cpp keyword bold">if</code>
+ <code class="cpp plain">(b == -1)</code></div><div class="line 
+number100 index99 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">b = i;</code></div><div class="line number101 
+index100 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number102 index101 
+alt1">&nbsp;</div><div class="line number103 index102 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+comments">// if no pastures except the barn are occupied, we are done</code></div><div
+ class="line number104 index103 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(a == -1)</code></div><div
+ class="line number105 index104 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">break</code><code class="cpp plain">;</code></div><div
+ class="line number106 index105 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// if only one other pasture is occupied, merge 
+that with the barn</code></div><div class="line number107 index106 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">if</code> <code class="cpp plain">(b == -1)</code></div><div
+ class="line number108 index107 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">b = 0;</code></div><div class="line number109 
+index108 alt2">&nbsp;</div><div class="line number110 index109 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+comments">// simulate the merge</code></div><div class="line number111 
+index110 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">fill(new_occupied, new_occupied + n, </code><code 
+class="cpp keyword bold">false</code><code class="cpp plain">);</code></div><div
+ class="line number112 index111 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; n; i++)</code></div><div class="line number113 index112 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">if</code> <code class="cpp plain">(occupied[i])</code></div><div
+ class="line number114 index113 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">new_occupied[simulate_merge[i][a][b]] = </code><code 
+class="cpp keyword bold">true</code><code class="cpp plain">;</code></div><div
+ class="line number115 index114 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">copy(new_occupied, new_occupied + n, occupied);</code></div><div
+ class="line number116 index115 alt1">&nbsp;</div><div class="line 
+number117 index116 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// and print the sequence to merge a and b</code></div><div
+ class="line number118 index117 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">while</code> <code class="cpp plain">(a != 0 
+|| b != 0) {</code></div><div class="line number119 index118 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">if</code> <code class="cpp plain">(a &gt; b)</code></div><div
+ class="line number120 index119 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">swap(a, b);</code></div><div class="line number121 
+index120 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">now = 
+sign_to_follow[a][b];</code></div><div class="line number122 index121 
+alt1">&nbsp;</div><div class="line number123 index122 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">cout &lt;&lt; (now + 1) &lt;&lt; </code><code 
+class="cpp string">"\n"</code><code class="cpp plain">;</code></div><div
+ class="line number124 index123 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">a = sign[a][now];</code></div><div class="line 
+number125 index124 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">b = sign[b][now];</code></div><div class="line 
+number126 index125 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number127 index126 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number128 index127 alt1"><code 
+class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="lostcows_files/shCore.js"></script>
+<script type="text/javascript" src="lostcows_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="lostcows_files/shBrushJava.js"></script>
+<link href="lostcows_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="lostcows_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+</body></html>

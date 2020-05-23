@@ -1,0 +1,144 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoanal2?a=9KC9FZj8IOz&S=rectbarn -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>A Rectangular Barn</title> </head>
+<body background="./rectbarn_files/bg3.jpg">
+<center><img src="./rectbarn_files/cow1.jpg" width="742" height="118"></center>
+
+<center>
+<b><font size="7">A Rectangular Barn</font></b><br>
+</center>
+
+<p> First, note that the largest possible barn will be touching a
+rock (i.e., a damaged area) or a side of the field on all four of
+its sides, as otherwise we could make a larger barn by extending
+the supposed largest barn on a side which isn't blocked.  Consider
+any rock on the top side. We can view the barn as extending out to
+the left and to the right from the column of this rock.
+
+</p><p>We loop through the rows, and then through the columns. For the
+i-th row and the j-th column, we consider the largest barn starting
+at the most recent rock (or the top side of the field) in the j-th
+column, and extending down to the i-th row. We have explicitly
+defined the top and bottom sides of the barn, so we simply want to
+extend the left and right sides as far out as possible from the
+j-th column. If we already have the maximum distance from the j-th
+column that the left and right sides can extend if the bottom side
+of the barn is the (i-1)-st row, then for each of the left and the
+right sides, we just take the minimum of the old value and the
+distance to the nearest rock on the i-th row to calculate the new
+value for the maximum extensions to the left and the right of our
+barn. (If we had just hit a rock on the (i-1)-st row, we assume
+that we could reach all the way to the side of the field.)
+
+</p><p>In this way, we scan down row by row. As each maximal barn is
+bounded on the top side by some rock or by the top side of the
+field, we will find it when we're scanning through the row corresponding
+to the bottom side of the barn.
+
+</p><pre>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+int intcmp(const void *p1, const void *p2){
+  return(*(int*)p1 - *(int*)p2);
+}
+
+const int MAXR = 4000;
+const int MAXC = 4000;
+const int MAXP = 40000;
+
+int r,c,p;
+int nrow[MAXR];
+int *start[MAXR];
+int rocklist[MAXP];
+int h[MAXC];
+int wleft[MAXC];
+int wright[MAXC];
+
+int main(){
+
+
+  FILE *fin = fopen("rectbarn.in", "r");
+  fscanf(fin, "%d %d %d", &amp;r, &amp;c, &amp;p);
+  for(int i = 0; i &lt; r; ++i){
+    nrow[i] = 0;
+  }
+  for(int i = 0; i &lt; p; ++i){
+    int a,b;
+    fscanf(fin, "%d %d", &amp;a, &amp;b);
+    ++nrow[a-1];
+  }
+  fclose(fin);
+
+
+  start[0] = rocklist;
+  for(int i = 1; i &lt; r; ++i){
+    start[i] = start[i-1] + nrow[i-1];
+  }
+  for(int i = 0; i &lt; r; ++i){
+    nrow[i] = 0;
+  }
+
+
+  fin = fopen("rectbarn.in", "r");
+  fscanf(fin, "%d %d %d", &amp;r, &amp;c, &amp;p);
+  for(int i = 0; i &lt; p; ++i){
+    int a,b;
+    fscanf(fin, "%d %d", &amp;a, &amp;b);
+    start[a-1][nrow[a-1]++] = b-1;
+  }
+  fclose(fin);
+
+
+  for(int i = 0; i &lt; c; ++i){
+    h[i] = 0;
+    wleft[i] = 0;
+    wright[i] = c-1;
+  }
+
+
+  int area = 0;
+  int r1,c1,r2,c2;
+  r1=c1=r2=c2=-1;
+
+  for(int i = 0; i &lt; r; ++i){
+    qsort(start[i], nrow[i], sizeof(int), intcmp);
+    int q = 0;
+    for(int j = 0; j &lt; c; ++j){
+      if(q &lt; nrow[i] &amp;&amp; start[i][q] == j){
+	h[j] = 0;
+	wleft[j] = 0;
+	wright[j] = c-1;
+	while(q &lt; nrow[i] &amp;&amp; start[i][q] == j){
+	  ++q;
+	}
+      } else {
+	++h[j];
+	if(q != 0){
+	  wleft[j] &gt;?= start[i][q-1] + 1;
+	}
+	if(q &lt; nrow[i]){
+	  wright[j] &lt;?= start[i][q] - 1;
+	}
+      }
+      if(area &lt; h[j] * (wright[j] - wleft[j] + 1)){
+	 area = h[j] * (wright[j] - wleft[j] + 1);
+	 r1 = i - h[j] + 1 + 1;
+	 r2 = i + 1;
+	 c1 = wleft[j] + 1;
+	 c2 = wright[j] + 1;
+      }
+    }
+  }
+
+  FILE *fout = fopen("rectbarn.out", "w");
+  fprintf(fout, "%d\n", area);
+  fclose(fout);
+
+  return(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=9KC9FZj8IOz">USACO Gateway</a> | <a href="mailto:kolstad.delos.com">Comment or Question</a>
+</center>
+
+</body></html>

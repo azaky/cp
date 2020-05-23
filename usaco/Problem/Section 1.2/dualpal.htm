@@ -1,0 +1,67 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 90: Dual Palindromes</title> </head><body background="dualpal_files/bg3.jpg">
+<img src="dualpal_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Dual Palindromes</font></b><br>
+<b>Mario Cruz (Colombia) &amp; Hugo Rickeboer (Argentina)</b>
+</center>
+
+<p> A number that reads the same from right to left as when read from
+left to right is called a palindrome.  The number 12321 is a palindrome;
+the number 77778 is not.  Of course, palindromes have neither leading
+nor trailing zeroes, so 0220 is not a palindrome.
+
+</p><p> The number 21 (base 10) is not palindrome in base 10, but the
+number 21 (base 10) is, in fact, a palindrome in base 2 (10101).
+
+</p><p>
+Write a program that reads two numbers (expressed in base 10):
+</p><ul>
+        <li> N (1 &lt;= N &lt;= 15) 
+        </li><li> S (0 &lt; S &lt; 10000)
+</li></ul>
+and then finds and prints (in base 10) the first N numbers strictly
+greater than S that are palindromic when written in two or more
+number bases (2 &lt;= base &lt;= 10).
+
+<p> Solutions to this problem do not require manipulating integers
+larger than the standard 32 bits.
+
+</p><h3>PROGRAM NAME: dualpal</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p>A single line with space separated integers N and S.
+
+</p><h3>SAMPLE INPUT (file dualpal.in) </h3>
+
+<pre>3 25
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+N lines, each with a base 10 number that is palindromic when expressed
+in at least two of the bases 2..10.  The numbers should be listed
+in order from smallest to largest.
+
+<h3>SAMPLE OUTPUT (file dualpal.out)</h3>
+
+<pre>26
+27
+28
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="dualpal" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

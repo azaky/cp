@@ -1,0 +1,101 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 11: Contact</title> </head><body 
+background="contact_files/bg3.jpg">
+<img src="contact_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Contact</font></b><br>
+<b>IOI'98</b>
+</center>
+
+<p>The cows have developed a new interest in scanning the universe
+outside their farm with radiotelescopes.  Recently, they noticed a very
+curious microwave pulsing emission sent right from the centre of the
+galaxy. They wish to know if the emission is transmitted by some
+extraterrestrial form of intelligent life or if it is nothing but the
+usual heartbeat of the stars.
+
+</p><p>Help the cows to find the Truth by providing a tool to analyze 
+bit
+patterns in the files they record. They are seeking bit patterns of
+length <b>A</b> through <b>B</b> inclusive (1 &lt;= A &lt;= B &lt;= 12)
+that repeat themselves most often in each day's data file. They are
+looking for the patterns that repeat themselves most often.  An input
+limit tells how many of the most frequent patterns to output.
+
+</p><p> Pattern occurrences may overlap, and only patterns that occur at
+least once are taken into account.
+
+</p><h3>PROGRAM NAME: contact</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td>Three space-separated integers: A, B,
+ N; (1
+&lt;= N &lt; 50) </td>
+</tr><tr> <td> Lines 2 and beyond: </td> <td>A sequence of as many as 
+200,000
+characters, all 0 or 1; the characters are presented 80 per line, except
+potentially the last line.</td>
+</tr></tbody></table>
+
+<h3>SAMPLE INPUT (file contact.in) </h3>
+
+<pre>2 4 10
+01010010010001000111101100001010011001111000010010011110010000000
+
+</pre>
+<p>In this example, pattern 100 occurs 12 times, and pattern 1000 occurs
+5 times. The most frequent pattern is 00, with 23 occurrences.
+
+</p><h3>OUTPUT FORMAT</h3>
+
+<p>Lines that list the N highest frequencies (in descending order of
+frequency) along with the patterns that occur in those frequencies.
+Order those patterns by shortest-to-longest and increasing binary number
+for those of the same frequency.  If fewer than N highest frequencies
+are available, print only those that are.
+
+</p><p>Print the frequency alone by itself on a line.  Then print the 
+actual
+patterns space separated, six to a line (unless fewer than six remain).
+
+</p><h3>SAMPLE OUTPUT (file contact.out)</h3>
+
+<pre>23
+00
+15
+01 10
+12
+100
+11
+11 000 001
+10
+010
+8
+0100
+7
+0010 1001
+6
+111 0000
+5
+011 110 1000
+4
+0001 0011 1100
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="LY9oWTzoc4b" type="hidden">
+<input name="S" value="contact" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=LY9oWTzoc4b"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

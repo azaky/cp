@@ -1,0 +1,826 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 traffic Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="traffic_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'traffic' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p> This is a classic shortest path algorithm, which we can use
+Dijkstra to solve.  All we have to do is factor in the wait time
+at each light, and then we have a solution. The hard part now is
+just finding a way to calculate the wait time. Luckily for us, the
+traffic lights do not have be the same for the whole trip, so we
+really are only interested in the first moment when they are the
+same color.  </p>
+
+<p> First, we write a function to tell us what color the traffic
+light is at time t. For ease, let <tt>0</tt> be the blue light and
+<tt>1</tt> be the purple light.  </p>
+
+<p>To solve this, we can just simulate the light changing until
+we get to the appropriate window. Let <tt>c</tt> be the initial
+color of the light and let <tt>sec</tt> be the time that we want
+to calculate for. Let <tt>i</tt> be the junction we want to calculate
+for. In addition, let <tt>init[i]</tt> be the time that the initial
+color light is on, <tt>duration[i][0]</tt> be the time that blue
+is on, and <tt>duration[i][1]</tt> be the time that purple is on.
+Now, we just step through the time intervals, switching our lights
+as when we finish the time interval. When we can no longer switch
+our lights (i.e. we have no more time), then that light is our
+answer. We also take advantage of the fact that <tt>1-c</tt> is the
+opposite color of the light. Below, is our function: </p>
+
+<div><div id="highlighter_378356" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="cpp color1 bold">int</code> <code class="cpp plain">calcLight
+ (</code><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">i, </code><code class="cpp color1 bold">int</code> <code 
+class="cpp plain">sec) {</code></div><div class="line number2 index1 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">c = light[i];</code></div><div
+ class="line number3 index2 alt2">&nbsp;</div><div class="line number4 
+index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(sec-init[i]
+ &gt;= 0) {</code></div><div class="line number5 index4 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sec -= init[i];</code></div><div class="line number6 
+index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">c=1-c;</code></div><div class="line number7 index6 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">}</code></div><div class="line number8 index7 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">while</code> <code class="cpp plain">(sec-duration[i][c] 
+&gt;= 0) {</code></div><div class="line number9 index8 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sec -= duration[i][c];</code></div><div class="line 
+number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">c = 1-c; </code></div><div class="line number11 
+index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number12 index11 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">return</code> <code class="cpp plain">c;</code></div><div 
+class="line number13 index12 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p> If we want to check if we can cross from junction <tt>i</tt>
+to junction <tt>j</tt> at time <tt>t</tt>, we just check if
+<tt>calcLight(i,t) == calcLight(j,t)</tt>.</p>
+
+<p>Once we reach junction <tt>i</tt>, we might have to wait a certain
+time before we actually get to cross to the other junctions.  We
+can just place a loop increasing time one by one until we can cross.
+However, we might not be able to cross the intersection at all
+because the times are synced, so we have to know to when to break
+out of our loop. Since the max cycle time is <tt>200</tt>, and the
+max initial time is <tt>100</tt>, just checking <tt>300</tt> seconds
+is enough. That means if we haven't crossed the intersection after
+<tt>300</tt> seconds, we break.  </p>
+
+<p>We now just put that all together into the solution below. Since
+<tt>N</tt> is small enough, and the graph can be quite dense, we
+can just use an adjacency matrix to store our graph. This will run
+in <tt>O(N<sup>2</sup>)</tt>, but with a constant factor of about
+<tt>300</tt>. Below is a solution by Fatih.  </p>
+
+<div><div id="highlighter_796204" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div
+ class="line number56 index55 alt1">56</div><div class="line number57 
+index56 alt2">57</div><div class="line number58 index57 alt1">58</div><div
+ class="line number59 index58 alt2">59</div><div class="line number60 
+index59 alt1">60</div><div class="line number61 index60 alt2">61</div><div
+ class="line number62 index61 alt1">62</div><div class="line number63 
+index62 alt2">63</div><div class="line number64 index63 alt1">64</div><div
+ class="line number65 index64 alt2">65</div><div class="line number66 
+index65 alt1">66</div><div class="line number67 index66 alt2">67</div><div
+ class="line number68 index67 alt1">68</div><div class="line number69 
+index68 alt2">69</div><div class="line number70 index69 alt1">70</div><div
+ class="line number71 index70 alt2">71</div><div class="line number72 
+index71 alt1">72</div><div class="line number73 index72 alt2">73</div><div
+ class="line number74 index73 alt1">74</div><div class="line number75 
+index74 alt2">75</div><div class="line number76 index75 alt1">76</div><div
+ class="line number77 index76 alt2">77</div><div class="line number78 
+index77 alt1">78</div><div class="line number79 index78 alt2">79</div><div
+ class="line number80 index79 alt1">80</div><div class="line number81 
+index80 alt2">81</div><div class="line number82 index81 alt1">82</div><div
+ class="line number83 index82 alt2">83</div><div class="line number84 
+index83 alt1">84</div><div class="line number85 index84 alt2">85</div><div
+ class="line number86 index85 alt1">86</div><div class="line number87 
+index86 alt2">87</div><div class="line number88 index87 alt1">88</div><div
+ class="line number89 index88 alt2">89</div><div class="line number90 
+index89 alt1">90</div><div class="line number91 index90 alt2">91</div><div
+ class="line number92 index91 alt1">92</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code class="cpp
+ preprocessor">#include &lt;fstream&gt;</code></div><div class="line 
+number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code
+ class="cpp keyword bold">using</code> <code class="cpp keyword bold">namespace</code>
+ <code class="cpp plain">std;</code></div><div class="line number4 
+index3 alt1">&nbsp;</div><div class="line number5 index4 alt2"><code 
+class="cpp preprocessor">#define MAX 300&nbsp;&nbsp;&nbsp; // max number
+ of junctions</code></div><div class="line number6 index5 alt1"><code 
+class="cpp preprocessor">#define DMAX 350&nbsp;&nbsp; // max wait time 
+(just a little higher to be safe)</code></div><div class="line number7 
+index6 alt2"><code class="cpp preprocessor">#define INF 100000000</code></div><div
+ class="line number8 index7 alt1">&nbsp;</div><div class="line number9 
+index8 alt2"><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">n, mat[MAX][MAX], src, dst, light[MAX], init[MAX], 
+duration[MAX][2], t[MAX];</code></div><div class="line number10 index9 
+alt1"><code class="cpp color1 bold">bool</code> <code class="cpp plain">mark[MAX];</code></div><div
+ class="line number11 index10 alt2">&nbsp;</div><div class="line 
+number12 index11 alt1"><code class="cpp comments">// read input</code></div><div
+ class="line number13 index12 alt2"><code class="cpp keyword bold">void</code>
+ <code class="cpp plain">fRead (</code><code class="cpp color1 bold">char</code>
+ <code class="cpp plain">*inpFile) {</code></div><div class="line 
+number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">ifstream f (inpFile);</code></div><div class="line 
+number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">m;</code></div><div
+ class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">char</code> <code class="cpp plain">c;</code></div><div
+ class="line number17 index16 alt2">&nbsp;</div><div class="line 
+number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">f &gt;&gt; src &gt;&gt; dst &gt;&gt; n &gt;&gt; m;</code></div><div
+ class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">src--;</code></div><div class="line number20 index19 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">dst--;</code></div><div class="line number21 index20 
+alt2">&nbsp;</div><div class="line number22 index21 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+comments">// read junctions</code></div><div class="line number23 
+index22 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; n; ++i) {</code></div><div class="line number24 index23 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">f &gt;&gt; c &gt;&gt; init[i] &gt;&gt; duration[i][0]
+ &gt;&gt; duration[i][1];</code></div><div class="line number25 index24 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">light[i] = (c == </code><code class="cpp string">'B'</code>
+ <code class="cpp plain">? 0 : 1);</code></div><div class="line number26
+ index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number27 index26 alt2">&nbsp;</div><div
+ class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// read roads</code></div><div class="line 
+number29 index28 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">a, b, l;</code></div><div
+ class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; m; ++i) {</code></div><div class="line number31 index30 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">f &gt;&gt; a &gt;&gt; b &gt;&gt; l;</code></div><div 
+class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">mat[--a][--b] = l;</code></div><div class="line 
+number33 index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">mat[b][a] = l;</code></div><div class="line number34 
+index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number35 index34 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">f.close ();</code></div><div class="line number36 index35 alt1"><code
+ class="cpp plain">}</code></div><div class="line number37 index36 alt2">&nbsp;</div><div
+ class="line number38 index37 alt1"><code class="cpp comments">// write 
+output</code></div><div class="line number39 index38 alt2"><code 
+class="cpp keyword bold">void</code> <code class="cpp plain">fWrite (</code><code
+ class="cpp color1 bold">char</code> <code class="cpp plain">*outFile) {</code></div><div
+ class="line number40 index39 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">ofstream f (outFile);</code></div><div class="line 
+number41 index40 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">f &lt;&lt; (t[dst] == INF ? 0 : t[dst]) &lt;&lt; </code><code
+ class="cpp string">"\n"</code><code class="cpp plain">;</code></div><div
+ class="line number42 index41 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">f.close ();</code></div><div class="line number43 
+index42 alt2"><code class="cpp plain">}</code></div><div class="line 
+number44 index43 alt1">&nbsp;</div><div class="line number45 index44 
+alt2"><code class="cpp comments">// calculates the color of the light at
+ junction a at time sec</code></div><div class="line number46 index45 
+alt1"><code class="cpp color1 bold">int</code> <code class="cpp plain">calcLight
+ (</code><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">a, </code><code class="cpp color1 bold">int</code> <code 
+class="cpp plain">sec) {</code></div><div class="line number47 index46 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">l = light[a];</code></div><div
+ class="line number48 index47 alt1">&nbsp;</div><div class="line 
+number49 index48 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(sec = 
+init[a] &gt;= 0) {</code></div><div class="line number50 index49 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sec -= init[a];</code></div><div class="line number51
+ index50 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">l = 1 - l;</code></div><div class="line number52 
+index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number53 index52 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">while</code> <code class="cpp plain">(sec - duration[a][l]
+ &gt;= 0 ) {</code></div><div class="line number54 index53 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sec -= duration[a][l];</code></div><div class="line 
+number55 index54 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">l = 1 - l;</code></div><div class="line number56 
+index55 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number57 index56 alt2">&nbsp;</div><div
+ class="line number58 index57 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">l;</code></div><div
+ class="line number59 index58 alt2"><code class="cpp plain">}</code></div><div
+ class="line number60 index59 alt1">&nbsp;</div><div class="line 
+number61 index60 alt2"><code class="cpp comments">// main solution 
+function</code></div><div class="line number62 index61 alt1"><code 
+class="cpp comments">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ shortest path with Dijkstra</code></div><div class="line number63 
+index62 alt2"><code class="cpp keyword bold">void</code> <code 
+class="cpp plain">solve () {</code></div><div class="line number64 
+index63 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">fill (t, t+n, 
+INF);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ </code><code class="cpp comments">// all the junctions are unreachable 
+at the beginning</code></div><div class="line number65 index64 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">t[src] = 
+0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ </code><code class="cpp comments">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ except the source one</code></div><div class="line number66 index65 
+alt1">&nbsp;</div><div class="line number67 index66 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">for</code> <code class="cpp plain">(</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">i = src; i !=
+ dst; ) {</code></div><div class="line number68 index67 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">mark[i] = </code><code class="cpp keyword bold">true</code><code
+ class="cpp plain">;</code></div><div class="line number69 index68 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">j = 0; j 
+&lt; n; j++) {</code></div><div class="line number70 index69 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(mat[i][j]) {</code></div><div
+ class="line number71 index70 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">k = t[i]; k 
+&lt; t[i] + DMAX &amp;&amp; k + mat[i][j] &lt; t[j]; k++) {</code></div><div
+ class="line number72 index71 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(calcLight 
+(i, k) == calcLight (j, k)) {</code></div><div class="line number73 
+index72 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">t[j] = k + mat[i][j];</code></div><div class="line 
+number74 index73 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">break</code><code class="cpp plain">;</code></div><div
+ class="line number75 index74 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number76 index75 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number77 index76 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">i--;</code></div><div class="line number78 index77 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number79 index78 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number80 index79 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">j = 0; j 
+&lt; n; ++j) {</code></div><div class="line number81 index80 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(!mark[j])</code></div><div
+ class="line number82 index81 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(i == -1 || 
+t[i] &gt; t[j]) </code></div><div class="line number83 index82 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">i = j;</code></div><div class="line number84 index83 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number85 index84 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number86 index85 alt1"><code 
+class="cpp plain">}</code></div><div class="line number87 index86 alt2">&nbsp;</div><div
+ class="line number88 index87 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">main() {</code></div><div class="line number89 
+index88 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">fRead (</code><code class="cpp string">"traffic.in"</code><code
+ class="cpp plain">);</code></div><div class="line number90 index89 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">solve ();</code></div><div class="line number91 
+index90 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">fWrite (</code><code class="cpp string">"traffic.out"</code><code
+ class="cpp plain">);</code></div><div class="line number92 index91 
+alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p> Here is a slightly faster solution </p>
+
+<p> Again, we'll create a function to calculate the light at a
+junction at a certain time. Define the variables similar to above.
+First, it is clear that if <tt>t &lt; init</tt>, the color will be
+<tt>c</tt>. After that, we see that we can just take <tt>k = (t -
+init) % (times[0] + times[1])</tt> because the traffic light has a
+cycle of <tt>times[0] + times[1]</tt>.  Now, it is fairly easy to
+calculate the color. If <tt>k &lt; times[1-c]</tt>, then the color of
+the light will be <tt>1-c</tt>. Otherwise it is <tt>c</tt>. Below,
+is our function: </p>
+
+<div><div id="highlighter_546735" class="syntaxhighlighter  java"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code 
+class="java keyword">public</code> <code class="java keyword">int</code>
+ <code class="java plain">calc (</code><code class="java keyword">int</code>
+ <code class="java plain">t) { </code><code class="java comments">// 
+returns the color of this junction at time t</code></div><div 
+class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(t &lt; init) </code><code
+ class="java keyword">return</code> <code class="java plain">color;</code></div><div
+ class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">t = (t - init) % (cycle);</code></div><div 
+class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">return</code> <code class="java plain">t &lt; 
+times [</code><code class="java value">1</code> <code class="java plain">-
+ color] ? </code><code class="java value">1</code> <code class="java 
+plain">- color : color;</code></div><div class="line number5 index4 
+alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p>
+Now, if we want to check whether or not we can go from junction
+<tt>i</tt> to junction <tt>j</tt> at time <tt>t</tt>, all we check
+is <tt>junction[i].calc(t) == junction[j].calc(t)</tt>.  </p>
+
+<p> Another function that we can create is the minimum wait time
+for the traffic light to change. Again, we we see that if <tt>t &lt;
+init</tt>, then clearly, our answer is <tt>t - init</tt>. Otherwise,
+we take <tt>k = (t - init) % (times [0] + times [1])</tt>. If <tt>k
+&lt; times [1-c]</tt>, then our answer is <tt>times [1-c] - k</tt>,
+if not, then our answer is <tt>times [1-c] + times [c] - k</tt>.
+We can see that it is almost the same thing as our calc function
+with a few minor changes. The structure is almost the same; we just
+changed a few values. </p>
+
+<div><div id="highlighter_331006" class="syntaxhighlighter  java"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code 
+class="java keyword">public</code> <code class="java keyword">int</code>
+ <code class="java plain">wait (</code><code class="java keyword">int</code>
+ <code class="java plain">t) { </code><code class="java comments">// 
+returns wait time until next traffic light change</code></div><div 
+class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(t &lt; init) </code><code
+ class="java keyword">return</code> <code class="java plain">init - t;</code></div><div
+ class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">t = (t - init) % (cycle);</code></div><div 
+class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">return</code> <code class="java plain">t &lt; 
+times [</code><code class="java value">1</code> <code class="java plain">-
+ color] ? times [</code><code class="java value">1</code> <code 
+class="java plain">- color] - t : cycle - t;</code></div><div 
+class="line number5 index4 alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<p> 
+However, there is one more tricky implementation detail. If the
+wait times are the same for both junctions, then that means they
+switch at the same time, and we are not allowed to pass. We can
+easily solve this by looping over using our new wait time (which
+is just <tt>cur_time + wait (cur_time)</tt>), and trying it again.
+However, we have to see that the junctions could be switching at
+the same time over and over again because their times are synced.
+We easily fix this by placing a maximum loop iteration. The maximum
+number of changes for one cycle is <tt>2</tt>, and there is also
+the initial time that we have to factor in. Therefore, the maximum
+loop iteration should be <tt>3</tt>.  </p>
+
+<p> Now, with these two functions, this gives us an easy solution.
+We just use Dijkstra's algorithm, but at the step when we look at
+all the neighbors of the vertex, we also factor in the wait time.
+We also determine whether or not it is possible to pass through the
+junction as described above.  </p>
+
+<p> The running time for this algorithm is dominated by Dijkstra's
+algorithm, which is <tt>O(N<sup>2</sup>)</tt>, but this has a much
+lower constant factor. My code below: </p>
+
+<div><div id="highlighter_496396" class="syntaxhighlighter  java"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div
+ class="line number56 index55 alt1">56</div><div class="line number57 
+index56 alt2">57</div><div class="line number58 index57 alt1">58</div><div
+ class="line number59 index58 alt2">59</div><div class="line number60 
+index59 alt1">60</div><div class="line number61 index60 alt2">61</div><div
+ class="line number62 index61 alt1">62</div><div class="line number63 
+index62 alt2">63</div><div class="line number64 index63 alt1">64</div><div
+ class="line number65 index64 alt2">65</div><div class="line number66 
+index65 alt1">66</div><div class="line number67 index66 alt2">67</div><div
+ class="line number68 index67 alt1">68</div><div class="line number69 
+index68 alt2">69</div><div class="line number70 index69 alt1">70</div><div
+ class="line number71 index70 alt2">71</div><div class="line number72 
+index71 alt1">72</div><div class="line number73 index72 alt2">73</div><div
+ class="line number74 index73 alt1">74</div><div class="line number75 
+index74 alt2">75</div><div class="line number76 index75 alt1">76</div><div
+ class="line number77 index76 alt2">77</div><div class="line number78 
+index77 alt1">78</div><div class="line number79 index78 alt2">79</div><div
+ class="line number80 index79 alt1">80</div><div class="line number81 
+index80 alt2">81</div><div class="line number82 index81 alt1">82</div><div
+ class="line number83 index82 alt2">83</div><div class="line number84 
+index83 alt1">84</div><div class="line number85 index84 alt2">85</div><div
+ class="line number86 index85 alt1">86</div><div class="line number87 
+index86 alt2">87</div><div class="line number88 index87 alt1">88</div><div
+ class="line number89 index88 alt2">89</div><div class="line number90 
+index89 alt1">90</div><div class="line number91 index90 alt2">91</div><div
+ class="line number92 index91 alt1">92</div><div class="line number93 
+index92 alt2">93</div><div class="line number94 index93 alt1">94</div><div
+ class="line number95 index94 alt2">95</div><div class="line number96 
+index95 alt1">96</div><div class="line number97 index96 alt2">97</div><div
+ class="line number98 index97 alt1">98</div><div class="line number99 
+index98 alt2">99</div><div class="line number100 index99 alt1">100</div><div
+ class="line number101 index100 alt2">101</div><div class="line 
+number102 index101 alt1">102</div><div class="line number103 index102 
+alt2">103</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="java keyword">import</code>
+ <code class="java plain">java.io.*;</code></div><div class="line 
+number2 index1 alt1"><code class="java keyword">import</code> <code 
+class="java plain">java.util.*;</code></div><div class="line number3 
+index2 alt2"><code class="java keyword">import</code> <code class="java 
+keyword">static</code> <code class="java plain">java.lang.Integer.parseInt;</code></div><div
+ class="line number4 index3 alt1">&nbsp;</div><div class="line number5 
+index4 alt2"><code class="java keyword">public</code> <code class="java 
+keyword">class</code> <code class="java plain">traffic {</code></div><div
+ class="line number6 index5 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">BufferedReader in;</code></div><div 
+class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">PrintWriter out;</code></div><div class="line 
+number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java 
+keyword">private</code> <code class="java keyword">static</code> <code 
+class="java keyword">int</code> <code class="java plain">INF = </code><code
+ class="java value">1</code> <code class="java plain">&lt;&lt; </code><code
+ class="java value">25</code><code class="java plain">;</code></div><div
+ class="line number10 index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number11 index10 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">static</code>
+ <code class="java keyword">void</code> <code class="java plain">main 
+(String [] args) </code><code class="java keyword">throws</code> <code 
+class="java plain">IOException {</code></div><div class="line number12 
+index11 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">in = </code><code class="java keyword">new</code> <code
+ class="java plain">BufferedReader (</code><code class="java keyword">new</code>
+ <code class="java plain">FileReader (</code><code class="java string">"traffic.in"</code><code
+ class="java plain">));</code></div><div class="line number13 index12 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out = </code><code class="java keyword">new</code> <code
+ class="java plain">PrintWriter (</code><code class="java keyword">new</code>
+ <code class="java plain">BufferedWriter (</code><code class="java 
+keyword">new</code> <code class="java plain">FileWriter (</code><code 
+class="java string">"traffic.out"</code><code class="java plain">)));</code></div><div
+ class="line number14 index13 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number15 index14 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">StringTokenizer st = </code><code class="java 
+keyword">new</code> <code class="java plain">StringTokenizer 
+(in.readLine ());</code></div><div class="line number16 index15 alt1"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">src = parseInt
+ (st.nextToken ()) - </code><code class="java value">1</code><code 
+class="java plain">, dst = parseInt (st.nextToken ()) - </code><code 
+class="java value">1</code><code class="java plain">;</code></div><div 
+class="line number17 index16 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st = </code><code class="java keyword">new</code> <code
+ class="java plain">StringTokenizer (in.readLine ());</code></div><div 
+class="line number18 index17 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">N = parseInt 
+(st.nextToken ()), M = parseInt (st.nextToken ());</code></div><div 
+class="line number19 index18 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number20 index19 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">Junction [] junctions = </code><code class="java 
+keyword">new</code> <code class="java plain">Junction [N];</code></div><div
+ class="line number21 index20 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; N; i++) {</code></div><div
+ class="line number22 index21 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st = </code><code class="java keyword">new</code> <code
+ class="java plain">StringTokenizer (in.readLine ());</code></div><div 
+class="line number23 index22 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">blue = 
+st.nextToken ().equals (</code><code class="java string">"B"</code><code
+ class="java plain">) ? </code><code class="java value">0</code> <code 
+class="java plain">: </code><code class="java value">1</code><code 
+class="java plain">;</code></div><div class="line number24 index23 alt1"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">a = parseInt 
+(st.nextToken ()), b = parseInt (st.nextToken ()), </code></div><div 
+class="line number25 index24 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">c = parseInt (st.nextToken ());</code></div><div 
+class="line number26 index25 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">junctions [i] = </code><code class="java keyword">new</code>
+ <code class="java plain">Junction (blue, a, b, c);</code></div><div 
+class="line number27 index26 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number28 index27 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number29 index28 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">[][] grid = </code><code
+ class="java keyword">new</code> <code class="java keyword">int</code> <code
+ class="java plain">[N][N];</code></div><div class="line number30 
+index29 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; M; i++) {</code></div><div
+ class="line number31 index30 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st = </code><code class="java keyword">new</code> <code
+ class="java plain">StringTokenizer (in.readLine ());</code></div><div 
+class="line number32 index31 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">a = parseInt 
+(st.nextToken ()) - </code><code class="java value">1</code><code 
+class="java plain">, b = parseInt (st.nextToken ()) - </code><code 
+class="java value">1</code><code class="java plain">, </code></div><div 
+class="line number33 index32 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">c = parseInt (st.nextToken ());</code></div><div 
+class="line number34 index33 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">grid [a][b] = grid [b][a] = c;</code></div><div 
+class="line number35 index34 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number36 index35 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number37 index36 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java comments">// dijkstra</code></div><div class="line number38
+ index37 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">[] time = </code><code
+ class="java keyword">new</code> <code class="java keyword">int</code> <code
+ class="java plain">[N];</code></div><div class="line number39 index38 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">boolean</code> <code class="java plain">[] vis = </code><code
+ class="java keyword">new</code> <code class="java keyword">boolean</code>
+ <code class="java plain">[N];</code></div><div class="line number40 
+index39 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">Arrays.fill (time, INF);</code></div><div 
+class="line number41 index40 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">time [src] = </code><code class="java value">0</code><code
+ class="java plain">;</code></div><div class="line number42 index41 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">cur = src;</code></div><div
+ class="line number43 index42 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">while</code> <code class="java plain">(cur != dst)
+ {</code></div><div class="line number44 index43 alt1"><code class="java
+ spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">vis [cur] = </code><code class="java keyword">true</code><code
+ class="java plain">;</code></div><div class="line number45 index44 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">t = time 
+[cur];</code></div><div class="line number46 index45 alt1"><code 
+class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; N; i++)</code></div><div
+ class="line number47 index46 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(grid [cur][i] 
+&gt; </code><code class="java value">0</code><code class="java plain">) {</code></div><div
+ class="line number48 index47 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">temp = t;</code></div><div
+ class="line number49 index48 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(junctions 
+[cur].calc (t) != junctions [i].calc (t)) { </code><code class="java 
+comments">// deal with waiting at traffic light</code></div><div 
+class="line number50 index49 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">j = junctions 
+[cur].wait (temp), k = junctions [i].wait (temp);</code></div><div 
+class="line number51 index50 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">iter = </code><code
+ class="java value">0</code><code class="java plain">;</code></div><div 
+class="line number52 index51 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">while</code> <code class="java plain">(iter &lt; </code><code
+ class="java value">3</code> <code class="java plain">&amp;&amp; j == k)
+ { </code><code class="java comments">// 3 is max loop limit</code></div><div
+ class="line number53 index52 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">temp += j;</code></div><div class="line number54 
+index53 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">j = junctions [cur].wait (temp);</code></div><div 
+class="line number55 index54 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">k = junctions [i].wait (temp);</code></div><div 
+class="line number56 index55 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">iter++;</code></div><div class="line number57 
+index56 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number58 index57 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(iter == </code><code
+ class="java value">3</code><code class="java plain">) </code><code 
+class="java keyword">continue</code><code class="java plain">; </code><code
+ class="java comments">// impossible</code></div><div class="line 
+number59 index58 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">temp += Math.min (j, k);</code></div><div 
+class="line number60 index59 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number61 index60 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">temp += grid [cur][i]; </code><code class="java 
+comments">// make sure to add travel time down the road</code></div><div
+ class="line number62 index61 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(temp &lt; time
+ [i]) time [i] = temp;</code></div><div class="line number63 index62 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number64 index63 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number65 index64 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">cur = -</code><code class="java value">1</code><code
+ class="java plain">;</code></div><div class="line number66 index65 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; N; i++)</code></div><div
+ class="line number67 index66 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(!vis [i])</code></div><div
+ class="line number68 index67 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(cur == -</code><code
+ class="java value">1</code> <code class="java plain">|| time [i] &lt; 
+time [cur])</code></div><div class="line number69 index68 alt2"><code 
+class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">cur = i;</code></div><div class="line number70 
+index69 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number71 index70 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(cur == -</code><code
+ class="java value">1</code><code class="java plain">) </code><code 
+class="java keyword">break</code><code class="java plain">;</code></div><div
+ class="line number72 index71 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number73 index72 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number74 index73 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.println (time [dst] == INF ? </code><code 
+class="java value">0</code> <code class="java plain">: time [dst]);</code></div><div
+ class="line number75 index74 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.close ();</code></div><div class="line number76 
+index75 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">System.exit (</code><code class="java value">0</code><code
+ class="java plain">);</code></div><div class="line number77 index76 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="java plain">}</code></div><div class="line number78 index77 alt1"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number79 index78 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">static</code> <code class="java keyword">class</code>
+ <code class="java plain">Junction {</code></div><div class="line 
+number80 index79 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">int</code>
+ <code class="java plain">init, times [], color, cycle;</code></div><div
+ class="line number81 index80 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number82 index81 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java plain">Junction (</code><code
+ class="java keyword">int</code> <code class="java plain">_color, </code><code
+ class="java keyword">int</code> <code class="java plain">_init, </code><code
+ class="java keyword">int</code> <code class="java plain">t_blue, </code><code
+ class="java keyword">int</code> <code class="java plain">t_purple) {</code></div><div
+ class="line number83 index82 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">color = _color;</code></div><div class="line 
+number84 index83 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">init = _init;</code></div><div class="line number85 
+index84 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">times = </code><code class="java keyword">new</code>
+ <code class="java keyword">int</code> <code class="java plain">[</code><code
+ class="java value">2</code><code class="java plain">];</code></div><div
+ class="line number86 index85 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">times [</code><code class="java value">0</code><code
+ class="java plain">] = t_blue;</code></div><div class="line number87 
+index86 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">times [</code><code class="java value">1</code><code
+ class="java plain">] = t_purple;</code></div><div class="line number88 
+index87 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">cycle = t_blue + t_purple;</code></div><div 
+class="line number89 index88 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number90 index89 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number91 index90 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">int</code>
+ <code class="java plain">calc (</code><code class="java keyword">int</code>
+ <code class="java plain">t) { </code><code class="java comments">// 
+returns the color of this junction at time t</code></div><div 
+class="line number92 index91 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(t &lt; init) </code><code
+ class="java keyword">return</code> <code class="java plain">color;</code></div><div
+ class="line number93 index92 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">t = (t - init) % (cycle);</code></div><div 
+class="line number94 index93 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">return</code> <code class="java plain">t &lt; 
+times [</code><code class="java value">1</code> <code class="java plain">-
+ color] ? </code><code class="java value">1</code> <code class="java 
+plain">- color : color;</code></div><div class="line number95 index94 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number96 index95 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number97 index96 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">int</code>
+ <code class="java plain">wait (</code><code class="java keyword">int</code>
+ <code class="java plain">t) { </code><code class="java comments">// 
+returns wait time until next traffic light change</code></div><div 
+class="line number98 index97 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(t &lt; init) </code><code
+ class="java keyword">return</code> <code class="java plain">init - t;</code></div><div
+ class="line number99 index98 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">t = (t - init) % (cycle);</code></div><div 
+class="line number100 index99 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">return</code> <code class="java plain">t &lt; 
+times [</code><code class="java value">1</code> <code class="java plain">-
+ color] ? times [</code><code class="java value">1</code> <code 
+class="java plain">- color] - t : cycle - t;</code></div><div 
+class="line number101 index100 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number102 index101 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="java plain">}</code></div><div class="line number103 index102 
+alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+<script type="text/javascript" src="traffic_files/shCore.js"></script>
+<script type="text/javascript" src="traffic_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="traffic_files/shBrushJava.js"></script>
+<link href="traffic_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="traffic_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+
+</body></html>

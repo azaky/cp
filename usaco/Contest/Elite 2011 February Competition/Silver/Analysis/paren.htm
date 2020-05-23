@@ -1,0 +1,248 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO FEB11 paren Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="paren_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO FEB11 Problem 'paren' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>
+There is an obvious quadratic time algorithm for this 
+problem. Find the closing parenthesis of the first open parenthesis, and
+ then 
+recursively apply the scoring algorithm (of course, handling the base 
+case, "()", separately). A 
+simple counter can be used to keep track of opening and closing 
+parentheses. This algorithm, 
+however, runs too slow for our bounds of N &lt;= 100,000, so we'll try 
+to find a faster 
+way.
+</p>
+
+<p>
+First, let us consider scoring this string "(()(()()))(())". We'll write
+ it in the following 
+way:
+</p>
+
+<pre>     (()(()()))(())
+L
+E 1: (        )(  )
+V 2:  ()(    )  ()
+E 3:     ()()
+L
+</pre>
+
+<p>
+This makes it easier for us to visualize the depth of the parenthesis. 
+It's not too 
+difficult to see that everytime we encounter a "(", we add one to our 
+depth, and everytime we 
+see a ")", we subtract one from our depth.
+</p>
+
+<p>
+Now, we'll just walk left to right, keeping track of the scores in the 
+different 
+levels. The current level's score is placed right above the closing 
+parenthesis.
+</p>
+
+<pre>            10 + 2 = 12
+ 1: (        )(  )
+      1  +  4   1
+ 2:  ()(    )  ()
+         1+1
+ 3:     ()()
+</pre>
+
+<p>
+That means the score of the string is 12. The pattern is becoming a bit 
+clearer now. Let's 
+write some rules and patterns that we observed:
+</p><ul>
+<li> If we see "()", we just assign a score of 1 to that
+</li><li> If we see "(", we will go down one level (while not losing 
+track of our score in 
+the current level)
+</li><li> If we see ")", we will do a few steps. First, we multiply the 
+current level's 
+total by two and add it to the previous level. Then, we reset the 
+current level's total to 
+zero. Finally, we move back up one level.
+</li></ul>
+<p></p>
+
+<p>
+With these three steps, that gives us a very easy linear solution. 
+Dealing with 
+the modulus is relatively simple since all we are doing is adding and 
+multiplying. 
+See the code below for implementation details.
+</p>
+
+<div><div id="highlighter_976835" class="syntaxhighlighter  java"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div></td><td class="code"><div 
+class="container"><div class="line number1 index0 alt2"><code 
+class="java keyword">import</code> <code class="java plain">java.io.*;</code></div><div
+ class="line number2 index1 alt1"><code class="java keyword">import</code>
+ <code class="java plain">java.util.*;</code></div><div class="line 
+number3 index2 alt2"><code class="java keyword">import</code> <code 
+class="java keyword">static</code> <code class="java plain">java.lang.Integer.parseInt;</code></div><div
+ class="line number4 index3 alt1">&nbsp;</div><div class="line number5 
+index4 alt2"><code class="java keyword">public</code> <code class="java 
+keyword">class</code> <code class="java plain">paren</code></div><div 
+class="line number6 index5 alt1"><code class="java plain">{</code></div><div
+ class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">BufferedReader in;</code></div><div 
+class="line number8 index7 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">PrintWriter out;</code></div><div class="line 
+number9 index8 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number10 index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">static</code>
+ <code class="java keyword">final</code> <code class="java keyword">long</code>
+ <code class="java plain">mod = 12345678910l;</code></div><div 
+class="line number11 index10 alt2">&nbsp;</div><div class="line number12
+ index11 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">public</code> <code class="java keyword">static</code>
+ <code class="java keyword">void</code> <code class="java plain">main 
+(String [] args) </code><code class="java keyword">throws</code> <code 
+class="java plain">IOException {</code></div><div class="line number13 
+index12 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">in = </code><code class="java keyword">new</code> <code
+ class="java plain">BufferedReader (</code><code class="java keyword">new</code>
+ <code class="java plain">FileReader (</code><code class="java string">"paren.in"</code><code
+ class="java plain">));</code></div><div class="line number14 index13 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out = </code><code class="java keyword">new</code> <code
+ class="java plain">PrintWriter (</code><code class="java keyword">new</code>
+ <code class="java plain">BufferedWriter (</code><code class="java 
+keyword">new</code> <code class="java plain">FileWriter (</code><code 
+class="java string">"paren.out"</code><code class="java plain">)));</code></div><div
+ class="line number15 index14 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number16 index15 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">N = parseInt 
+(in.readLine ());</code></div><div class="line number17 index16 alt2"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number18 index17 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">long</code> <code class="java plain">[] st = </code><code
+ class="java keyword">new</code> <code class="java keyword">long</code> <code
+ class="java plain">[N / </code><code class="java value">2</code> <code 
+class="java plain">+ </code><code class="java value">1</code><code 
+class="java plain">]; </code><code class="java comments">// stack of our
+ current totals</code></div><div class="line number19 index18 alt2"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">idx = </code><code
+ class="java value">0</code><code class="java plain">;</code></div><div 
+class="line number20 index19 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; N; i++) {</code></div><div
+ class="line number21 index20 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">c = parseInt 
+(in.readLine ());</code></div><div class="line number22 index21 alt1"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">switch</code> <code class="java plain">(c) {</code></div><div
+ class="line number23 index22 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">case</code> <code class="java value">0</code> <code
+ class="java plain">: </code><code class="java comments">// '('</code></div><div
+ class="line number24 index23 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">idx++; </code><code class="java comments">// go down
+ one level</code></div><div class="line number25 index24 alt2"><code 
+class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">break</code><code class="java plain">;</code></div><div
+ class="line number26 index25 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">case</code> <code class="java value">1</code> <code
+ class="java plain">: </code><code class="java comments">// ')'</code></div><div
+ class="line number27 index26 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(st [idx] == </code><code
+ class="java value">0</code><code class="java plain">) </code><code 
+class="java comments">// we encountered a '()'</code></div><div 
+class="line number28 index27 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st [idx - </code><code class="java value">1</code><code
+ class="java plain">]++;</code></div><div class="line number29 index28 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">else</code></div><div class="line number30 index29
+ alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st [idx - </code><code class="java value">1</code><code
+ class="java plain">] += st [idx] * </code><code class="java value">2</code><code
+ class="java plain">;</code></div><div class="line number31 index30 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st [idx - </code><code class="java value">1</code><code
+ class="java plain">] %= mod;</code></div><div class="line number32 
+index31 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">st [idx--] = </code><code class="java value">0</code><code
+ class="java plain">;</code></div><div class="line number33 index32 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">break</code><code class="java plain">;</code></div><div
+ class="line number34 index33 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number35 index34 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number36 index35 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number37 index36 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.println (st [</code><code class="java value">0</code><code
+ class="java plain">]);</code></div><div class="line number38 index37 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.close ();</code></div><div class="line number39 
+index38 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">System.exit (</code><code class="java value">0</code><code
+ class="java plain">);</code></div><div class="line number40 index39 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="java plain">}</code></div><div class="line number41 index40 alt2"><code
+ class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="paren_files/shCore.js"></script>
+<script type="text/javascript" src="paren_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="paren_files/shBrushJava.js"></script>
+<link href="paren_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="paren_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,93 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 5: Riding the Fences</title> </head><body background="fence_files/bg3.jpg">
+<img src="fence_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Riding the Fences</font></b><br>
+</center>
+
+<p> Farmer John owns a large number of fences that must be repaired
+annually.  He traverses the fences by riding a horse along each and
+every one of them (and nowhere else) and fixing the broken parts.
+
+</p><p> Farmer John is as lazy as the next farmer and hates to ride the same
+fence twice.  Your program must read in a description of a network of
+fences and tell Farmer John a path to traverse each fence length exactly
+once, if possible.  Farmer J can, if he wishes, start and finish at any
+fence intersection.
+
+</p><p> Every fence connects two fence intersections, which are numbered
+inclusively from 1 through 500 (though some farms have far fewer than
+500 intersections).  Any number of fences (&gt;=1) can meet at a fence
+intersection.  It is always possible to ride from any fence to any other
+fence (i.e., all fences are "connected").
+
+</p><p>Your program must output the path of intersections that, if interpreted
+as a base 500 number, would have the smallest magnitude.
+
+</p><p> There will always be at least one solution for each set of input
+data supplied to your program for testing.
+
+</p><h3>PROGRAM NAME: fence</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> The number of fences, F (1 &lt;= F &lt;= 1024) </td> </tr>
+<tr> <td> Line 2..F+1: </td> <td> A pair of integers (1 &lt;= i,j &lt;=
+500) that tell which pair of intersections this fence connects.  </td>
+</tr>
+
+</tbody></table>
+
+<h3>SAMPLE INPUT (file fence.in) </h3>
+
+
+<pre>9
+1 2
+2 3
+3 4
+4 2
+4 5
+2 5
+5 6
+5 7
+4 6
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>The output consists of F+1 lines, each containing a single integer.
+Print the number of the starting intersection on the first line, the
+next intersection's number on the next line, and so on, until the final
+intersection on the last line.  There might be many possible answers to
+any given input set, but only one is ordered correctly.
+
+
+</p><h3>SAMPLE OUTPUT (file fence.out)</h3>
+
+<pre>1
+2
+3
+4
+2
+5
+4
+6
+5
+7
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="bVwW9mmCuyS" type="hidden">
+<input name="S" value="fence" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=bVwW9mmCuyS"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

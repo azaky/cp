@@ -1,0 +1,514 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 8: Fence Loops</title> </head><body 
+background="fence6_files/bg3.jpg">
+<img src="fence6_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Fence Loops</font></b><br>
+Hal Burch
+</center>
+
+<p>The first problem is to switch the problem into a graph.  The easiest
+graph representation to use is an adjacency list, where each node has
+the list of edges which are incident to it.  The problem specifies that
+the endpoint of each edge will coincide with no more than 8 other
+endpoints.
+
+</p><p>For simplicity, let the endpoints of fence segments be the nodes 
+of
+the graph, and the edges be of two types: the ones across fence segments
+and the ones connecting points which are at the same location (another
+alternative is to just have one node for each location).
+
+</p><p>Given the input, it's fairly simple to determine which side of 
+fence
+A that fence B is connected to by determining which adjaency list of
+fence B contains A.
+
+</p><p>Once the graph representation is done, the problem is to find the
+shortest cycle (edges between nodes at the same location are considered
+to have length zero).  For each edge, find the minimum length simple
+cycle which contains it by deleting that edge and finding the minimum
+length path from one end of the edge to the other.  We can just use
+Dijkstra's to determine the shortest path.
+
+</p><pre>#include &lt;stdio.h&gt;
+
+/* maximum number of segments */
+#define MAXS 100
+
+/* an edge is a fence segment */
+/* a place is a side of a fence segment */
+/* there are two places for each edge */
+
+/* conn is the index of the incident edge */
+/* alist is the index of the incident place */
+
+int conn[2*MAXS][8]; /* one edge list for each side of each segment */
+int ccnt[2*MAXS]; /* number of incident edges */
+int length[MAXS]; /* length of the segments */
+
+int alist[2*MAXS][8]; /* adjacency list for each end of each segment */
+
+int nfence; /* numbor of fences */
+int npl; /* number of places */
+
+int dist[2*MAXS]; /* distance to each place */
+
+/* heap data structure */
+int heap[2*MAXS]; 
+int hsize;
+int hloc[2*MAXS]; /* location within heap of each place */
+
+/* debugging routine */
+/* ensure heap order has been maintained */
+void check_heap(void)
+ {
+  int lv;
+
+  for (lv = 1; lv &lt; hsize; lv++)
+   {
+    if (dist[heap[lv]] &lt; dist[heap[(lv-1)/2]])
+     {
+      fprintf (stderr, "HEAP ERROR!\n");
+      return;
+     }
+   }
+ }
+
+/* delete the minimum item from the heap */
+void delete_min(void)
+ {
+  int loc, val;
+  int p, t;
+
+  /* remove last item in the heap array */
+  loc = heap[--hsize];
+  val = dist[loc];
+  p = 0;
+
+  while (2*p+1 &lt; hsize)
+   {
+    /* find smaller child */
+    t = 2*p+1;
+    if (t+1 &lt; hsize &amp;&amp; dist[heap[t+1]] &lt; dist[heap[t]]) t++;
+
+    /* if child less than the removed item, move child up */
+    if (dist[heap[t]] &lt; val)
+     {
+      heap[p] = heap[t];
+      hloc[heap[p]] = p;
+      p = t;
+     } else break; /* otherwise, put removed item here */
+   }
+
+  /* put removed item back into the heap */
+  heap[p] = loc;
+  hloc[loc] = p;
+  check_heap(); /* sanity check */
+ }
+
+void update(int loc)
+ { /* we've decreased the value of dist[loc] */
+   /* change heap to maintain heap order */
+  int val;
+  int p, t;
+
+  val = dist[loc];
+  p = hloc[loc];
+  while (p &gt; 0)
+   { /* while the element's not the root of the heap */
+
+    /* check to see if it's less than it's parent */
+    t = (p-1)/2;
+    if (dist[heap[t]] &gt; val)
+     { /* if so, move parent down */
+      heap[p] = heap[t];
+      hloc[heap[p]] = p;
+
+      /* consider as if updated element is now in parent's prev location */
+      p = t;
+     } else break; /* otherwise, stop */
+   }
+
+  /* put element in proper location in heap */
+  heap[p] = loc;
+  hloc[loc] = p;
+  check_heap(); /* sanity check */
+ }
+
+void add_heap(int loc)
+ { /* add an element to the heap /*
+
+  if (hloc[loc] == -1)
+   { /* if it's not in the heap, add to the end (eff value = infinity) */
+    heap[hsize++] = loc;
+    hloc[loc] = hsize-1;
+   }
+
+  /* change the value to the real value */
+  update(loc);
+ }
+
+
+void fill_dist(int s)
+ {
+  int lv;
+  int p;
+  int t;
+  int l;
+
+ /* initialize hloc &amp; dist */
+  for (lv = 0; lv &lt; npl; lv++) { hloc[lv] = -1; dist[lv] = 255*MAXS + 1; }
+  dist[s] = 0;
+  hsize = 0;
+  add_heap(s);
+
+  while (hsize)
+   { /* heap is not empty */
+
+    /* take minimum distance location */
+    p = heap[0];
+    delete_min();
+    t = dist[p];
+
+    /* try all possible endpoints of other edges at the same location */
+    for (lv = 0; lv &lt; ccnt[p]; lv++)
+     {
+      l = alist[p][lv];
+      if (dist[l] &gt; t)
+       { /* found better distance */
+        dist[l] = t;
+	add_heap(l); /* add, if necessary, update otherwise */
+       }
+     }
+
+    /* consider moving across this edge */
+    t = dist[p] + length[p/2]; 
+    p = p ^ 0x1; /* go to the other endpoint */
+    if (dist[p] &gt; t) 
+     { /* found a better way to get to the location */
+      dist[p] = t;
+      add_heap(p);
+     }
+   }
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv, lv2, lv3;
+  int c1, c2;
+  int segid, len;
+  int p;
+  int min;
+
+  if ((fin = fopen("fence6.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("fence6.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  fscanf (fin, "%d\n", &amp;nfence);
+  npl = nfence*2;
+
+  for (lv = 0; lv &lt; nfence; lv++)
+   { /* read in edges */
+    fscanf (fin, "%d %d %d %d", &amp;segid, &amp;len, &amp;c1, &amp;c2);
+    segid--;
+    length[segid] = len;
+    ccnt[2*segid] = c1;
+    ccnt[2*segid+1] = c2;
+    while (c1--)
+     {
+      fscanf (fin, "%d", &amp;p);
+      conn[2*segid][c1] = p-1;
+     }
+    while (c2--)
+     {
+      fscanf (fin, "%d", &amp;p);
+      conn[2*segid+1][c2] = p-1;
+     }
+   }
+
+  for (lv = 0; lv &lt; npl; lv++)
+    for (lv2 = 0; lv2 &lt; ccnt[lv]; lv2++)
+     { /* for all edges */
+      c1 = lv/2;
+      c2 = conn[lv][lv2]*2;
+
+      /* find other occurance of edge */
+      for (lv3 = 0; lv3 &lt; ccnt[c2]; lv3++)
+        if (conn[c2][lv3] == c1)
+	  break;
+
+      /* if no match was found, must be on 'other' side of edge */
+      if (lv3 &gt;= ccnt[c2]) c2++;
+
+      /* update adjaceny list */
+      alist[lv][lv2] = c2;
+     }
+
+  min = 255*MAXS+1; /* higher than we could ever see */
+
+  for (lv = 0; lv &lt; nfence; lv++)
+   { /* for each fence */
+     
+    /* make edge infinite length, to ensure it's not used */
+    len = length[lv];
+    length[lv] = 255*MAXS+1; 
+
+    /* find distance from one end-point of edge to the other */
+    fill_dist(2*lv);
+
+    /* if the cycle (the path plus the edge deleted) is better
+       than the best found so far, update min */
+    if (dist[2*lv+1] + len &lt; min)
+      min = dist[2*lv+1] + len; 
+
+    /* put edge back in */
+    /* actually, not necessary, since we've already found the
+       best cycle which uses this edge */
+    length[lv] = len;
+   }
+
+  fprintf (fout, "%i\n", min);
+  return 0;
+ }
+</pre>
+
+
+<p>Bjarke Roune has some improvements:
+
+</p><p>
+When creating the graph representation, instead of searching through
+all edges to identy the nodes that corresponds to the endspoints of the
+edges (fence segments), a signature of each node is created. This
+signature consists of the two maximal IDs of the edges (fence segments)
+that connect at that node. These IDs are guarantueed to be unique, as
+the fence segments are straight, so if two fence segments meet at one
+point, they cannot meet anywhere else (the fence segments cannot be
+right on top of each other, as the problem statement says they only meet
+at their endpoints).
+
+</p><p>When running the Dijkstra algorithm, it is unnecessary to 
+consider
+any paths anywhere that are equal to or greater than the smallest
+perimeter found so far. These paths can safely be considered of infinite
+distance (i.e., they can be ignored).
+
+</p><p>After having found the smallest perimeter that includes a certain
+node, that node can safely be removed from the graph, since we have
+already got the smallest perimeter that includes that node. (a comment
+in the solution also says this, but for some reason the node is put back
+in anyway).
+
+</p><p><i>The solution below is blazingly fast...RK</i>
+</p><pre>#include &lt;fstream.h&gt;
+
+const int Inf = 1000 * 1000 * 1000;
+
+ifstream in ("fence6.in");
+ofstream out ("fence6.out");
+
+/* The edges are one-way so two edges are neccesary for each fence segment. */
+
+struct Edge {
+    Edge () { }
+    Edge (int _to, int _dist):to (_to), dist (_dist) { }
+    int     to, dist;
+}       edges[100][8];		/* edges[x][y] = edge number y of node
+				   number x */
+int     edgeCo[100];		/* edgeCo[x]   = number of edges that
+				   connect at node x */
+int     nodeCo = 0;		/* total number of nodes */
+
+/*
+ * Each node is given a signature consisting of the two largest fence
+ * segment IDs of all the fence segments that connect at that node
+ */
+
+int     sigs[100][2];		/* sigs[x] = signature of node x.
+				   sigs[x][0] &gt; sigs[x][1] */
+
+void 
+AddEdge (int from, const Edge &amp; edge)
+{
+    edges[from][edgeCo[from]++] = edge;
+}
+
+/* Returns the removed edge */
+Edge 
+RemoveEdge (int from, int to)
+{
+    int     i;
+    for (i = 0; i &lt; edgeCo[from]; ++i) {
+	if (edges[from][i].to == to) {
+	    Edge    tmp = edges[from][i];
+	    edges[from][i] = edges[from][--edgeCo[from]];
+	    return tmp;
+	}
+    }
+}
+
+/*
+ * The segs parameter is an array of length len that contains the IDs of the
+ * fence segments that meet at the sought-for node.
+ */
+
+int 
+GetNode (int *segs, int len) {
+ /* The signature of the node is calculated by retriving the two largets
+    fence segment IDs */
+    int     i, max0 = 0, max1 = 0;
+    for (i = 0; i &lt; len; ++i) {
+	if (segs[i] &gt; max1) {
+	    if (segs[i] &gt; max0) {
+		max1 = max0;
+		max0 = segs[i];
+	    }
+	    else
+		max1 = segs[i];
+	}
+    }
+
+ /* The known signatures are searched. If a matching signature is found,
+    the corresponding node is returned */
+    for (i = 0; i &lt; nodeCo; ++i)
+	if (max0 == sigs[i][0] &amp;&amp; max1 == sigs[i][1])
+	    return i;
+
+ /* A signature could not be made, so we will have to create a new node
+    with that signature. This node is then returned */
+    sigs[nodeCo][0] = max0;
+    sigs[nodeCo][1] = max1;
+
+    return nodeCo++;
+}
+
+/* This function returns length of the shortest path between the passed-in
+   nodes.
+   Paths of length equal to or larger than lessThan are not considered.
+   It is not guaranteed that the graph is connected.
+   If no suitable path is found, Infinity is returned
+*/
+int 
+CalcShortestPath (int from, int to, int lessThan) {
+    bool    visited[100];
+    int     dist[100];
+
+    int     i;
+    for (i = 0; i &lt; nodeCo; ++i)
+	visited[i] = false, dist[i] = Inf;
+
+    visited[from] = true;
+    dist[from] = 0;
+    int     lastVisited = from;
+
+    for (;;) {
+	int     j;
+	for (j = 0; j &lt; edgeCo[lastVisited]; ++j) {
+	    const   Edge &amp; edge = edges[lastVisited][j];
+	    int     d = dist[lastVisited] + edge.dist;
+	    if (d &lt; lessThan &amp;&amp; dist[edge.to] &gt; d)
+		dist[edge.to] = d;
+	}
+
+	int     minDist = Inf;
+	for (j = 0; j &lt; nodeCo; ++j)
+	    if (!visited[j] &amp;&amp; minDist &gt; dist[j])
+		lastVisited = j, minDist = dist[j];
+
+	if (minDist == Inf)
+	    break;
+
+	visited[lastVisited] = true;
+    }
+
+    return dist[to];
+}
+
+void 
+ReadArray (int *arr, int len, istream &amp; in)
+{
+    int     i;
+    for (i = 0; i &lt; len; ++i)
+	in &gt;&gt; arr[i];
+}
+
+int 
+main () {
+    int     segCo;
+    in &gt;&gt; segCo;
+
+    int     i;
+    for (i = 0; i &lt; segCo; ++i) {
+	int     dist, co1, co2, segs[9];
+	in &gt;&gt; segs[0] &gt;&gt; dist &gt;&gt; co1 &gt;&gt; co2;
+
+	ReadArray (segs + 1, co1, in);
+	int     node1 = GetNode (segs, co1 + 1);
+
+	ReadArray (segs + 1, co2, in);
+	int     node2 = GetNode (segs, co2 + 1);
+
+	AddEdge (node1, Edge (node2, dist));
+	AddEdge (node2, Edge (node1, dist));
+    }
+
+ /*
+  * For each node, the smallest perimeter that includes that node is
+  * calculated. After each calculation, that node is deleted, as no smaller
+  * perimeter can possibly include that node (we already got the smallest
+  * one).
+  */
+    int     minPerim = Inf;
+    while (nodeCo != 0) {
+	int     node = nodeCo - 1;
+
+    /* Nodes and therefore edges are continually removed, so there might be
+       some nodes with less than 2 edges. Such nodes obviously cannot be
+       part of any perimeter. */
+	if (edgeCo[node] &gt; 1) {
+	/* The minimal perimeter that includes the node is calculated */
+	    for (i = 0; i &lt; edgeCo[node]; ++i) {
+		int     otherNode = edges[node][i].to;
+
+		Edge    out = RemoveEdge (node, otherNode);
+		Edge    in = RemoveEdge (otherNode, node);
+
+		int     perim = out.dist + CalcShortestPath (node,
+				        otherNode, minPerim - out.dist);
+
+		if (minPerim &gt; perim)
+		    minPerim = perim;
+
+		AddEdge (node, out);
+		AddEdge (otherNode, in);
+	    }
+	}
+
+    /* The node is deleted by deleting all edges to it and decreasing
+       nodeCo, so that the current node "falls of the edge" of the now
+       smaller edges array */
+	for (i = 0; i &lt; edgeCo[node]; ++i)
+	    RemoveEdge (edges[node][i].to, node);
+	--nodeCo;
+    }
+
+    out &lt;&lt; minPerim &lt;&lt; '\n';
+
+    return 0;
+}
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

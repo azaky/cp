@@ -1,0 +1,69 @@
+Problem 1: Meet and Greet [Brian Dean, 2012]
+
+Seperti yang telah diketahui secara umum, sapi-sapi dikenal sangat sopan:
+setiap kali dua sapi kembali bertemu setelah berpisah jauh, mereka menyapa
+satu sama lain dengan sebuah "moo" yang bersahabat.
+
+Bessie si sapi dan temannya, Elsie, sedang berjalan di sebuah jalur di
+peternakan Farmer John. Untuk kemudahan, anggap jalur ini sebagai sebuah
+garis bilangan satu dimensi. Awalnya, Bessie dan Elsie berada di origin,
+dan mereka berdua mulai berjalan dengan kecepatan yang sama untuk suatu
+waktu tertentu. Diberikan deskripsi gerakan yang dilakukan oleh mereka
+berdua, tentukan banyaknya "moo" yang mereka berdua lakukan.
+
+Bessie dan Elsie dapat berhenti pada titik yang berbeda, dan keduanya
+tidak akan berjalan lebih dari 1000000 dalam satuan waktu.
+
+PROBLEM NAME: greetings
+
+INPUT FORMAT:
+
+* Baris 1: Dua buah bilangan bulat yang dipisahkan sebuah spasi, B dan
+        E (1 <= B, E <= 50000).
+
+* Baris 2..1+B: B baris tersebut mendeskripsikan pergerakan Bessie. Tiap
+        baris berisi sebuah bilangan bulat positif, diikuti oleh "L"
+        atau "R", yang menandakan pergerakan Bessie. "L" berarti Bessie
+        bergerak ke kiri, dan "R" berarti Bessie bergerak ke kanan.
+
+* Baris 2+B..1+B+E: E baris tersebut mendeskripsikan pergerakan Elsie.
+        Tiap baris berisi sebuah bilangan bulat positif, diikuti oleh "L"
+        atau "R", yang menandakan pergerakan Elsie. "L" berarti Elsie
+        bergerak ke kiri, dan "R" berarti Elsie bergerak ke kanan.
+
+SAMPLE INPUT (file greetings.in):
+
+4 5
+3 L
+5 R
+1 L
+2 R
+4 R
+1 L
+3 L
+4 R
+2 L
+
+INPUT DETAILS:
+
+Bessie bergerak ke kiri selama 3 satuan waktu, kemudian ke kanan selama 5
+satuan waktu, kemudian ke kiri selama 1 satuan waktu, dan terakhir ke kanan
+selama 2 satuan waktu; lalu dia berhenti. Elsie bergerak ke kanan selama 4
+satuan waktu, kemudian ke kiri selama 4 satuan waktu, kemudian ke kanan
+selama 4 satuan waktu, terakhir ke kiri selama 2 satuan waktu; lalu dia
+berhenti.
+
+OUTPUT FORMAT:
+
+* Baris 1: Sebuah bilangan bulat yang menyatakan banyaknya "moo" yang
+        mereka berdua lakukan. Keadaan awal mereka yang sama-sama terletak
+        pada origin tidak menyebabkan sebuah "moo".
+
+SAMPLE OUTPUT (file greetings.out):
+
+3
+
+OUTPUT DETAILS:
+
+Bessie dan Elsie bertemu setelah berpisah sementara waktu pada waktu 7, 9,
+dan 13.

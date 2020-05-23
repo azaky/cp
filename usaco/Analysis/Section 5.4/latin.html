@@ -1,0 +1,144 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 66: All Latin Squares</title> </head><body background="latin_files/bg3.jpg">
+<img src="latin_files/cow1.jpg" height="118" width="742">
+<center>
+<b><font size="7">All Latin Squares</font></b><br>
+<b>Songzi Du</b>
+</center>
+
+<p>Leonhard Euler introduced latin squares in 1783 as a "nouveau espece de
+carres magiques", a new kind of magic squares.  Combinatorists calculated
+the numbers of latin squares (up to 7x7) on paper for, apparently, mental
+challenges, before the invention of computer.
+
+</p><p>In this problem, we must count the number of Latin square whose first row
+is {1, 2, 3 ... N}.  One approach is a recursive brute-force search: place
+every appropriate number in a position and "re-curse" on the next position;
+when a complete latin square is formed, increment our total number.  This
+algorithm would work fine for N&lt;=6 but would be too slow for N=7.
+Therefore some prunings/optimizations are required:
+
+</p><p>1. A latin square whose first row and column are both {1, 2, 3 ... N} is
+called a reduced (or normalized) latin square.  It is useful because for
+any latin square, permutating its rows and columns will produce many
+different latin squares.  Let L(K) represent the number of KxK reduced
+latin square and N(K) represent the total number of KxK latin square, it
+is obvious that
+</p><center> N(K) = L(K) * N! * (N-1)!</center>
+since for any reduced latin square, you can permute its rows (N!) and
+columns ((N-1)!) and get N!*(N-1)! different latin squares.  Likewise, M(K)
+= L(K) * (N-1)!  where M(K) is the number of KxK latin square of our
+interest.  Therefore, we only need to search and count the reduced latin
+square.
+
+<p>2. For the second row (the first row is {1, 2, 3 ... N}): the number of
+latin square (reduced or not reduced) whose row 2 column 2 is 3 is same
+with number of latin square whose row 2 column 2 is 4, 5, or ... N.  We
+can take advantage of this fact; the idea is better illustrated in the code
+below.
+
+</p><p>3. When we filled the kth row of a latin square (k&lt;N), we know for a
+fact that the (k+1)th row could be filled.  Therefore, we only need to
+search until N-1 row.
+
+</p><p>Here is code in C++ from Slovakia's Marius Sajgalik:
+
+</p><pre>#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+using namespace std;
+const int maxn=16;
+int N;
+bool putx[maxn][maxn];
+bool puty[maxn][maxn];
+long long int res;
+int s[maxn][maxn];
+int h[maxn][maxn*maxn];
+void input(){
+    freopen("latin.in","r",stdin);
+    scanf("%d",&amp;N);
+}
+void put(int x,int y,int k){
+    putx[x][k]=true;
+    puty[y][k]=true;
+    s[x][y]=k;
+}
+void unput(int x,int y,int k){
+    putx[x][k]=false;
+    puty[y][k]=false;
+    s[x][y]=0;
+}
+void pretreat(){
+    memset(putx,0,sizeof(putx));
+    memset(puty,0,sizeof(puty));
+    for(int i=1;i&lt;=N;++i){
+        put(1,i,i);
+        put(i,1,i);
+    }
+    memset(h,-1,sizeof(h));
+}
+unsigned int search(int x,int y){
+    if(x&gt;=N)return 1;
+    if(x==3&amp;&amp;y==2){
+        static bool v[maxn];
+        memset(v,0,sizeof(v));
+        int i=0,j=1;
+        for(int k=1;k&lt;=N;++k){
+            if(v[k])continue;
+            v[k]=true;
+            int n=1;
+            for(int l=s[2][k];l!=k;l=s[2][l]){
+                v[l]=true;
+                ++n;
+            }
+            ++i;
+            j*=n;
+        }
+        if(h[i][j]!=-1)return h[i][j];
+        int res=0;
+        for(int k=1;k&lt;=N;++k){
+            if(putx[x][k])continue;
+            if(puty[y][k])continue;
+            put(x,y,k);
+            res+=(y!=N?search(x,y+1):search(x+1,2));
+            unput(x,y,k);
+        }
+        return h[i][j]=res;
+    }
+    int res=0;
+    for(int k=1;k&lt;=N;++k){
+        if(putx[x][k])continue;
+        if(puty[y][k])continue;
+        put(x,y,k);
+        res+=(y!=N?search(x,y+1):search(x+1,2));
+        unput(x,y,k);
+    }
+    return res;
+}
+
+void solve(){
+    pretreat();
+    res=search(2,2);
+    for(int i=2;i&lt;N;++i)
+        res*=i;
+}
+
+void output(){
+    freopen("latin.out","w",stdout);
+    cout&lt;&lt;res&lt;&lt;endl;
+}
+
+int main(){
+    input();
+    solve();
+    output();
+}
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=IvIn7TchG8N"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

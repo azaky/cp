@@ -1,0 +1,81 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 34: Bessie Come Home</title> </head><body 
+background="comehome_files/bg3.jpg">
+<img src="comehome_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Bessie Come Home</font></b><br>
+Kolstad &amp; Burch
+</center>
+
+<p>It's dinner time, and the cows are out in their separate pastures.
+Farmer John rings the bell so they will start walking to the barn. Your
+job is to figure out which one cow gets to the barn first (the supplied
+test data will always have exactly one fastest cow).
+
+</p><p>Between milkings, each cow is located in her own pasture, though 
+some
+pastures have no cows in them. Each pasture is connected by a path to
+one or more other pastures (potentially including itself). Sometimes,
+two (potentially self-same) pastures are connected by more than one
+path.  One or more of the pastures has a path to the barn.  Thus, all
+cows have a path to the barn and they always know the shortest path. Of
+course, cows can go either direction on a path and they all walk at the
+same speed.
+
+</p><p>The pastures are labeled `a'..`z' and `A'..`Y'. One cow is in 
+each
+pasture labeled with a capital letter. No cow is in a pasture labeled
+with a lower case letter. The barn's label is `Z'; no cows are in the
+barn, though.
+
+</p><h3>PROGRAM NAME: comehome</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td>
+Integer P (1 &lt;= P &lt;= 10000) the number of paths that interconnect 
+the pastures (and the barn)
+</td> </tr>
+<tr> <td> Line 2..P+1: </td> <td>Space separated, two letters and an
+integer: the names of the interconnected pastures/barn and the distance
+between them (1 &lt;= distance &lt;= 1000)
+</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file comehome.in) </h3>
+
+<pre>5
+A d 6
+B d 3
+C e 9
+d Z 8
+e Z 3
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing two items:  the capital letter name of the
+pasture of the cow that arrives first back at the barn, the length of
+the path followed by that cow.
+
+<h3>SAMPLE OUTPUT (file comehome.out)</h3>
+
+<pre>B 11
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="ty7Q0TyKL3v" type="hidden">
+<input name="S" value="comehome" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=ty7Q0TyKL3v"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

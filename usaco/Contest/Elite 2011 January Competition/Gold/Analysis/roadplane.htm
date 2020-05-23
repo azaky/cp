@@ -1,0 +1,431 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 roadplane Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="roadplane_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'roadplane' Analysis</h2>
+<h4>by Neal Wu</h4>
+<p>If the problem contained only the roads, then we would be able to use
+Dijkstra for an efficient O(R log T) solution.</p>
+
+<p>However, since the planes are allowed to have negative costs, 
+traditional
+Dijkstra will not be effective here (and should either obtain incorrect 
+answers
+or time out). The reason for this is that when negative edges are 
+present, even
+after Dijkstra finalizes the shortest path for a vertex, we may later 
+use a
+negative edge to find a better path, forcing us to revisit the vertex 
+and
+making the algorithm no longer efficient.</p>
+
+<p>Thus to enable ourselves to use Dijkstra to solve the problem, we 
+must take
+a closer look at the graph given. The key condition is that if a plane 
+travels
+from A_i to B_i, then there is no possible path from B_i to A_i.</p>
+
+<p>What this implies is that if we take the road-connected components of
+ the
+graph and consider them as "super vertices," the corresponding graph of 
+these
+vertices and the plane edges will form a directed acyclic graph (or 
+DAG).</p>
+
+<p>We thus determine the road-connected components and perform a 
+topological
+sort to order the resulting DAG. We can then loop through these each of 
+these
+components and do a modified Dijkstra on each, preventing revisiting of 
+nodes
+and giving us the desired R log T runtime. (John Pardon cleverly 
+suggests
+viewing this idea as normal heap Dijkstra ordered by component first and
+ then
+by distance).</p>
+
+<p>One thing of note is that a heavily-optimized Bellman-Ford solution 
+performs
+very well in most cases, so the last two test cases were specifically 
+designed
+to prevent this type of solution from obtaining a full score.</p>
+
+<p>Solution below:</p>
+
+<div><div id="highlighter_925158" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div
+ class="line number56 index55 alt1">56</div><div class="line number57 
+index56 alt2">57</div><div class="line number58 index57 alt1">58</div><div
+ class="line number59 index58 alt2">59</div><div class="line number60 
+index59 alt1">60</div><div class="line number61 index60 alt2">61</div><div
+ class="line number62 index61 alt1">62</div><div class="line number63 
+index62 alt2">63</div><div class="line number64 index63 alt1">64</div><div
+ class="line number65 index64 alt2">65</div><div class="line number66 
+index65 alt1">66</div><div class="line number67 index66 alt2">67</div><div
+ class="line number68 index67 alt1">68</div><div class="line number69 
+index68 alt2">69</div><div class="line number70 index69 alt1">70</div><div
+ class="line number71 index70 alt2">71</div><div class="line number72 
+index71 alt1">72</div><div class="line number73 index72 alt2">73</div><div
+ class="line number74 index73 alt1">74</div><div class="line number75 
+index74 alt2">75</div><div class="line number76 index75 alt1">76</div><div
+ class="line number77 index76 alt2">77</div><div class="line number78 
+index77 alt1">78</div><div class="line number79 index78 alt2">79</div><div
+ class="line number80 index79 alt1">80</div><div class="line number81 
+index80 alt2">81</div><div class="line number82 index81 alt1">82</div><div
+ class="line number83 index82 alt2">83</div><div class="line number84 
+index83 alt1">84</div><div class="line number85 index84 alt2">85</div><div
+ class="line number86 index85 alt1">86</div><div class="line number87 
+index86 alt2">87</div><div class="line number88 index87 alt1">88</div><div
+ class="line number89 index88 alt2">89</div><div class="line number90 
+index89 alt1">90</div><div class="line number91 index90 alt2">91</div><div
+ class="line number92 index91 alt1">92</div><div class="line number93 
+index92 alt2">93</div><div class="line number94 index93 alt1">94</div><div
+ class="line number95 index94 alt2">95</div><div class="line number96 
+index95 alt1">96</div><div class="line number97 index96 alt2">97</div><div
+ class="line number98 index97 alt1">98</div><div class="line number99 
+index98 alt2">99</div><div class="line number100 index99 alt1">100</div><div
+ class="line number101 index100 alt2">101</div><div class="line 
+number102 index101 alt1">102</div><div class="line number103 index102 
+alt2">103</div><div class="line number104 index103 alt1">104</div><div 
+class="line number105 index104 alt2">105</div><div class="line number106
+ index105 alt1">106</div><div class="line number107 index106 alt2">107</div><div
+ class="line number108 index107 alt1">108</div><div class="line 
+number109 index108 alt2">109</div><div class="line number110 index109 
+alt1">110</div><div class="line number111 index110 alt2">111</div><div 
+class="line number112 index111 alt1">112</div><div class="line number113
+ index112 alt2">113</div><div class="line number114 index113 alt1">114</div><div
+ class="line number115 index114 alt2">115</div><div class="line 
+number116 index115 alt1">116</div><div class="line number117 index116 
+alt2">117</div><div class="line number118 index117 alt1">118</div><div 
+class="line number119 index118 alt2">119</div><div class="line number120
+ index119 alt1">120</div><div class="line number121 index120 alt2">121</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="cpp preprocessor">#include &lt;cstdio&gt;</code></div><div
+ class="line number2 index1 alt1"><code class="cpp preprocessor">#include
+ &lt;cstring&gt;</code></div><div class="line number3 index2 alt2"><code
+ class="cpp preprocessor">#include &lt;queue&gt;</code></div><div 
+class="line number4 index3 alt1"><code class="cpp keyword bold">using</code>
+ <code class="cpp keyword bold">namespace</code> <code class="cpp plain">std;</code></div><div
+ class="line number5 index4 alt2">&nbsp;</div><div class="line number6 
+index5 alt1"><code class="cpp color1 bold">FILE</code> <code class="cpp 
+plain">*in = </code><code class="cpp functions bold">fopen</code> <code 
+class="cpp plain">(</code><code class="cpp string">"roadplane.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *out = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"roadplane.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number7 index6 alt2">&nbsp;</div><div
+ class="line number8 index7 alt1"><code class="cpp keyword bold">const</code>
+ <code class="cpp color1 bold">int</code> <code class="cpp plain">MAXT =
+ 25005, INF = 1000000005;</code></div><div class="line number9 index8 
+alt2">&nbsp;</div><div class="line number10 index9 alt1"><code 
+class="cpp keyword bold">struct</code> <code class="cpp plain">path</code></div><div
+ class="line number11 index10 alt2"><code class="cpp plain">{</code></div><div
+ class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">num, dist;</code></div><div
+ class="line number13 index12 alt2">&nbsp;</div><div class="line 
+number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">inline</code> <code class="cpp color1 bold">bool</code>
+ <code class="cpp plain">operator &lt; (</code><code class="cpp keyword 
+bold">const</code> <code class="cpp plain">path &amp;o) </code><code 
+class="cpp keyword bold">const</code></div><div class="line number15 
+index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number16 index15 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">dist 
+&gt; o.dist;</code></div><div class="line number17 index16 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number18 index17 alt1"><code 
+class="cpp plain">};</code></div><div class="line number19 index18 alt2">&nbsp;</div><div
+ class="line number20 index19 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">T, R, P, S, C = 0, dist [MAXT];</code></div><div
+ class="line number21 index20 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">part [MAXT], indeg [MAXT], tfront, tback, topo 
+[MAXT];</code></div><div class="line number22 index21 alt1"><code 
+class="cpp plain">vector &lt;</code><code class="cpp color1 bold">int</code><code
+ class="cpp plain">&gt; comp [MAXT];</code></div><div class="line 
+number23 index22 alt2"><code class="cpp plain">vector &lt;path&gt; roads
+ [MAXT], planes [MAXT];</code></div><div class="line number24 index23 
+alt1">&nbsp;</div><div class="line number25 index24 alt2"><code 
+class="cpp keyword bold">void</code> <code class="cpp plain">road_dfs (</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">num)</code></div><div
+ class="line number26 index25 alt1"><code class="cpp plain">{</code></div><div
+ class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">part [num] = C;</code></div><div class="line number28
+ index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">comp [C].push_back (num);</code></div><div 
+class="line number29 index28 alt2">&nbsp;</div><div class="line number30
+ index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) roads [num].size (); i++)</code></div><div class="line number31
+ index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(part [roads
+ [num][i].num] == -1)</code></div><div class="line number32 index31 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">road_dfs (roads [num][i].num);</code></div><div 
+class="line number33 index32 alt2"><code class="cpp plain">}</code></div><div
+ class="line number34 index33 alt1">&nbsp;</div><div class="line 
+number35 index34 alt2"><code class="cpp color1 bold">int</code> <code 
+class="cpp plain">main ()</code></div><div class="line number36 index35 
+alt1"><code class="cpp plain">{</code></div><div class="line number37 
+index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(in, </code><code
+ class="cpp string">"%d %d %d %d"</code><code class="cpp plain">, 
+&amp;T, &amp;R, &amp;P, &amp;S); S--;</code></div><div class="line 
+number38 index37 alt1">&nbsp;</div><div class="line number39 index38 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0, a, b,
+ c; i &lt; R; i++)</code></div><div class="line number40 index39 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">{</code></div><div class="line number41 index40 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(in, </code><code
+ class="cpp string">"%d %d %d"</code><code class="cpp plain">, &amp;a, 
+&amp;b, &amp;c); a--; b--;</code></div><div class="line number42 index41
+ alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">roads [a].push_back ((path) {b, c});</code></div><div
+ class="line number43 index42 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">roads [b].push_back ((path) {a, c});</code></div><div
+ class="line number44 index43 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number45 index44 alt2">&nbsp;</div><div
+ class="line number46 index45 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0, a, b,
+ c; i &lt; P; i++)</code></div><div class="line number47 index46 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">{</code></div><div class="line number48 index47 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(in, </code><code
+ class="cpp string">"%d %d %d"</code><code class="cpp plain">, &amp;a, 
+&amp;b, &amp;c); a--; b--;</code></div><div class="line number49 index48
+ alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">planes [a].push_back ((path) {b, c});</code></div><div
+ class="line number50 index49 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number51 index50 alt2">&nbsp;</div><div
+ class="line number52 index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">memset</code> <code class="cpp plain">(part,
+ -1, </code><code class="cpp keyword bold">sizeof</code> <code 
+class="cpp plain">(part));</code></div><div class="line number53 index52
+ alt2">&nbsp;</div><div class="line number54 index53 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">for</code> <code class="cpp plain">(</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i &lt;
+ T; i++)</code></div><div class="line number55 index54 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(part [i] ==
+ -1)</code></div><div class="line number56 index55 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number57 index56 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">road_dfs (i);</code></div><div class="line number58 
+index57 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">C++;</code></div><div class="line number59 index58 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number60 index59 alt1">&nbsp;</div><div
+ class="line number61 index60 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; T; i++)</code></div><div class="line number62 index61 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">j = 0; j 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) planes [i].size (); j++)</code></div><div class="line number63 
+index62 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">indeg [part [planes [i][j].num]]++;</code></div><div 
+class="line number64 index63 alt1">&nbsp;</div><div class="line number65
+ index64 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">memset</code> <code class="cpp plain">(dist,
+ 63, </code><code class="cpp keyword bold">sizeof</code> <code 
+class="cpp plain">(dist));</code></div><div class="line number66 index65
+ alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">dist [S] = 0;</code></div><div class="line number67 
+index66 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">tfront = tback = 0;</code></div><div class="line 
+number68 index67 alt1">&nbsp;</div><div class="line number69 index68 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; C; i++)</code></div><div class="line number70 index69 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(indeg [i] 
+== 0)</code></div><div class="line number71 index70 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">topo [tback++] = i;</code></div><div class="line 
+number72 index71 alt1">&nbsp;</div><div class="line number73 index72 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp keyword bold">while</code> <code class="cpp plain">(tfront 
+&lt; tback)</code></div><div class="line number74 index73 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">{</code></div><div class="line number75 index74 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">c = topo 
+[tfront++];</code></div><div class="line number76 index75 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">priority_queue &lt;path&gt; pq;</code></div><div 
+class="line number77 index76 alt2">&nbsp;</div><div class="line number78
+ index77 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) comp [c].size (); i++)</code></div><div class="line number79 
+index78 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(dist [comp 
+[c][i]] &lt; INF)</code></div><div class="line number80 index79 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">pq.push ((path) {comp [c][i], dist [comp [c][i]]});</code></div><div
+ class="line number81 index80 alt2">&nbsp;</div><div class="line 
+number82 index81 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">while</code> <code class="cpp plain">(!pq.empty
+ ())</code></div><div class="line number83 index82 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number84 index83 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">path top = pq.top (); pq.pop ();</code></div><div 
+class="line number85 index84 alt2">&nbsp;</div><div class="line number86
+ index85 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(top.dist !=
+ dist [top.num])</code></div><div class="line number87 index86 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">continue</code><code class="cpp plain">;</code></div><div
+ class="line number88 index87 alt1">&nbsp;</div><div class="line 
+number89 index88 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) roads [top.num].size (); i++)</code></div><div class="line 
+number90 index89 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number91 index90 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">nnum = roads
+ [top.num][i].num, edge = roads [top.num][i].dist;</code></div><div 
+class="line number92 index91 alt1">&nbsp;</div><div class="line number93
+ index92 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(top.dist + 
+edge &lt; dist [nnum])</code></div><div class="line number94 index93 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">pq.push ((path) {nnum, dist [nnum] = top.dist + 
+edge});</code></div><div class="line number95 index94 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number96 index95 alt1">&nbsp;</div><div
+ class="line number97 index96 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) planes [top.num].size (); i++)</code></div><div class="line 
+number98 index97 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number99 index98 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">nnum = 
+planes [top.num][i].num, edge = planes</code></div><div class="line 
+number100 index99 alt1"><code class="cpp plain">[top.num][i].dist;</code></div><div
+ class="line number101 index100 alt2">&nbsp;</div><div class="line 
+number102 index101 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(top.dist + 
+edge &lt; dist [nnum])</code></div><div class="line number103 index102 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">dist [nnum] = top.dist + edge;</code></div><div 
+class="line number104 index103 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number105 index104 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number106 index105 
+alt1">&nbsp;</div><div class="line number107 index106 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; (</code><code class="cpp color1 bold">int</code><code class="cpp 
+plain">) comp [c].size (); i++)</code></div><div class="line number108 
+index107 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">num = comp 
+[c][i], j = 0; j &lt; (</code><code class="cpp color1 bold">int</code><code
+ class="cpp plain">) planes [num].size</code></div><div class="line 
+number109 index108 alt2"><code class="cpp plain">(); j++)</code></div><div
+ class="line number110 index109 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(--indeg 
+[part [planes [num][j].num]] == 0)</code></div><div class="line 
+number111 index110 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">topo [tback++] = part [planes [num][j].num];</code></div><div
+ class="line number112 index111 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number113 index112 
+alt2">&nbsp;</div><div class="line number114 index113 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">for</code> <code class="cpp plain">(</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i &lt;
+ T; i++)</code></div><div class="line number115 index114 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(dist [i] 
+&lt; INF)</code></div><div class="line number116 index115 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fprintf</code> <code class="cpp plain">(out,
+ </code><code class="cpp string">"%d\n"</code><code class="cpp plain">, 
+dist [i]);</code></div><div class="line number117 index116 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">else</code></div><div class="line number118 
+index117 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fputs</code> <code class="cpp plain">(</code><code
+ class="cpp string">"NO PATH\n"</code><code class="cpp plain">, out);</code></div><div
+ class="line number119 index118 alt2">&nbsp;</div><div class="line 
+number120 index119 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number121 index120 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="roadplane_files/shCore.js"></script>
+<script type="text/javascript" src="roadplane_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="roadplane_files/shBrushJava.js"></script>
+<link href="roadplane_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="roadplane_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+</body></html>

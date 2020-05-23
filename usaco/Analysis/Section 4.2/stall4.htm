@@ -1,0 +1,140 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 40: The Perfect Stall</title> </head><body background="stall4_files/bg3.jpg">
+<img src="stall4_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">The Perfect Stall</font></b><br>
+Hal Burch
+</center>
+
+<p>This is a straight-forward maximum matching algorithm.  The only
+difference in the program below is that the graph is not stored
+directly.  Instead, the likes of each cows is maintained, along with
+the cow/stall assignments.  The graph can be determined quickly using
+only this information.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/* maximum number of cows */
+#define MAXC 200
+/* maximum number of stalls */
+#define MAXS 200
+
+/* does cow i like stall j */
+char likes[MAXC][MAXS];
+int ncow; /* number of cows */
+int nstall; /* number of stalls */
+
+int stall[MAXC]; /* which stall is cow i assigned to? */
+int cow[MAXS];   /* which cow is assigned to stall j? */
+
+int vis[MAXC+MAXS]; /* has the cow/stall been visited */
+
+/* find_cow, find_stall perform a flood fill to determine if there
+   is a path in the graph from the super source to the super sink
+   (see max matching algorithm */
+
+/* vis is the location that the flood is done */
+
+/* find_cow tries to find a cow to go with a stall */
+/* find_stall tries to find a stall to go with a cow */
+int find_stall(int cnum);
+
+int find_cow(int stall)
+ {
+  /* if we've already visited here, no need to try again */
+  if (vis[stall+MAXC]) return 0;
+  vis[stall+MAXC] = 1; /* mark as visited */
+
+  /* if this stall isn't assign, then we can go to super sink, and
+     a path is found! */
+  if (cow[stall] == -1) return 1;
+  else return find_stall(cow[stall]);
+ }
+
+int find_stall(int cnum)
+ { /* cnum = cow number */
+  int lv; /* loop variable */
+
+  /* if we've already visited here, no need to try again */
+  if (vis[cnum]) return 0;
+  vis[cnum] = 1; /* mark as visited */
+
+  /* for each stall that the cow likes, see if there's a path from there
+     to the super sink */
+  for (lv = 0; lv &lt; nstall; lv++)
+    if (likes[cnum][lv])
+     {
+      if (find_cow(lv)) 
+       { /* there's a path, so add that augmenting path by assigning
+            this cow to stall lv */
+        stall[cnum] = lv;
+	cow[lv] = cnum;
+	return 1;
+       }
+     }
+  return 0;
+ }
+
+/* look for an augmenting path */
+int find_path(void)
+ {
+  int lv;
+  memset(vis, 0, sizeof(vis));
+
+  /* for each cow that is not assigned to a stall there's an edge from
+     the super source, so see if there's a path using that edge */
+  for (lv = 0; lv &lt; ncow; lv++)
+    if (stall[lv] == -1)
+      if (find_stall(lv)) return 1;
+  return 0;
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv; /* loop variable */
+  int cnt; /* counter used for reading the stalls a cow likes */
+  int st; /* st number */
+
+  if ((fin = fopen("stall4.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("stall4.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  fscanf (fin, "%d %d", &amp;ncow, &amp;nstall);
+  for (lv = 0; lv &lt; ncow; lv++)
+   {
+    fscanf (fin, "%d", &amp;cnt);
+
+    /* read stall numbers */
+    while (cnt--)
+     {
+      fscanf (fin, "%d", &amp;st);
+      likes[lv][st-1] = 1; /* 0-based indexing, so st-1, not st */
+     }
+    stall[lv] = -1; /* note that the cow is not assigned to a stall */
+   }
+
+  /* for each stall, note it's not assigned a cow */
+  for (lv = 0; lv &lt; nstall; lv++)
+    cow[lv] = -1;
+
+  /* max flow algorithm: augment while possible */
+  for (lv = 0; find_path(); lv++)
+   ;
+  fprintf (fout, "%i\n", lv);
+  return 0;
+ }
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

@@ -1,0 +1,120 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - A</title>
+
+<style>
+body, p {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem A</h2>
+<h1>Word Words Wordsz</h1>
+Time Limit: 2 seconds
+</center>
+<br>
+
+<p>Windarik, an infamous 008 agent, got a mission to retrieve a 
+world-domination instrument in a top secret government facility. In 
+order to get the passkey number to the place where the instrument is 
+hidden, Windarik had Bowo, another agent, to send him the passkey 
+through a letter. </p>
+<p>When the letter arrived, Windarik was surprised because the letter is
+ full of words instead of numbers. Windarik called Bowo to clarify the 
+letter, only to get snapped by Bowo "Idiot! Use your head!". Windarik 
+then realized his stupidity, why would any agent sent a passkey without 
+first encrypting it?</p> 
+<p>After careful analysis, Windarik discovered that the key to the 
+encryption is located at the last line of the letter which consists of 
+three words: "word words wordsz". These three out of nowhere words seems
+ to be the hint to crack the encrypted message. It did not take a lot of
+ time for Windarik to arrive at a conclusion: he should count how many 
+words in the letter which length is 4, 5 and 6 (associated with "word", 
+"words" and "wordsz" respectively).</p>
+<p>The letter is quite long and Windarik is known to be an extremely 
+lazy agent. He commanded you, as an unpaid intern, to do this simple 
+task. Of course he entirely believes that you would not leak this secret
+ information to other agents... would you?</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with an integer N (1 &#8804; N &#8804; 100) 
+denoting the number of words in the letter. The next N lines each 
+contains a word in lowercase alphabet (a-z) which length is between 1 
+and 20. The given words might not be unique, but you should treat each 
+of them as different entities (see 1<sup>st</sup> sample input for clarity).</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: A B C</font>" where <font face="Courier New">X</font> is the case number starts from 1, and
+</p><ul>
+<li><font face="Courier New">A</font> is the number of words which length is exactly 4.</li>
+<li><font face="Courier New">B</font> is the number of words which length is exactly 5.</li>
+<li><font face="Courier New">C</font> is the number of words which length is exactly 6.</li>
+</ul>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="700" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="*" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+13
+today
+i
+was
+very
+very
+happy
+because
+i
+met
+a
+girl
+i
+like
+5
+acm
+icpc
+indonesia
+national
+contest
+5
+coding
+phase
+is
+already
+over
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 4 2 0
+Case #2: 1 0 0
+Case #3: 1 1 1
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+<br><br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>
+</p><ul>
+<li>There are 8 words with length of 4: very, very, girl, like.</li>
+<li>There are 2 words with length of 5: today, happy.</li>
+<li>There is no word with length of 6</li>
+</ul>
+Notice there are two occurrence of "very" in the set of words with length of 4. You should count both of them.
+<p></p><br>
+
+
+
+<br><br>
+</com:tcontent></body></html>

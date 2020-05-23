@@ -1,0 +1,74 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 44: Longest Prefix</title> </head><body 
+background="prefix_files/bg3.jpg">
+<img src="prefix_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Longest Prefix</font></b><br>
+<b>IOI'96</b>
+</center>
+
+<p>The structure of some biological objects is represented by the 
+sequence
+of their constituents denoted by uppercase letters. Biologists are
+interested in decomposing a long sequence into shorter ones called
+<i>primitives</i>.
+
+</p><p>We say that a sequence S can be composed from a given set of 
+primitives
+P if there is a some sequence of (possibly repeated) primitives from
+the set whose concatenation equals S.  Not necessarily all primitives
+need be present.  For instance the sequence <tt>ABABACABAAB</tt>can be
+composed from the set of primitives </p><pre>	   {A, AB, BA, CA, BBC}
+</pre>
+
+<p>The first K characters of S are the <i>prefix of </i>S with length
+K.  Write a program which accepts as input a set of primitives and
+a sequence of constituents and then computes the length of the longest
+prefix that can be composed from primitives.
+
+</p><h3>PROGRAM NAME: prefix</h3>
+
+<h3>INPUT FORMAT</h3>
+
+First, the input file contains the list (length 1..200) of primitives
+(length 1..10) expressed as a series of space-separated strings of
+upper-case characters on one or more lines.  The list of primitives is
+terminated by a line that contains nothing more than a period (`.').
+No primitive appears twice in the list.
+
+Then, the input file contains a sequence S (length 1..200,000) expressed
+as one or more lines, none of which exceed 76 letters in length.  The
+"newlines" are not part of the string S.
+
+<h3>SAMPLE INPUT (file prefix.in) </h3>
+
+<pre>A AB BA CA BBC
+.
+ABABACABAABC
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing an integer that is the length of the longest
+prefix that can be composed from the set P.
+
+<h3>SAMPLE OUTPUT (file prefix.out)</h3>
+
+<pre>11
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="prefix" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

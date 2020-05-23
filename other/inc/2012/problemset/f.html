@@ -1,0 +1,84 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/cac49fed22597db86cbc6e8a0bf15dec/f.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem F</h2>
+<h1>N Choose K</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>Given N integers a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub> ... a<sub>N-1</sub>, a<sub>N</sub>; you have to choose K integers from those integers and relabel them into b<sub>1</sub>, b<sub>2</sub>, b<sub>3</sub> ... b<sub>K-1</sub>, b<sub>K</sub>. Those chosen K integers should have ALL of the following properties:</p>
+
+<ul>
+<li>b<sub>1</sub> + b<sub>2</sub> + b<sub>3</sub> + ... + b<sub>K-1</sub> &gt; b<sub>K</sub></li>
+<li>b<sub>1</sub> + b<sub>2</sub> + b<sub>3</sub> + ... + b<sub>K-2</sub> + b<sub>K</sub> &gt; b<sub>K-1</sub></li>
+<li>b<sub>1</sub> + b<sub>2</sub> + b<sub>3</sub> + ... + b<sub>K-3</sub> + b<sub>K-1</sub> + b<sub>K</sub> &gt; b<sub>K-2</sub></li>
+<li>...</li>
+<li>...</li>
+<li>b<sub>1</sub> + b<sub>3</sub> + ... + b<sub>K-1</sub> + b<sub>K</sub> &gt; b<sub>2</sub></li>
+<li>b<sub>2</sub> + b<sub>3</sub> + ... + b<sub>K-1</sub> + b<sub>K</sub> &gt; b<sub>1</sub></li>
+</ul>
+
+<p>For example, let N = 5, K = 3 and the integers are: {3, 1, 7, 5, 3}. We can choose {3, 7, 5} as they satisfy the required property:</p>
+<ul>
+<li>3 + 7 &gt; 5</li>
+<li>3 + 5 &gt; 7</li>
+<li>5 + 7 &gt; 3</li>
+</ul>
+
+<p>Your task is easy, you only have to determine whether it is possible or not to find such K integers from the given N integers. Output "YES" (without quote) if it is possible, otherwise "NO" (without quote).</p>
+
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the number of cases. Each case begins with two integers N (3 &#8804; N &#8804; 100) and K (3 &#8804; K &#8804; N) as defined above. The next line contains N integers separated by a single space.<br>Each integer is non-negative and not more than 2,000,000,000.
+</p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1, and Y is "YES" or "NO" (without quote) which indicate whether you can choose K integers with property described above or not.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+5 3
+3 1 7 5 3
+9 4
+0 0 0 0 0 0 0 0 0
+8 4
+2 7 3 5 2 9 4 5
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: YES
+Case #2: NO
+Case #3: YES
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>This is the example from the problem statement.</p>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>We can't find 4 integers satisfying the required property.</p>
+<p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>{7, 5, 9, 4} satisfy the required property.</p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

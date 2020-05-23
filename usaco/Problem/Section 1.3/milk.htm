@@ -1,0 +1,83 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Problem 76: Mixing Milk</title>
+</head><body background="milk_files/bg3.jpg">
+<img src="milk_files/cow1.jpg" width="742" height="118">
+
+<center>
+<h1>Mixing Milk</h1>
+</center>
+
+<p>Since milk packaging is such a low margin business, it is important
+to keep the price of the raw product (milk) as low as possible. Help
+Merry Milk Makers get the milk they need in the cheapest possible manner.
+
+</p><p>The Merry Milk Makers company has several farmers from which they
+may buy milk, and each one has a (potentially) different price at which
+they sell to the milk packing plant. Moreover, as a cow can only produce
+so much milk a day, the farmers only have so much milk to sell per day.
+Each day, Merry Milk Makers can purchase an integral amount of milk from
+each farmer, less than or equal to the farmer's limit. 
+
+</p><p>Given the Merry Milk Makers' daily requirement of milk, along with the cost
+per gallon and amount of available milk for each farmer, calculate the
+minimum amount of money that it takes to fulfill the Merry Milk Makers'
+requirements. 
+
+</p><p>Note: The total milk produced per day by the farmers will be sufficient
+to meet the demands of the Merry Milk Makers.
+
+</p><h3>PROGRAM NAME: milk</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> Two integers, N and M. <br>The first
+value, N,  (0 &lt;= N &lt;=
+2,000,000) is the amount of milk that Merry Milk Makers' want per day.
+The second, M, (0 &lt;= M &lt;= 5,000) is the number of farmers
+that they may buy from.
+<br>
+</td>
+</tr><tr> <td> Lines 2 through M+1: </td> <td> The next M lines each contain
+two integers, P<sub>i</sub> and A<sub>i</sub>. <br> P<sub>i</sub> (0 &lt;= P<sub>i</sub> &lt;= 1,000) is price in
+cents that farmer i charges.<br>  A<sub>i</sub> (0 &lt;= Ai &lt;= 2,000,000) is the amount
+of milk that farmer i can sell to Merry Milk Makers per day.
+</td>
+</tr></tbody></table>
+<p>
+
+</p><h3>SAMPLE INPUT (file milk.in) </h3>
+
+<pre>100 5
+5 20
+9 40
+3 10
+8 80
+6 30
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p> A single line with a single integer that is the minimum price that
+Merry Milk Makers can get their milk at for one day.
+
+</p><h3>SAMPLE OUTPUT (file milk.out)</h3>
+
+<pre>630
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="milk" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

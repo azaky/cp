@@ -1,0 +1,128 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO FEB11 dance2 Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="dance2_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO FEB11 Problem 'dance2' Analysis</h2>
+<h4>by Andre Kessler</h4>
+Suppose we consider the cows "&gt;" to have a value of +1 and the bulls 
+"&lt;" to
+have a value of -1. Then checking whether a line of "&lt;"s and "&gt;"s 
+is balanced
+can be done by iterating over the string character by character and 
+keeping
+track of the "nesting level". 
+
+<p> Initially, the nesting level is zero. When we encounter a "&gt;", we
+ add one
+to the nesting level; on the other hand, when we encounter a "&lt;", we 
+subtract
+one from the nesting level. Clearly, the string is legal if and only if 
+the
+nesting level is 0 again at the end and never drops below 0 -- dropping 
+below
+zero means that there are unmatched bulls "&lt;" and being nonzero at 
+the end
+means there are unmatched cows "&gt;". 
+
+</p><p> My code follows below.
+</p><div><div id="highlighter_406708" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div
+ class="line number18 index17 alt1">18</div><div class="line number19 
+index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div
+ class="line number21 index20 alt2">21</div><div class="line number22 
+index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div
+ class="line number24 index23 alt1">24</div><div class="line number25 
+index24 alt2">25</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="cpp preprocessor">#include
+ &lt;cstdio&gt;</code></div><div class="line number2 index1 alt1">&nbsp;</div><div
+ class="line number3 index2 alt2"><code class="cpp color1 bold">FILE</code>
+ <code class="cpp plain">*fin = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"dance2.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">), *fout = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"dance2.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number4 index3 alt1">&nbsp;</div><div
+ class="line number5 index4 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">N, K, nesting, bad;</code></div><div 
+class="line number6 index5 alt1"><code class="cpp color1 bold">char</code>
+ <code class="cpp plain">line [1005];</code></div><div class="line 
+number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">main ()</code></div><div
+ class="line number9 index8 alt2"><code class="cpp plain">{</code></div><div
+ class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d"</code><code class="cpp plain">, &amp;N);</code></div><div
+ class="line number11 index10 alt2">&nbsp;</div><div class="line 
+number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">while</code> <code class="cpp plain">(N--)</code></div><div
+ class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number14 index13 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d %s"</code><code class="cpp plain">, &amp;K, 
+line); bad = </code><code class="cpp keyword bold">false</code><code 
+class="cpp plain">; nesting = 0;</code></div><div class="line number15 
+index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; K; i++)</code></div><div class="line number17 index16 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">{</code></div><div class="line number18 index17 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">nesting += line [i] == </code><code class="cpp 
+string">'&gt;'</code> <code class="cpp plain">? 1 : -1;</code></div><div
+ class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(nesting 
+&lt; 0) { bad = </code><code class="cpp keyword bold">true</code><code 
+class="cpp plain">; </code><code class="cpp keyword bold">break</code><code
+ class="cpp plain">; }</code></div><div class="line number20 index19 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number21 index20 alt2">&nbsp;</div><div
+ class="line number22 index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fprintf</code> <code class="cpp plain">(fout,
+ </code><code class="cpp string">"%slegal\n"</code><code class="cpp 
+plain">, bad || nesting &gt; 0 ? </code><code class="cpp string">"il"</code>
+ <code class="cpp plain">: </code><code class="cpp string">""</code><code
+ class="cpp plain">);</code></div><div class="line number23 index22 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="cpp plain">}</code></div><div class="line number24 index23 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">return</code> <code class="cpp plain">0;</code></div><div 
+class="line number25 index24 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="dance2_files/shCore.js"></script>
+<script type="text/javascript" src="dance2_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="dance2_files/shBrushJava.js"></script>
+<link href="dance2_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="dance2_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+
+
+</body></html>

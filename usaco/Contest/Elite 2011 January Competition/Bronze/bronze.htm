@@ -1,0 +1,517 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<meta http-equiv="Pragma" content="no-cache">
+<script language="javascript">
+<!--
+    var endtime;
+    
+    function initcount(secondsleft) {
+        var now = new Date();
+        return now.getTime() + secondsleft*1000;
+    }
+    function count1(i) { i = i - i%1; return i; } 
+    function count2(i) { i = i - i%1; if (i < 10) return "0"+i; return i; }
+    function updateclock(head, word, endtime) {
+        var now = new Date();
+        var delta = (endtime - now.getTime())/1000;
+        var s, x;
+        if(delta < 1)
+            s = head + " has ended";
+        else{
+            s = head + " ends: ";
+            s = head + ": ";
+            if(delta >= 24*3600)
+                s = s + count1(delta/86400) + "d";
+            if(delta >= 3600)
+                s = s + count2((delta/3600)%24) + "h";
+            if(delta >= 60)
+                s = s + count2((delta/60)%60) + "m";
+            s = s + count2(delta%60) + "s";
+            setTimeout("updateclock('"+head+"','"+word+"',"+endtime+")", 500);
+        }
+
+        var slot = document.getElementById(word);
+        slot.innerHTML = s;
+    }
+-->
+</script>
+
+<title>USACO Problems</title>
+<style type="text/css"><!--
+table,td,body {
+font-family: Helvetica, Verdana, Arial, SunSans-Regular, Sans-Serif;
+}
+--></style>
+</head><body onload="" background="bronze_files/bg9silver.jpg">
+
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans">
+<table><tbody><tr>
+<td><img src="bronze_files/cowhead2.gif">
+</td>
+<td valign="top">
+<table cellpadding="0" cellspacing="0">
+    <tbody><tr><td>Contest: JAN11 <b>SILVER</b> Division</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    
+</tbody></table>
+</td></tr>
+</tbody></table>
+<font color="red"><b>
+</b></font>
+
+<br><font size="6"><b>ANALYSIS MODE</b></font><br>
+Submit solutions for your own enjoyment.
+
+</font><pre>**********************************************************************
+                           BRONZE PROBLEMS
+**********************************************************************
+                  Four problems numbered 11 through 14
+**********************************************************************
+
+Problem 11: Symmetry [Jeffrey Wang, 2009]
+
+Farmer John loves symmetry and is currently arranging his cows on
+his field partitioned into an N x M (1 &lt;= N &lt;= 1,000,000,000; 1 &lt;=
+M &lt;= 1,000,000,000) grid.
+
+To preserve symmetry, Farmer John places cows in the following way.
+He puts a cow in the very center grid-square of the field; if no
+such grid-square exists, he simply stops. Then he partitions the field
+into four equal-sized smaller fields (separated by the row and
+column of the cow in the center) and arranges cows on each of those
+fields as before. He repeats the partitioning for ever-smaller
+fields until no center grid-square of a field exists or the field
+can not be subdivided.
+
+By way of example, if N = 7 and M = 15 then Farmer John will place a cow in
+row 4, column 8 and arrange each of the resulting 3x7 fields. In each of
+the 3x7 fields, Farmer John will place a cow in row 2, column 4 and arrange
+each of the resulting 1x3 fields. The process is shown here (where C
+denotes a cow):
+
+...............    ...............    .......|.......    .C.|.C.|.C.|.C.
+...............    ...............    ...C...|...C...    ---C---|---C---
+...............    ...............    .......|.......    .C.|.C.|.C.|.C.
+............... -&gt; .......C....... -&gt; -------C------- -&gt; -------C-------
+...............    ...............    .......|.......    .C.|.C.|.C.|.C.
+...............    ...............    ...C...|...C...    ---C---|---C---
+...............    ...............    .......|.......    .C.|.C.|.C.|.C.
+
+21 cows are required for this field. On the other hand, if N = M =
+5 then Farmer John will only need to place one cow since the resulting
+2x2 fields do not have center grid-squares. Help Farmer John determine
+how many cows he needs to arrange his field.
+
+PROBLEM NAME: sym
+
+INPUT FORMAT:
+
+* Line 1: Two space-separated integers: N and M
+
+SAMPLE INPUT (file sym.in):
+
+7 15
+
+OUTPUT FORMAT:
+
+* Line 1: The number of cows needed
+
+SAMPLE OUTPUT (file sym.out):
+
+21
+
+**********************************************************************
+
+Problem 12: Cleaning the Dishes [Sherry Wu et al., 2010]
+
+Bessie and Canmuu are teaming up to wash the massive pile of N (1
+&lt;= N &lt;= 10,000) dirty dishes left over after the CowMoose Festival.
+Bessie is washing the dishes; Canmuu will dry them.
+
+Each dish has a unique serial number in the range 1..N. At the
+beginning, the dishes are stacked in order with #1 on the top and
+#N on the bottom.
+
+Bessie first washes some number of dishes D_i by taking one from
+the top of the incoming pile, washing it, and then stacking it on
+the other side of the sink (this reverses the order of those dishes).
+
+Once she has finished washing those dishes, either she washes another
+set of dishes or Canmuu comes back to dry D_i dishes while Bessie
+goes off to eat her well-earned snack. He takes those dishes, one
+by one, off the stack that Bessie left him, dries the dish, and
+stacks it (again in reverse order) in the 'cleaned' stack.
+
+Canmuu then either takes another set of dishes to dry or goes off
+to get a snack while Bessie comes back to wash. They repeat these
+operations until all of the dishes are washed and dried.
+
+What is the final order (top to bottom) in which the clean, dry
+dishes are stacked?
+
+To illustrate, suppose that Bessie has a stack of 5 dishes to wash:
+
+1 &lt;-- top
+2
+3
+4
+5 &lt;-- bottom
+
+D_1 is 3, so Bessie takes three dishes from the top of the stack,
+one by one, washes them, and stacks on the other side of the sink
+for Canmuu to dry:
+
+       Unwashed
+       | Washed but not dried
+       | | Washed &amp; Dried
+       | | |
+TOP    1             
+       2          2   
+       3      -&gt;  3      -&gt;  3      -&gt;    3   
+       4          4          4 2        4 2 
+BOTTOM 5 - -      5 1 -      5 1 -      5 1 -
+    Initial      Dish 1     Dish 2     Dish 3
+
+Canmuu dries two of these, one by one, and places them onto the clean stack:
+
+TOP         3                   
+          4 2    -&gt;  4 2   -&gt;  4   2
+BOTTOM    5 1 -      5 1 3     5 1 3
+
+Bessie washes the final two dishes:
+
+TOP                              5
+          4   2  -&gt;    4 2 -&gt;    4 2
+BOTTOM    5 1 3      5 1 3     - 1 3
+
+Finally, Canmuu dries the last three dishes, stacking them in the
+resulting order below:
+
+TOP                                          1
+                                  4          4
+          5    -&gt;      5  -&gt;      5  -&gt;      5
+          4 2        4 2          2          2
+BOTTOM  - 1 3      - 1 3      - 1 3      - - 3
+
+So the final order is: 1, 4, 5, 2, 3.
+
+Each of the main input lines contains both a command, C_i (1 &lt;= C_i
+&lt;= 2) where 1 indicates Bessie washing while 2 indicates Canmuu
+drying, and the number of dishes D_i (1 &lt;= D_i &lt;= N) to be washed
+or dried.
+
+PROBLEM NAME: dishes
+
+INPUT FORMAT:
+
+* Line 1: A single integer indicating the number of dishes to wash and
+        dry: N
+
+* Lines 2..??: Each line contains a command and a count of dishes to
+        process: C_i and D_i
+
+SAMPLE INPUT (file dishes.in):
+
+5
+1 3
+2 2
+1 2
+2 3
+
+OUTPUT FORMAT:
+
+* Lines 1..N: Line i contains the i-th cleaned dish, starting from the
+        top
+
+SAMPLE OUTPUT (file dishes.out):
+
+1
+4
+5
+2
+3
+
+**********************************************************************
+
+Problem 13: Space Exploration [Andre Kessler, 2010]
+
+Farmer John's cows have finally blasted off from earth and are now
+floating around space in their Moocraft. The cows want to reach
+their fiery kin on Jupiter's moon of Io, but to do this they must
+first navigate through the dangerous asteroid belt.
+
+Bessie is piloting the craft through this treacherous N x N (1 &lt;=
+N &lt;= 1,000) sector of space. Asteroids in this sector comprise some
+number of 1 x 1 squares of space-rock connected along their edges
+(two squares sharing only a corner count as two distinct asteroids).
+Please help Bessie maneuver through the field by counting the number
+of distinct asteroids in the entire sector.
+
+Consider the 10 x 10 space shown below on the left. The '*'s represent
+asteroid chunks, and each '.' represents a .vast void of empty space. The
+diagram on the right shows an arbitrary numbering applied to the asteroids.
+
+               ...**.....           ...11.....
+               .*........           .2........
+               ......*...           ......3...
+               ...*..*...           ...3..3...
+               ..*****...           ..33333...
+               ...*......           ...3......
+               ....***...           ....444...
+               .*..***...           .5..444...
+               .....*...*          ......4...6
+               ..*.......          ..7........
+
+It's easy to see there are 7 asteroids in this sector.
+
+PROBLEM NAME: space
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Line i+1 contains row i of the asteroid field: N
+        characters
+
+SAMPLE INPUT (file space.in):
+
+10
+...**.....
+.*........
+......*...
+...*..*...
+..*****...
+...*......
+....***...
+.*..***...
+.....*...*
+..*.......
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer indicating the number of asteroids in the
+        field.
+
+SAMPLE OUTPUT (file space.out):
+
+7
+
+**********************************************************************
+
+Problem 14: Crop Circles [Rob Kolstad, 2011]
+
+Bessie and her fellow herd-mates have become extremely territorial.
+The N (1 &lt;= N &lt;= 400) cows conveniently numbered 1..N have all
+staked out a grazing spot in the pasture. Each cow i has a spot on
+an integer grid (0 &lt;= X_i &lt;= 10,000; 0 &lt;= Y_i &lt;= 10,000) and an
+integer radius R_i that indicates the circle she is staking out (1
+&lt;= R_i &lt;= 500).
+
+The cows are a bit greedy and sometimes stake out territory of their
+herd-mates. For each cow, calculate the number of other cows whose
+territory overlaps her territory.
+
+By way of example, consider these six cows with indicated locations
+and radii (don't confuse radius with diameter!):
+
+<img src="bronze_files/1801example.gif">
+
+By visual inspection, we can see and count the overlaps, as shown.
+
+NOTE: the test data will avoid pathological situations like tangents
+where the circles just barely touch.
+
+PROBLEM NAME: cropcir
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Three space-separated integers: X_i, Y_i, and R_i
+
+SAMPLE INPUT (file cropcir.in):
+
+6
+7 7 7
+16 14 7
+11 13 2
+10 17 3
+29 8 5
+15 7 4
+
+OUTPUT FORMAT:
+
+* Lines 1..N: Line i contains a single integer that is the number of
+        other fields that overlap with cow i's field.
+
+SAMPLE OUTPUT (file cropcir.out):
+
+3
+4
+3
+2
+0
+2
+
+**********************************************************************
+
+</pre><hr>
+<form action="/ioiupload" enctype="multipart/form-data" method="POST">
+<input name="a" value="CsQv5nmZkOW" type="hidden">
+
+<table>
+<tbody><tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+  <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill
+ Sans">
+  <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+  <tbody><tr><td><b>Submit a program  for grading:&nbsp;<b><input 
+name="filename" type="file">
+  &nbsp;&nbsp;
+  <input value="Submit" name="submit" type="submit"></b></b></td></tr>
+  </tbody></table>
+
+</font></td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+   <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+   <tbody><tr><td colspan="2">
+   <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+   <b>To run your program with your own test data, enter the program<br>
+   file name and input file name then click 'Test':</b></font></td></tr>
+
+  <tr><td>
+
+   <table>
+   <tbody><tr><td>
+     <table>
+     <tbody><tr><td>
+     <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+     <b>Program&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testprogramname" type="file"></td></tr>
+     <tr><td align="right">
+         <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+         <b>Input&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testfilename" type="file"></td></tr>
+     </tbody></table>
+   </td>
+   <td>&nbsp;&nbsp;</td>
+   <td><input value="Test" name="submit" type="submit"></td>
+   </tr>
+   </tbody></table>
+
+   </td></tr></tbody></table>
+
+</td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+  <table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+    <tbody><tr><td height="1"></td></tr>
+    <tr><td width="1"></td><td>
+
+    <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+      <tbody><tr><td>
+      <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+      <b>Backup a file:&nbsp;</b><input name="backupfilename" 
+type="file">
+      &nbsp;&nbsp;&nbsp;<input value="Backup" name="submit" 
+type="submit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input value="See Backups" name="submit" type="submit">
+      </font></td></tr>
+    </tbody></table>
+
+    </td><td width="1"></td></tr>
+    <tr><td height="1"></td><td></td></tr>
+  </tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+</tbody></table>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> The following solution files are saved for grading:<br>
+<table cellspacing="3">
+<tbody><tr><th>Name</th><th>Size</th><th>When</th><th>Age</th></tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=divgold.p">divgold.p</a></td>
+<td align="right">769</td>
+<td align="center"> 5h24:40</td>
+<td align="center">2205h06:26</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=profits.p">profits.p</a></td>
+<td align="right">989</td>
+<td align="center"> 6h57:47</td>
+<td align="center">2203h33:19</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=traffic.p">traffic.p</a></td>
+<td align="right">2610</td>
+<td align="center"> 7h41:15</td>
+<td align="center">2202h49:51</td>
+</tr>
+</tbody></table>
+</font><hr>
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a href="http://ace.delos.com/ioiedit?a=CsQv5nmZkOW">Edit your 
+database record</a>&nbsp;|&nbsp;
+
+<a href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;logout=1"> 
+Logout </a>
+<!--<a href="https://ace.delos.com/rules.html" target="_blank"> Rules </a>-->
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?init=1&amp;a=CsQv5nmZkOW">Main 
+contest index</a>
+</font></center>
+<!--&nbsp;|&nbsp;-->
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;showsubmit">See 
+submitted solutions</a>
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;suggestionbox">Send
+ message
+to operations staff</a>
+&nbsp;|&nbsp;
+Phone: +1 719-321-7333
+<br>
+Director is not online<br>
+This page was generated at 9:31:06 GMT.
+</font></center>
+</form></body></html>

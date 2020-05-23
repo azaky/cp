@@ -1,0 +1,88 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/625966acdef25b4addbd315dbdf59953/c.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem C</h2>
+<h1>Laser-Based Mosquito Killer</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>Mosquitoes can be quite annoying, especially if they appear at night in your room and start biting you while you're sleeping. Phylix, who is a good and smart guy, is now having such bad time for several weeks because of them. "Enough is enough!" he said. With his ability, he creates a device which can shoot laser to kill those annoying mosquitoes in an instant.</p>
+
+<p>To make the problem easier, let's reduce Phylix's room from 3-dimensional into a 2-dimensional plane (height and width) and remove all objects other than mosquitoes in the room. The device is put at (0, 0) and there are N mosquitoes flying at (x<sub>i</sub>, y<sub>i</sub>) where 0 &lt; x<sub>i</sub>,y<sub>i</sub>. Let's assume that the mosquitoes are flying still at their position (actually, once the device is functioning, they all will be killed instantly in their position, so we don't need to trouble our self with the movement). The device can shoot a laser from its position to anywhere in the plane in a straight line until it hit the attic/wall. The laser shot also emits some radiation such that any mosquitoes which distance is not larger than R to the laser shot line will also be killed instantly. One drawback on the device is that it uses some sensors such that the laser shot should be targeted and exactly hit at least one mosquito. By "exactly hit" we mean that the mosquito is not killed because of the radiation, but the laser shot hit, kill and pass through the mosquito.</p>
+
+<p>Shooting the laser consumes a lot of energy and Phylix's mom is the one who's paying the electric bill. Besides, Phylix is also an environmental friendly guy, he doesn't like to spend energy more than what we need. He needs to modify his device such that it only needs to shoot the least amount of laser to kill all the mosquitioes.</p>
+
+<p>Check the following example.</p>
+<img src="./c_files/c.jpg" width="333" height="333" alt="example" title="example">
+<p>There are 8 mosquitoes located at (3,2), (4,5), (5,5), (7,1), (8,2), (8,3), (8,6) and (9,9) represented by the blue dot in the figure. Let's assume in this case the radiation R equals to 2. We can kill all these mosquitoes with only 2 laser shots represented by the red lines while the pink area are the radiation caused by the laser shots. First shot is targeted to mosquito at (8,2) and it will also kill mosquitoes at (3,2), (7,1) and (8,3). The second shot is targeted to mosquito at (5,5) and it also happens that mosquito at (9,9) lies at this shot line. This second shot will also kill mosquitoes at (3,2), (4,5) and (8,6). Note that mosquito at (3,2) can be killed by either shot #1 or shot #2, it doesn't matter which.</p>
+
+<p>Phylix already wrote an algorithm to determine which mosquitoes to shot in order to minimize the number of shooting, but he's not sure that his algorithm is correct. He needs your help to check the minimum number of shots needed to kill all the mosquitoes.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 50) the number of cases. Each case begins with two integers N (1 &#8804; N &#8804; 2,000) and R (0 &#8804; R &#8804; 100) denoting the number of mosquitoes and radiation size respectively. The following N lines each contains two integers x<sub>i</sub> and y<sub>i</sub> (1 &#8804; x<sub>i</sub>, y<sub>i</sub> &#8804; 10,000) representing the (x,y) position of the mosquito in 2D plane.
+</p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1, and Y is the minimum number of shots required to kill all the mosquitoes.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+8 2
+3 2
+4 5
+5 5
+7 1
+8 2
+8 3
+8 6
+9 9
+8 0
+3 2
+4 5
+5 5
+7 1
+8 2
+8 3
+8 6
+9 9
+3 100
+4 9
+10 7
+2 5
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 2
+Case #2: 7
+Case #3: 1
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>This is the example from problem statement.</p>
+
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>There are a same number (and position) of mosquitoes with sample #1, but the size of radiation R = 0, which mean we can only kill those mosquitoes by hitting them directly with the laser. We need 7 shots as mosquitoes at (5,5) and (9,9) can be killed in one shot, while the other 6 mosquitoes can only be killed by 6 different shots.</p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

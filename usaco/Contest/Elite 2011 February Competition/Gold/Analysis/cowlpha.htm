@@ -1,0 +1,180 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO FEB11 cowlpha Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="cowlpha_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO FEB11 Problem 'cowlpha' Analysis</h2>
+<h4>by Michael Cohen</h4>
+This is a simple dynamic programming problem.  The idea is to compute 
+and 
+store, 
+for all i &lt;= U, j &lt;= L, and symbols k, the number of strings 
+containing i 
+uppercase letters and j lowercase letters that end on the symbol k.  For
+ each i 
+and j, this can be computed using the values for smaller i and j by 
+looping 
+over 
+each final valid pair of symbols and adding the number of possibilities 
+ending 
+on these pairs to the appropriate positions.  For instance, if Ab is a 
+valid 
+string, the number of strings containing 5 uppercase and 6 lowercase 
+letters 
+ending on Ab is equal to the number of strings containing 5 uppercase 
+and 5 
+lowercase letters and ending on A; this value is added the the value for
+ 5 
+uppercase and 6 lowercase ending on b.
+<p>
+Evaluating this recurrence in this way takes time O(ULP).  A short 
+implementation of this solution is
+</p><div><div id="highlighter_748566" class="syntaxhighlighter  cpp"><div
+ class="toolbar"><span><a href="#" class="toolbar_item command_help 
+help">?</a></span></div><table border="0" cellpadding="0" 
+cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 
+index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div 
+class="line number3 index2 alt2">3</div><div class="line number4 index3 
+alt1">4</div><div class="line number5 index4 alt2">5</div><div 
+class="line number6 index5 alt1">6</div><div class="line number7 index6 
+alt2">7</div><div class="line number8 index7 alt1">8</div><div 
+class="line number9 index8 alt2">9</div><div class="line number10 index9
+ alt1">10</div><div class="line number11 index10 alt2">11</div><div 
+class="line number12 index11 alt1">12</div><div class="line number13 
+index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div
+ class="line number15 index14 alt2">15</div><div class="line number16 
+index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div
+ class="line number18 index17 alt1">18</div><div class="line number19 
+index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div
+ class="line number21 index20 alt2">21</div><div class="line number22 
+index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div
+ class="line number24 index23 alt1">24</div><div class="line number25 
+index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div
+ class="line number27 index26 alt2">27</div><div class="line number28 
+index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div
+ class="line number30 index29 alt1">30</div><div class="line number31 
+index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div
+ class="line number33 index32 alt2">33</div><div class="line number34 
+index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div
+ class="line number36 index35 alt1">36</div><div class="line number37 
+index36 alt2">37</div><div class="line number38 index37 alt1">38</div><div
+ class="line number39 index38 alt2">39</div><div class="line number40 
+index39 alt1">40</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="cpp preprocessor">#include
+ &lt;fstream&gt;</code></div><div class="line number2 index1 alt1"><code
+ class="cpp keyword bold">using</code> <code class="cpp keyword bold">namespace</code>
+ <code class="cpp plain">std;</code></div><div class="line number3 
+index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">U, L, P;</code></div><div
+ class="line number5 index4 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">first[200], second[200];</code></div><div 
+class="line number6 index5 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">sentence[251][251][52];</code></div><div 
+class="line number7 index6 alt2">&nbsp;</div><div class="line number8 
+index7 alt1"><code class="cpp color1 bold">int</code> <code class="cpp 
+plain">main() {</code></div><div class="line number9 index8 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">ifstream inp(</code><code class="cpp string">"cowlpha.in"</code><code
+ class="cpp plain">);</code></div><div class="line number10 index9 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">ofstream outp(</code><code class="cpp string">"cowlpha.out"</code><code
+ class="cpp plain">);</code></div><div class="line number11 index10 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">inp &gt;&gt; U &gt;&gt; L &gt;&gt; P;</code></div><div
+ class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; P; i++) {</code></div><div class="line number14 index13 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">char</code> <code class="cpp plain">pair[3];</code></div><div
+ class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">inp &gt;&gt; pair;</code></div><div class="line 
+number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">first[i] = (</code><code class="cpp string">'A'</code>
+ <code class="cpp plain">&lt;= pair[0] &amp;&amp; pair[0] &lt;= </code><code
+ class="cpp string">'Z'</code> <code class="cpp plain">? pair[0]-</code><code
+ class="cpp string">'A'</code> <code class="cpp plain">: pair[0]-</code><code
+ class="cpp string">'a'</code><code class="cpp plain">+26);</code></div><div
+ class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">second[i] = (</code><code class="cpp string">'A'</code>
+ <code class="cpp plain">&lt;= pair[1] &amp;&amp; pair[1] &lt;= </code><code
+ class="cpp string">'Z'</code> <code class="cpp plain">? pair[1]-</code><code
+ class="cpp string">'A'</code> <code class="cpp plain">: pair[1]-</code><code
+ class="cpp string">'a'</code><code class="cpp plain">+26);</code></div><div
+ class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number19 index18 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number20 index19 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; 26; i++) </code></div><div class="line number21 index20 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sentence[1][0][i]++;</code></div><div class="line 
+number22 index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 26; i 
+&lt; 52; i++)</code></div><div class="line number23 index22 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sentence[0][1][i]++;</code></div><div class="line 
+number24 index23 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt;= U; i++)</code></div><div class="line number26 index25 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">j = 0; j 
+&lt;= L; j++) {</code></div><div class="line number27 index26 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">((i+j) &lt;=
+ 1) </code><code class="cpp keyword bold">continue</code><code 
+class="cpp plain">;</code></div><div class="line number28 index27 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">k = 0; k 
+&lt; P; k++) {</code></div><div class="line number29 index28 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(second[k] 
+&lt; 26 &amp;&amp; i &gt; 0)</code></div><div class="line number30 
+index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sentence[i][j][second[k]] = 
+(sentence[i][j][second[k]]+sentence[i-1][j][first[k]])%97654321;</code></div><div
+ class="line number31 index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">else</code> <code class="cpp keyword bold">if</code>
+ <code class="cpp plain">(second[k] &gt;= 26 &amp;&amp; j &gt; 0)</code></div><div
+ class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sentence[i] [j][second[k]] = 
+(sentence[i][j][second[k]]+sentence[i][j-1] [first[k]])%97654321;</code></div><div
+ class="line number33 index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number34 index33 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number35 index34 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">answer = 0;</code></div><div
+ class="line number37 index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; i 
+&lt; 52; i++) answer = (answer+sentence[U][L] [i])%97654321;</code></div><div
+ class="line number38 index37 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">outp &lt;&lt; answer &lt;&lt; endl;</code></div><div 
+class="line number39 index38 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">0;</code></div><div
+ class="line number40 index39 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<script type="text/javascript" src="cowlpha_files/shCore.js"></script>
+<script type="text/javascript" src="cowlpha_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="cowlpha_files/shBrushJava.js"></script>
+<link href="cowlpha_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="cowlpha_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+</body></html>

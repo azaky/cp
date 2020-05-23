@@ -1,0 +1,46 @@
+Case #1: AB AB
+Case #2: A A B C A BC
+Case #3: C A BC
+Case #4: B A B A BC
+Case #5: A A C A BC
+Case #6: A BC
+Case #7: C B C A BC
+Case #8: A C A C A BC
+Case #9: A A B A B C A BC
+Case #10: AB AB AB AB
+Case #11: A C A B C A BC
+Case #12: C B C A B C A BC
+Case #13: A B A B A B A BC
+Case #14: A C A C A C A BC
+Case #15: A A B A B A BC
+Case #16: B C B C A BC
+Case #17: B A BC
+Case #18: AB
+Case #19: B B A B C A BC
+Case #20: A B A BC
+Case #21: C A B C A BC
+Case #22: AB AB AB
+Case #23: A A C A B C A BC
+Case #24: B A B A B C A BC
+Case #25: A A C A C A BC
+Case #26: B B C A BC
+Case #27: B A B A B A BC
+Case #28: B C A B C A BC
+Case #29: C C A B C A BC
+Case #30: A B C A BC
+Case #31: A B A B C A BC
+Case #32: B A B C A BC
+Case #33: A A BC
+Case #34: C A C A BC
+Case #35: B B C B C A BC
+Case #36: B C B C B C A BC
+Case #37: A A B A BC
+Case #38: B B C A B C A BC
+Case #39: C A C A B C A BC
+Case #40: C A C A C A BC
+Case #41: A A A B C A BC
+Case #42: B C A BC
+Case #43: A C A BC
+Case #44: C B C B C A BC
+Case #45: A B A B A BC
+Case #46: A B C A B C A BC

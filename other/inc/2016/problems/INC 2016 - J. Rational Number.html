@@ -1,0 +1,86 @@
+
+<!-- saved from url=(0061)http://competition.binus.ac.id/contest/team/problem.php?id=30 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>INC 2016 - J. Rational Number</title>
+
+<style>
+body, p, li, td {
+	font-family: "Arial";
+	font-size: 12pt;
+	line-height: 1.5;
+}
+li {
+	padding-bottom: 10px;
+}
+.norm{
+	font-family: "Cambria Math";
+	font-size: 13pt;
+}
+.block{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;	
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2016</h3>
+<h2>Problem J</h2>
+<h1>Rational Number</h1>
+Time Limit: 1 second
+</center>
+<br>
+
+<p>A <i>rational number</i> is any real number which can be written as the fraction a/b of two whole numbers (integers) a and b. One property of a rational number is it either terminates after a finite number of digits or it has a repeating decimal digits (r). Example of rational numbers are:</p>
+
+<table cellpadding="5" cellspacing="1" border="0">
+<tbody><tr><td width="90">•&nbsp;&nbsp;100</td><td>a = 100</td><td>b = 1</td><td><small>(terminates)</small></td></tr>
+<tr><td>•&nbsp;&nbsp;-1.875</td><td>a = -15</td><td>b = 8</td><td><small>(terminates)</small></td></tr>
+<tr><td>•&nbsp;&nbsp;2.1<span style="text-decoration: overline;">6</span></td><td>a = 13</td><td>b = 6</td><td>r = 6</td></tr>
+<tr><td>•&nbsp;&nbsp;7.<span style="text-decoration: overline;">27</span></td><td>a = 80</td><td>b = 11</td><td>r = 27</td></tr>
+<tr><td>•&nbsp;&nbsp;0.<span style="text-decoration: overline;">285714</span></td><td>a = 2</td><td>b = 7</td><td>r = 285714</td></tr>
+</tbody></table>
+
+<p>The overlined numbers in above examples represent the repeating decimal digits, e.g., 2.1<span style="text-decoration: overline;">6</span> means the number is 2.166666..., while 0.<span style="text-decoration: overline;">285714</span> means the number is 0.285714285714285714285714...; 100 and -1.875 do not have repeating decimal digits as they terminate.</p>
+
+<p>In this problem, you are challenged to find the length of the repeating decimal digits of a rational number. In the examples above, when a = 13 and b = 6, then the length of its repeating decimal digits is 1; while, when a = 2 and b = 7, the length of its repeating decimal digits is 6.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (T &#8804; 100) denoting the number of cases. Each case contains two integers in a line: a b (-1,000,000,000 &#8804; a, b &#8804; 1,000,000,000; b &#8800; 0) which represent the numerator and denominator of the rational number, respectively.
+</p>
+
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X:</font>" where <font face="Courier New">X</font> is the case number, starts from 1, and <font face="Courier New">Y</font> is the length of the repeating decimal digits for that particular case.</p>
+
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td align="center">
+<table border="0" cellspacing="1" cellpadding="4" width="700">
+<tbody><tr><th align="left" width="*" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF">
+<pre>5
+100 1
+-15 8
+13 6
+80 11
+2 7
+</pre>
+</td><td bgcolor="#FFFFFF">
+<pre>Case #1: 0
+Case #2: 0
+Case #3: 1
+Case #4: 2
+Case #5: 6
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+
+<br><br>
+</com:tcontent><script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>

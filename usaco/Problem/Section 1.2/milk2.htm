@@ -1,0 +1,70 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Milking Cows</title> </head><body background="milk2_files/bg3.jpg">
+<img src="milk2_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Milking Cows</font></b><br>
+</center>
+
+<p>Three farmers rise at 5 am each morning and head for the barn
+to milk three cows. The first farmer begins milking his cow at time
+300 (measured in seconds after 5 am) and ends at time 1000. The
+second farmer begins at time 700 and ends at time 1200. The third
+farmer begins at time 1500 and ends at time 2100.  The longest
+continuous time during which at least one farmer was milking a cow
+was 900 seconds (from 300 to 1200). The longest time no milking was
+done, between the beginning and the ending of all milking, was 300
+seconds (1500 minus 1200).
+
+</p><p>Your job is to write a program that will examine a list of
+beginning and ending times for N (1 &lt;=  N &lt;= 5000) farmers
+milking N cows and compute (in seconds):
+</p><ul>
+<li> The longest time interval at least one cow was milked. 
+</li><li> The longest time interval (after milking starts) during which
+no cows were being milked.
+</li></ul>
+
+<h3>PROGRAM NAME: milk2</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td>The single integer  </td>
+</tr><tr> <td> Lines 2..N+1: </td> <td>Two non-negative integers less than
+1000000, the starting and ending time in seconds after 0500</td>
+
+</tr></tbody></table>
+
+<h3>SAMPLE INPUT (file milk2.in) </h3>
+
+<pre>3
+300 1000
+700 1200
+1500 2100
+
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line with two integers that represent the longest
+continuous time of milking and the longest idle time.
+
+<h3>SAMPLE OUTPUT (file milk2.out)</h3>
+
+<pre>900 300
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="milk2" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,125 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoanal2?a=E0qBBPTi58K&S=cowxor -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Cow XOR</title> <script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/document_iterator.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/find_proxy.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/get_html_text.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/global_constants.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/name_injection_builder.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/number_injection_builder.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/string_finder.js"></script><script src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/change_sink.js"></script><meta name="document_iterator.js"><meta name="find_proxy.js"><meta name="get_html_text.js"><meta name="global_constants.js"><meta name="name_injection_builder.js"><meta name="number_injection_builder.js"><meta name="string_finder.js"><meta name="change_sink.js"></head>
+<body background="./cowxor_files/bg3.jpg">
+<center><img src="./cowxor_files/cow1.jpg" width="742" height="118"></center>
+
+<center>
+<b><font size="6">Cow XOR</font></b><br>
+</center>
+<p>Suppose that we know the k first bits of binary representation of
+the greatest possible xor. If there exists a sequence such that its
+xor (which we shall call q) on the first k bits agrees with those
+-- and the next bit is '1' -- then we know, that k+1'th bit of the
+greatest xor will be '1', because if not, then q would be greater.
+
+</p><p>The solution first computes values xr[], where xr[q] equals xor of
+all the cows' values from 1 to q - then, xor of the sequence a..b
+quals xr[b] xor xr[a-1].
+
+</p><p>It then runs a loop over all possible exponents e of 2 (starting
+from 21 downwards), updating arrays pop[] and best[]. It is assumed
+that after finishing the loop with exponent e (and before entering
+the loop, with e assumed to be 22), that for every 0 &#8804; q &#8804; N:
+</p><ul>
+<li>
+    xr[pop[q][0]]'s and xr[q]'s binary representations are the same
+    on positions e, e+1, etc., and pop[q][0] is biggest possible
+    with 0 &#8804; pop[q][0] &lt; q. If there's no such pop[q][0] possible,
+    then pop[q][0] = -1.
+</li><li>
+
+    xr[pop[q][1]]'s and xr[q]'s binary representations are the same
+    on positions e+2, e+2, etc., different on position e, and
+    pop[q][1] is biggest possible with 0 &#8804; pop[q][1] &lt; q. If there's
+    no such pop[q][1] possible, then pop[q][1] = -1.
+
+</li><li>
+    if X would be equal biggest possible xor, then xr[best[q]] xor
+     xr[q]'s in equal X's binary representation on positions e,
+     e+1, etc., and best[q] is biggest possible with 0 &#8804; best[q]
+     &lt; q. If there's no such best[q] possible, then best[q] = -1.
+</li></ul>
+<p>
+After performing the loop with e = 0, for each 0 &#8804; q &#8804; N, best[q]
+= -1 or xr[best[q]] xor xr[q] is equal X. There exists at least one
+q with best[q] non-negative, because there exist such a and b, a
+&#8804; b, that xr[a-1] xor xr[b] = X.
+</p><p>
+The last step will be finding smallest possible q with non-negative
+best[q], which satisfies, that if there're more possible sequences,
+we should choose one with last cow having highest rank. The third
+condition, stating, that if there's still a tie we should choose
+shortest sequence, is satisfied thanks to the fact, that best[q]
+is always biggest possible.
+</p><p>
+Here is the implementation:
+</p><pre>#include &lt;cstdio&gt;
+
+#define MXN 101000
+
+using namespace std;
+
+int xr[MXN], prev[MXN][2], best[MXN];
+int a, wyk, res, n, x;
+int tmp[2];
+bool fnd;
+
+int main() {
+    freopen("cowxor.in", "r", stdin);
+    freopen("cowxor.out", "w", stdout);
+    scanf("%i", &amp;n);
+    xr[0] = 0;
+    for (a = 0; a &lt; n; a++ ) {
+        scanf("%d", &amp;x);
+        xr[a+1] = xr[a] ^ x;
+    }
+    for (a = 0; a &lt;= n; a++ ) {
+        prev[a][0] = a-1;
+        prev[a][1] = -1;
+        best[a] = a-1;
+    }
+    wyk = 22;
+    res = 0;
+    while (wyk--) {
+        for (a = 1; a &lt;= n; a++ )
+            if (prev[a][0] == -1)
+                prev[a][1] = -1;
+            else {
+                if (xr[a] &gt;&gt; wyk != xr[prev[a][0]] &gt;&gt; wyk) {
+                    tmp[0] = prev[prev[a][0]][1];
+                    tmp[1] = prev[a][0];
+                } else {
+                    tmp[0] = prev[a][0];
+                    tmp[1] = prev[prev[a][0]][1];
+                }
+                prev[a][0] = tmp[0];
+                prev[a][1] = tmp[1];
+            }
+        fnd = false;
+        for (a = 1; a &lt;= n; a++ )
+            if (0 &lt;= best[a])
+                if ((xr[a] &gt;&gt; wyk) % 2 != (xr[best[a]] &gt;&gt; wyk) % 2 ||
+                                      0 &lt;= prev[best[a]][1])
+                    fnd = true;
+        if (fnd) {
+            res |= 1 &lt;&lt; wyk;
+            for (a = 1; a &lt;= n; a++ )
+                if (0 &lt;= best[a] &amp;&amp;
+                              (xr[a] &gt;&gt; wyk) % 2 == (xr[best[a]] &gt;&gt; wyk) % 2)
+                    best[a] = prev[best[a]][1];
+        }
+    }
+    for (a = 0; best[a] == -1; a++ );
+    printf("%d %d %d\n", res, best[a]+1, a);
+    return 0;
+}
+</pre>
+
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=E0qBBPTi58K">USACO Gateway</a> | <a href="mailto:kolstad.delos.com">Comment or Question</a>
+</center>
+
+
+</body><span id="skype_highlighting_settings" display="none" autoextractnumbers="1"></span><object id="skype_plugin_object" location.href="http://ace.delos.com/usacoanal2?a=E0qBBPTi58K&amp;S=cowxor" location.hostname="ace.delos.com" style="position: absolute; visibility: hidden; left: -100px; top: -100px; " width="0" height="0" type="application/x-vnd.skype.click2call.chrome.5.7.0"></object></html>

@@ -1,0 +1,53 @@
+Problem 2: Scrambled Letters [Brian Dean, 2012]
+
+Farmer John punya daftar nama N ekor sapi miliknya (1 <= N <= 50,000) yang
+terurut secara alfabetis. Nama setiap sapi adalah string yang berbeda-
+beda yang terdiri dari 1 sampai 20 buah huruf kecil.
+
+Selalu saja membuat masalah, Bessie mengubah daftar tersebut dengan cara
+mengubah susunan nama-nama pada daftar itu. Selain itu, dia juga mengacak
+huruf-huruf pada nama tiap sapi. Diberikan daftar yang telah diubah ini,
+tolong bantu Farmer John untuk menghitung, untuk setiap nama dalam daftar,
+posisi terendah dan tertinggi yang mungkin di dalam daftar aslinya.
+
+PROBLEM NAME: scramble
+
+INPUT FORMAT:
+
+* Baris 1: Sebuah bilangan bulat N.
+
+* Baris 2..1+N: Tiap baris berisi nama suatu sapi yang (mungkin) telah diubah.
+
+SAMPLE INPUT (file scramble.in):
+
+4
+essieb
+a
+xzy
+elsie
+
+INPUT DETAILS:
+
+Ada 4 sapi, dengan nama-nama yang diberikan di atas. Nama-nama tersebut
+mungkin saja telah diubah oleh Bessie.
+
+OUTPUT FORMAT:
+
+* Baris 1..N: Baris i berisi kemungkinan posisi kemunculan terendah dan
+        tertinggi di daftar yang dimiliki oleh Farmer John, di mana versi
+        asli dari string ke-i mungkin muncul pada posisi tersebut.
+
+SAMPLE OUTPUT (file scramble.out):
+
+2 3
+1 1
+4 4
+2 3
+
+OUTPUT DETAILS:
+
+String "a" pasti muncul di posisi pertama pada daftar bagaimanapun juga,
+dan string "xyz" pasti muncul terakhir. Dua string "essieb" dan "elsie"
+bisa saja muncul di posisi kedua atau ketiga, tergantung dari susunan
+asli huruf-hurufnya (sebagai contoh, "bessie" (posisi 2) dan "elsie"
+(posisi 3), dengan "sisbee" (posisi 3) dan "ilees" (posisi 2)).

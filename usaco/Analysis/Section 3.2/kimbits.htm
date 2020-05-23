@@ -1,0 +1,117 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 69: Stringsobits</title> </head><body 
+background="kimbits_files/bg3.jpg">
+<img src="kimbits_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Stringsobits</font></b><br>
+Russ Cox
+</center>
+
+
+<p>Suppose we knew how to calculate the size of the set of binary 
+numbers
+for a given nbits and nones.  That is, suppose we have a function
+sizeofset(n, m) that returns the number of n-bit binary numbers that
+have at most m ones in them.
+
+</p><p>Then we can solve the problem as follows.  We're looking for the 
+ith
+element in the set of size n with m bits.  This set has two parts: the
+numbers the start with zero, and the numbers that start with one.  There
+are sizeofset(n-1, m) numbers that start with zero and have at most m
+one bits, and there are sizeofset(n-1, m-1) numbers that start with one
+and have at most m one bits.
+
+</p><p>So if the index is less than sizeofset(n-1, m), the number in 
+question
+occurs in the part of the set that is numbers that start with zero.
+Otherwise, it starts with a one.
+
+</p><p>This lends itself to a nice recursive solution, implemented by
+"printbits".
+
+</p><p>The only difficult part left is calculating "sizeofset".  We can 
+do
+this by dynamic programming using the property described above:
+
+</p><pre>	sizeofset(n, m) = sizeofset(n-1, m) + sizeofset(n-1, m-1)
+</pre>
+and sizeofset(0, m) = 1 for all m.
+
+We use double's throughout for bits, but that's overkill given the
+rewritten problem that requires only 31 bits intead of 32.
+
+<pre>/*
+PROG: kimbits
+ID: rsc001
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+FILE *fout;
+
+/* calculate binomial coefficient (n choose k) */
+double sizeofset[33][33];
+
+void
+initsizeofset(void)
+{
+	int i, j;
+
+	for(j=0; j&lt;=32; j++)
+		sizeofset[0][j] = 1;
+
+	for(i=1; i&lt;=32; i++)
+	for(j=0; j&lt;=32; j++)
+		if(j == 0)
+			sizeofset[i][j] = 1;
+		else
+			sizeofset[i][j] = sizeofset[i-1][j-1] + sizeofset[i-1][j];
+}
+
+void
+printbits(int nbits, int nones, double index)
+{
+	double s;
+
+	if(nbits == 0)
+		return;
+
+	s = sizeofset[nbits-1][nones];
+	if(s &lt;= index) {
+		fprintf(fout, "1");
+		printbits(nbits-1, nones-1, index-s);
+	} else {
+		fprintf(fout, "0");
+		printbits(nbits-1, nones, index);
+	}
+}
+
+void
+main(void)
+{
+	FILE *fin;
+	int nbits, nones;
+	double index;
+
+	fin = fopen("kimbits.in", "r");
+	fout = fopen("kimbits.out", "w");
+	assert(fin != NULL &amp;&amp; fout != NULL);
+
+	initsizeofset();
+	fscanf(fin, "%d %d %lf", &amp;nbits, &amp;nones, &amp;index);
+	printbits(nbits, nones, index-1);
+	fprintf(fout, "\n");
+
+	exit(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

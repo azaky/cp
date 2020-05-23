@@ -1,0 +1,86 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/bd36e60d7542be5468a9ad5760e4b017/e.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem E</h2>
+<h1>Tree Land</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>Deep inside the largest and most mysterious forest in the world, there lies a beautiful land, Tree Land, inhabited by interesting and most noble creatures called treeman. There are N cities in Tree Land numbered from 1 to N which are connected by N-1 roads where each road connects exactly two different cities and it does not have any sidetrack/fork in the middle of the road. The cities are connected such that one can go from one city to any other city through some roads.</p>
+
+<p>It's almost that time of year again when treemans do their sacred ritual. One city will be selected as a holy city, and at the time, all treemans accross the land (in all cities, except the holy one) should walk toward the holy city while singing their holy song along the way, and when they reach the holy city, they will gather and say a prayer together. This ritual is believed will bring tranquility to the whole land. Of course after the ritual, they will chat with each other as it might be a rare occasion for them to meet.</p>
+
+<p>Usually the holy city is selected arbitrarily by the tree elder, but lately the treemans feel bored and experience some kind of Déjà vu, they think the path they took to gather at the holy city are similar in the past few years. To be precise, let us define this "similarity" feeling clearly. Let us say there are two candidate of holy city, A and B. Choosing A or B will give a similar experience if and only if we can rearrange the number of all cities such that for each road connecting city x<sub>i</sub> and y<sub>i</sub>, they all travel in the same direction (toward the holy city of course), either from x<sub>i</sub> to y<sub>i</sub> or the other way around. Check the following figure to understand it better.</p>
+
+<center><img src="./e_files/e.jpg" width="600" height="400"></center>
+
+<p>In the example above, there are six citites (1..6) with 5 roads connecting them. Selecting A (city 2) and B (city 4) will give a similar experience. Selecting A and rearrange the city number with <font face="Courier New">1~2</font> (relabel city 1 as city 2), <font face="Courier New">2~1</font>, <font face="Courier New">3~3</font>, <font face="Courier New">4~4</font>, <font face="Courier New">5~5</font>, <font face="Courier New">6~6</font> (city 3 to 6 do not change their label) will produce the middle right figure. While selecting B and rearrange the city number with <font face="Courier New">1~5</font>, <font face="Courier New">2~4</font>, <font face="Courier New">3~6</font>, <font face="Courier New">4~1</font>, <font face="Courier New">5~3</font>, <font face="Courier New">6~2</font> will produce the lower right figure. In both arrangement, the holy city is renumbered into 1. The arrow connecting between cities denotes that treemans will walk that road in the direction of the arrow (towards the holy city). As we analyze the figures, we will find that road connecting x<sub>i</sub> and y<sub>i</sub> have an exact same direction in both figure for all x<sub>i</sub>-y<sub>i</sub> roads, i.e. <font face="Courier New">2-&gt;1</font> (they are walking from city 2 to city 1), <font face="Courier New">3-&gt;1</font>, <font face="Courier New">4-&gt;1</font>, <font face="Courier New">5-&gt;4</font>, <font face="Courier New">6-&gt;4</font>.</p>
+
+<p>If we further analyze the cities, then we will find that selecting city 2 and 4 produce a similar experience, while selecting city 1, 3, 5 and 6 also produce another similar experience. Thus, there are two different experiences: {2, 4} and {1, 3, 5, 6}.</p>
+
+<p>Before selecting a new capital, the tree alder wants to know how many distinct possible experience they have in their land. As treeman are noble creatures, they don't fond with petty calculation, it's your task as human to help them.</p>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 50) the number of cases. Each case begins with an integer N (2 &#8804; N &#8804; 1,000) denoting the number of cities in Tree Land. The next N-1 lines each contains two integers v<sub>i</sub> and w<sub>i</sub> (1 &#8804; v<sub>i</sub>, w<sub>i</sub> &#8804; N; v<sub>i</sub> &#8800; w<sub>i</sub>) denoting that there is a road connecting city v<sub>i</sub> with city w<sub>i</sub>.</p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1, and Y is the number of different possible experiences they can have in each case.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+6
+1 2
+2 3
+2 4
+4 5
+4 6
+2
+2 1
+7
+1 2
+1 3
+3 4
+4 5
+3 6
+3 7
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 2
+Case #2: 1
+Case #3: 4
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>This is the example from problem statement, the distinct possible experiences are: {2, 4} and {1, 3, 5, 6}.</p>
+
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>There's only two cities and one road, selecting either city gives a similar experience as they will walk from the other city to the selected holy city.</p>
+
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>There are 4 distinct possible experiences: {1, 5}, {2, 4}, {3}, {6, 7}.</p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

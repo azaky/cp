@@ -1,0 +1,105 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      2745,         96]
+NotebookOptionsPosition[      2300,         75]
+NotebookOutlinePosition[      2670,         91]
+CellTagsIndexPosition[      2627,         88]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 63", "Title",
+ CellChangeTimes->{{3.536402438306776*^9, 3.536402450147197*^9}}],
+
+Cell[TextData[{
+ "The 5-digit number, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"16807", "=", 
+    SuperscriptBox["7", "5"]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", is also a fifth power. Similarly, the 9-digit number, 134217728=",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["8", "9"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", is a ninth power.\n\nHow many n-digit positive integers exist which are \
+also an nth power?"
+}], "Text",
+ CellChangeTimes->{{3.5364024545776043`*^9, 3.5364024700372314`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ans", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"n", "=", "1"}], ",", 
+    RowBox[{
+     RowBox[{"IntegerLength", "[", 
+      SuperscriptBox["9", "n"], "]"}], "\[Equal]", "n"}], ",", 
+    RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"a", "=", "1"}], ",", 
+      RowBox[{"a", "\[LessEqual]", "9"}], ",", 
+      RowBox[{"a", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"IntegerLength", "[", 
+          SuperscriptBox["a", "n"], "]"}], "==", "n"}], ",", 
+        RowBox[{"ans", "++"}]}], "]"}]}], "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "ans"}], "Input",
+ CellChangeTimes->{{3.536402529397336*^9, 3.536402906762999*^9}}],
+
+Cell[BoxData["49"], "Output",
+ CellChangeTimes->{{3.536402766018552*^9, 3.536402791649397*^9}, {
+   3.5364028399792814`*^9, 3.5364028754381437`*^9}, 3.5364029070593996`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{120, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 106, 1, 83, "Title"],
+Cell[688, 25, 536, 15, 65, "Text"],
+Cell[CellGroupData[{
+Cell[1249, 44, 847, 23, 119, "Input"],
+Cell[2099, 69, 173, 2, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

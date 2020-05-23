@@ -1,0 +1,451 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<meta http-equiv="Pragma" content="no-cache">
+<script language="javascript">
+<!--
+    var endtime;
+    
+    function initcount(secondsleft) {
+        var now = new Date();
+        return now.getTime() + secondsleft*1000;
+    }
+    function count1(i) { i = i - i%1; return i; } 
+    function count2(i) { i = i - i%1; if (i < 10) return "0"+i; return i; }
+    function updateclock(head, word, endtime) {
+        var now = new Date();
+        var delta = (endtime - now.getTime())/1000;
+        var s, x;
+        if(delta < 1)
+            s = head + " has ended";
+        else{
+            s = head + " ends: ";
+            s = head + ": ";
+            if(delta >= 24*3600)
+                s = s + count1(delta/86400) + "d";
+            if(delta >= 3600)
+                s = s + count2((delta/3600)%24) + "h";
+            if(delta >= 60)
+                s = s + count2((delta/60)%60) + "m";
+            s = s + count2(delta%60) + "s";
+            setTimeout("updateclock('"+head+"','"+word+"',"+endtime+")", 500);
+        }
+
+        var slot = document.getElementById(word);
+        slot.innerHTML = s;
+    }
+-->
+</script>
+
+<title>USACO Problems</title>
+<style type="text/css"><!--
+table,td,body {
+font-family: Helvetica, Verdana, Arial, SunSans-Regular, Sans-Serif;
+}
+--></style>
+</head><body onload="" background="silver_files/bg9silver.jpg">
+
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans">
+<table><tbody><tr>
+<td><img src="silver_files/cowhead2.gif">
+</td>
+<td valign="top">
+<table cellpadding="0" cellspacing="0">
+    <tbody><tr><td>Contest: JAN11 <b>SILVER</b> Division</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    
+</tbody></table>
+</td></tr>
+</tbody></table>
+<font color="red"><b>
+</b></font>
+
+<br><font size="6"><b>ANALYSIS MODE</b></font><br>
+Submit solutions for your own enjoyment.
+
+</font><pre>**********************************************************************
+                           SILVER PROBLEMS
+**********************************************************************
+                  Three problems numbered 6 through 8
+**********************************************************************
+
+Problem 6: Profits [Neal Wu, 2007]
+
+The cows have opened a new business, and Farmer John wants to see
+how well they are doing. The business has been running for N (1 &lt;=
+N &lt;= 100,000) days, and every day i the cows recorded their net
+profit P_i (-1,000 &lt;= P_i &lt;= 1,000).
+
+Farmer John wants to find the largest total profit that the cows
+have made during any consecutive time period. (Note that a consecutive
+time period can range in length from one day through N days.) Help
+him by writing a program to calculate the largest sum of consecutive
+profits.
+
+PROBLEM NAME: profits
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Line i+1 contains a single integer: P_i
+
+SAMPLE INPUT (file profits.in):
+
+7
+-3
+4
+9
+-2
+-5
+8
+-3
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer representing the value of the maximum sum
+        of profits for any consecutive time period.
+
+SAMPLE OUTPUT (file profits.out):
+
+14
+
+OUTPUT DETAILS:
+
+The maximum sum is obtained by taking the sum from the second through
+the sixth number (4, 9, -2, -5, 8) =&gt; 14.
+
+**********************************************************************
+
+Problem 7: Dividing the Gold [Sherry Wu, a classic, 2010]
+
+Bessie and Canmuu found a sack of N (1 &lt;= N &lt;= 250) gold coins
+that they wish to divide as evenly as possible. Coin i has value
+v_i (1 &lt;= V_i &lt;= 2,000). The cows would like to split the pile as
+evenly as they can, but that is not always possible. What is the
+smallest difference between the values of the two piles?
+
+In addition, the Bessie and Canmuu have found that there might be
+multiple ways to split the piles with that minimum difference. They
+would also like to know the number of ways to split the coins as
+fairly as possible. If it isn't possible to split the piles evenly, Bessie 
+will get the higher-valued pile.
+
+By way of example, consider a sack of five coins of values: 2, 1,
+8, 4, and 16. Bessie and Canmuu split the coins into two piles, one
+pile with one coin worth 16, and the other pile with the remaining
+coins worth 1+2+4+8=15. Therefore the difference is 16-15 = 1.  This
+is the only way for them to split the coins this way, so the number
+of ways to split it evenly is just 1.
+
+Note that same-valued coins can be switched among the piles to
+increase the number of ways to perform an optimal split. Thus, the
+set of coins {1, 1, 1, 1} has six different ways to split into two
+optimal partitions, each with two coins.
+
+PROBLEM NAME: divgold
+
+INPUT FORMAT:
+
+* Line 1: A single integer: N
+
+* Lines 2..N+1: Line i+1 contains a single integer: V_i
+
+SAMPLE INPUT (file divgold.in):
+
+5
+2
+1
+8
+4
+16
+
+OUTPUT FORMAT:
+
+* Line 1: A single integer that is the smallest difference of two
+        partitions.
+
+* Line 2: A single integer that is the number of ways to split the
+        coins with the minimum difference printed in line 1. Since
+        this number can get quite large, print the remainder when
+        divided by 1,000,000.
+
+SAMPLE OUTPUT (file divgold.out):
+
+1
+1
+
+**********************************************************************
+
+Problem 8: Traffic Lights [Adopted from IOI'99, 2008]
+
+Kenosha, the city nearest Farmer John, has M (1 &lt;= M &lt;= 14,000)
+roads conveniently numbered 1..M that connect N (2 &lt;= N &lt;= 300)
+junctions which are conveniently numbered 1..N. No two roads connect
+the same pair of junctions. No road connects a junction to itself.
+The integer travel time T_ij (1 &lt;= T_ij &lt;= 100) between junctions
+i and j is the same for both directions (i.e., T_ij = T_ji).
+
+Each junction has a single traffic light with two colors: blue or
+purple. The color of each light alternates periodically: blue for
+certain duration and then purple for another duration.  Traffic is
+permitted to commence travel down the road between any two junctions,
+if and only if the lights at both junctions are the same color at
+the moment of departing from one junction for the other.  The lights
+do not necessarily have to be the same on the whole trip down the
+road.
+
+If a vehicle arrives at a junction just at the moment the lights
+switch it must consider the new colors of lights. Vehicles are
+allowed to wait at the junctions. You are given the city map which
+shows:
+    * The travel times T_ij for all roads
+    * The durations of the two colors at junction i. (DB_i (1 &lt;=
+      DB_i &lt;= 100) for the blue light and DP_i (1 &lt;= DP_i &lt;= 100)
+      for the purple light)
+    * The initial color C_i of the light at junction i (a letter
+      'B' or 'P' with the obvious meaning) and the remaining time
+      R_i (1 &lt;= R_i &lt;= 100) for this color to change
+
+Find the minimum time one needs to get from a given source S (1 &lt;=
+S &lt;= N) to a given destination D (1 &lt;= D &lt;= N; D != S).
+
+Consider the map below with four junctions and five roads. FJ wants
+to travel from junction 1 to junction 4. The first light is blue;
+the rest are purple.
+                                    Init  Remg  Blue   Purple
+       4       76         Junction  Color Time  Cycle  Cycle
+&gt;&gt;[1B]===[2P]======          1        B    2     16      99
+    |   /          \         2        P    6     32      13
+  40|  /75          \        3        P    2     87       4
+    | /              \       4        P   38     96      49
+  [3P]===============[4P]&gt;&gt;
+           77
+
+The minimum time is 127 utilizing the path 1-2-4.
+
+Initially, the light at junction 1 is blue. Since the light at
+junction 2 is purple, vehicle waits at junction 1 for 2 seconds
+then travels 4 seconds to junction 2.
+
+At time 6, the light at junction 2 switches to blue whereas the
+light at junction 4 has 32 more seconds to switch to blue. However,
+after 32 seconds, the light at junction 2 switches to purple and
+the light at junction 4 switches to blue at the same time. So the
+vehicle needs to wait 13 seconds more for junction 2 to switch to
+blue then the lights have the same color and vehicle travels 76
+seconds to the destination junction 4.
+
+The total time is 2+4+32+13+76=127 seconds.
+
+Below is a more graphical presentation of this travel plan:
+                                                                                                       1    1    1    1    1    1
+             1    1    2    2    3    3    4    4    5    5    6    6    7    7    8    8    9    9    0    0    1    1    2    2
+   0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5....0....5..
+   --------------------------------------------------------------------------------------------------------------------------------
+J1 BBBPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPBBBBBBBBBBBBBBBBPPPPPPPPPP
+J2 PPPPPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBPPPPPPPPPPPPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBPPPPPPPPPPPPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+J3 PPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBPPPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+J4 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+FJ 1..&gt;&gt;&gt;2............................................&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;4
+
+PROBLEM NAME: traffic
+
+INPUT FORMAT:
+
+* Line 1: Two space-separated integers: S and D
+
+* Line 2: Two space-separated integers: N and M
+
+* Lines 3..N+2: Line i+2 line describes junction i with a character
+        and three integers (all separated by a single space): C_i,
+        R_i, DB_i, and DP_i
+
+* Lines N+3..N+M+2: Line N+2+k describes road k with three integers:
+        i, j, and T_ij
+
+SAMPLE INPUT (file traffic.in):
+
+1 4
+4 5
+B 2 16 99
+P 6 32 13
+P 2 87 4
+P 38 96 49
+1 2 4
+1 3 40
+2 3 75
+2 4 76
+3 4 77
+
+OUTPUT FORMAT:
+
+* Line 1: One integer: the time taken by a minimum-time path from the
+        source junction to the destination junction. If there is no
+        path, output 0.
+
+SAMPLE OUTPUT (file traffic.out):
+
+127
+
+**********************************************************************
+
+</pre><hr>
+<form action="/ioiupload" enctype="multipart/form-data" method="POST">
+<input name="a" value="CsQv5nmZkOW" type="hidden">
+
+<table>
+<tbody><tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+  <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill
+ Sans">
+  <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+  <tbody><tr><td><b>Submit a program  for grading:&nbsp;<b><input 
+name="filename" type="file">
+  &nbsp;&nbsp;
+  <input value="Submit" name="submit" type="submit"></b></b></td></tr>
+  </tbody></table>
+
+</font></td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+<table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+<tbody><tr><td height="1"></td></tr>
+<tr><td width="1"></td><td>
+
+   <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+   <tbody><tr><td colspan="2">
+   <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+   <b>To run your program with your own test data, enter the program<br>
+   file name and input file name then click 'Test':</b></font></td></tr>
+
+  <tr><td>
+
+   <table>
+   <tbody><tr><td>
+     <table>
+     <tbody><tr><td>
+     <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+     <b>Program&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testprogramname" type="file"></td></tr>
+     <tr><td align="right">
+         <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+         <b>Input&nbsp;File:&nbsp;</b></font></td>
+         <td><input name="testfilename" type="file"></td></tr>
+     </tbody></table>
+   </td>
+   <td>&nbsp;&nbsp;</td>
+   <td><input value="Test" name="submit" type="submit"></td>
+   </tr>
+   </tbody></table>
+
+   </td></tr></tbody></table>
+
+</td><td width="1"></td></tr>
+<tr height="1"><td></td></tr>
+</tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td>
+
+  <table width="100%" bgcolor="#000000" border="0" cellpadding="0" 
+cellspacing="0">
+    <tbody><tr><td height="1"></td></tr>
+    <tr><td width="1"></td><td>
+
+    <table width="100%" bgcolor="#bfffbf" cellpadding="5">
+      <tbody><tr><td>
+      <font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida 
+Sans,Gill Sans">
+      <b>Backup a file:&nbsp;</b><input name="backupfilename" 
+type="file">
+      &nbsp;&nbsp;&nbsp;<input value="Backup" name="submit" 
+type="submit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input value="See Backups" name="submit" type="submit">
+      </font></td></tr>
+    </tbody></table>
+
+    </td><td width="1"></td></tr>
+    <tr><td height="1"></td><td></td></tr>
+  </tbody></table>
+
+</td></tr>
+<tr><td><hr></td></tr>
+
+</tbody></table>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"> The following solution files are saved for grading:<br>
+<table cellspacing="3">
+<tbody><tr><th>Name</th><th>Size</th><th>When</th><th>Age</th></tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=divgold.p">divgold.p</a></td>
+<td align="right">769</td>
+<td align="center"> 5h24:40</td>
+<td align="center">2205h05:54</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=profits.p">profits.p</a></td>
+<td align="right">989</td>
+<td align="center"> 6h57:47</td>
+<td align="center">2203h32:47</td>
+</tr>
+<tr><td><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;seesaved=traffic.p">traffic.p</a></td>
+<td align="right">2610</td>
+<td align="center"> 7h41:15</td>
+<td align="center">2202h49:19</td>
+</tr>
+</tbody></table>
+</font><hr>
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a href="http://ace.delos.com/ioiedit?a=CsQv5nmZkOW">Edit your 
+database record</a>&nbsp;|&nbsp;
+
+<a href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;logout=1"> 
+Logout </a>
+<!--<a href="https://ace.delos.com/rules.html" target="_blank"> Rules </a>-->
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?init=1&amp;a=CsQv5nmZkOW">Main 
+contest index</a>
+</font></center>
+<!--&nbsp;|&nbsp;-->
+<center>
+<font face="Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida Sans,Gill 
+Sans"><a 
+href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;showsubmit">See 
+submitted solutions</a>
+&nbsp;|&nbsp;
+<a href="http://ace.delos.com/ioiupload?a=CsQv5nmZkOW&amp;suggestionbox">Send
+ message
+to operations staff</a>
+&nbsp;|&nbsp;
+Phone: +1 719-321-7333
+<br>
+Director is not online<br>
+This page was generated at 9:30:34 GMT.
+</font></center>
+</form></body></html>

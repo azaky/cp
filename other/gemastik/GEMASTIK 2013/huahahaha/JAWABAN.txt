@@ -1,0 +1,40 @@
+1:
+<u><19> printf("%d\n",array[c]);
+<u><10> if(array[d]>array[d+1]){
+
+2:
+1
+
+7:
+<u><10> return (fib(n-1)+fib(n-2));
+<u><8>  return 1;
+<u><13> var b=0;
+<u><18> b+=1;
+<d><14>
+
+8:
+50
+
+10:
+<u><5> int *p=&i;
+
+11:
+<u><3> const char arr[]={'c','b','a'};
+
+12:
+2
+
+16:
+4
+
+19:
+<u><6> document.write('x is ');
+<u><7> document.write(x);
+
+20:
+<u><4> for(var i=1;i<=9;i++){ 
+<u><6> square=i*i;
+
+21:
+<u><11> printf("%f\n",T);
+

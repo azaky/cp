@@ -1,0 +1,242 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 98: Window Area</title> </head><body 
+background="window_files/bg3.jpg">
+<img src="window_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Window Area</font></b><br>
+Alex Schwendner
+</center>
+
+<p>This problem is very similar to "Shaping Regions". To calculate the
+visible area of a window, we consider each window. If another window
+is above the first window, then we split the first window into up to 4
+smaller rectangles, (see below) none of which overlaps with the other
+rectangle, and we recurse on the smaller rectangles.
+</p><pre>*----------------*
+|                |
+|                |
+|                |
+|     *----*     |
+|     |    |     |
+|     |    |     |   A rectangle partly covers another rectangle.
+|     |    |     |
+|     *----*     |
+|                |
+|                |
+*----------------*
+        ||
+        \/
+*-----*----*-----*
+|     |    |     |
+|     | 2  |     |
+|     |    |     |
+|     *----*     |
+|     |    |     |   We remove the covered portion, and divide 
+|  1  |    |  3  |   the remaining area into 4 rectangles.
+|     |    |     |   Of course, this may not always be the layout of
+|     *----*     |   the two rectangles; however, we can always use
+|     |  4 |     |   this layout if we ignore degenerate rectangles.
+|     |    |     |
+*-----*----*-----*
+
+       *-----*
+       |   2 |
+       |     |
+*------------------*
+|                  |   The same layout works here, we simply ignore rectangles 1 and 3.
+|                  |
+*------------------*
+       |   4 |
+       |     |
+       *-----*
+
+        *------------*
+        |            |
+*-------|            |
+|       |            |  Here, we ignore rectangles 2 and 3.
+|       |            |
+|   1   *------------*
+|       | 4 |
+*-------*---*
+</pre>
+
+<p>And here is the solution:
+</p><pre>#include &lt;fstream.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+
+template &lt; class type &gt; inline type max (const type &amp; a, const type &amp; b)
+{
+    return ((a &gt; b) ? a : b);
+}
+
+template &lt; class type &gt; inline type min (const type &amp; a, const type &amp; b)
+{
+    return ((a &lt; b) ? a : b);
+}
+
+
+class   window
+{
+    public:
+
+    bool real;
+    int     y1, x1, y2, x2;             //y1 &lt;= y2, x1 &lt;= x2
+    int     level;
+
+    window (void) {
+	real = false;
+    }
+
+    window (int a, int b, int c, int d, int e) {
+	real = true;
+	y1 = a;
+	x1 = b;
+	y2 = c;
+	x2 = d;
+	level = e;
+    }
+}
+
+screen[256];
+
+int     top;
+int     bot;
+
+inline int
+area (window w)
+{
+    if (w.y1 &gt;= w.y2 || w.x1 &gt;= w.x2) {
+	return (0);
+    }
+    for (int i = 0; i &lt; 256; ++i) {
+	if (screen[i].real &amp;&amp; screen[i].level &gt; w.level) {
+	    if (!
+		(w.y2 &lt;= screen[i].y1 || screen[i].y2 &lt;= w.y1
+		    || w.x2 &lt;= screen[i].x1 || screen[i].x2 &lt;= w.x1)) {
+		window  a (w.y1, w.x1, w.y2, screen[i].x1, w.level);
+		window  b (w.y1, screen[i].x2, w.y2, w.x2, w.level);
+		window  c (w.y1, max (w.x1, screen[i].x1), screen[i].y1,
+		            min (screen[i].x2, w.x2), w.level);
+		window  d (screen[i].y2, max (w.x1, screen[i].x1), w.y2,
+		            min (screen[i].x2, w.x2), w.level);
+		return (area (a) + area (b) + area (c) + area (d));
+	    }
+	}
+    }
+    return ((w.y2 - w.y1) * (w.x2 - w.x1));
+}
+
+
+//Create window:w (I, x, y, X, Y)
+inline void
+w (char i, int x1, int y1, int x2, int y2)
+{
+    assert (!screen[i].real);
+
+    screen[i].real = true;
+    screen[i].y1 = y1;
+    screen[i].x1 = x1;
+    screen[i].y2 = y2;
+    screen[i].x2 = x2;
+
+    screen[i].level = top++;
+}
+
+//Bring window to top:t (I)
+inline void
+t (char i)
+{
+    assert (screen[i].real);
+    screen[i].level = top++;
+}
+
+//Put window on bottom:b (I)
+inline void
+b (char i)
+{
+    assert (screen[i].real);
+    screen[i].level = bot--;
+}
+
+//Destroy window:d (I)
+inline void
+d (char i)
+{
+    assert (screen[i].real);
+    screen[i].real = false;
+}
+
+//Output percentage visible:s (I)
+inline double
+s (int i)
+{
+    assert (screen[i].real);
+    return (100.0 * double (area (screen[i])) /
+	((screen[i].y2 - screen[i].y1) * (screen[i].x2 - screen[i].x1)));
+}
+
+int
+main ()
+{
+    top = 1;
+    bot = 0;
+
+    char    buffer[1000];
+    ifstream filein ("window.in");
+    FILE *fileout = fopen("window.out", "w");
+
+    while (!filein.eof ()) {
+	char    command;
+	char    i;
+	int     l, m, n, o;
+	double  q;
+
+	char    blank;
+
+	filein &gt;&gt; command;
+	if (!filein.eof ()) {
+	    switch (command) {
+	      case 'w':
+		filein &gt;&gt; blank &gt;&gt; i &gt;&gt; blank &gt;&gt; l &gt;&gt; blank &gt;&gt; m &gt;&gt; blank &gt;&gt; n
+		    &gt;&gt; blank &gt;&gt; o &gt;&gt; blank;
+		assert (!(l == n &amp;&amp; m == o));
+		w (i, min (l, n), min (m, o), max (l, n), max (m, o));
+		break;
+	      case 't':
+		filein &gt;&gt; blank &gt;&gt; i &gt;&gt; blank;
+		t (i);
+		break;
+	      case 'b':
+		filein &gt;&gt; blank &gt;&gt; i &gt;&gt; blank;
+		b (i);
+		break;
+	      case 'd':
+		filein &gt;&gt; blank &gt;&gt; i &gt;&gt; blank;
+		d (i);
+		break;
+	      case 's':
+		filein &gt;&gt; blank &gt;&gt; i &gt;&gt; blank;
+                fprintf(fileout, "%.3f\n", s(i));
+		break;
+	      default:
+		cerr &lt;&lt; "Bad command \'" &lt;&lt; command &lt;&lt; "\'.\n";
+		return (0);
+		break;
+	    }
+	}
+    }
+    filein.close ();
+    fclose (fileout);
+    exit (0);
+}
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

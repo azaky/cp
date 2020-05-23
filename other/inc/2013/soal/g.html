@@ -1,0 +1,99 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - G</title>
+
+<style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem G</h2>
+<h1>Beautiful Gift</h1>
+Time Limit: 2 seconds
+</center>
+<br>
+
+<p>This Saturday, Windarik is going to meet a girl that he has known 
+from a new MMORPG that he has been playing lately. Windarik is very 
+happy and plan to bring a gift when he meet her from the first time in 
+the real life. In order to impress her, Windarik thought of crafting a 
+hand-made necklace as a present. After spending a whole afternoon, 
+Windarik managed to finish a beautiful necklace. This necklace consists 
+of many beads and each bead has an alphabet printed on it. Before 
+putting the necklace in a box full of love pattern, Windarik made a 
+thorough examination on its quality. While examining the necklace, 
+Windarik asked a question to himself:</p>
+<p>"If I remove K type of beads from this necklace, what would the 
+longest remaining chain be?" Two beads are stated to be a different type
+ if and only if the alphabet embedded on those beads are not the same.</p>
+<p>Windarik did not decide which type of bead he wanted to remove, 
+instead, he wants to remove the beads such that the longest remaining 
+chain is as long as possible.</p>
+
+<p>For example, let the necklace beads be: "AABACBBACBCA" as shown in 
+Figure 1 (a) below. Note that the necklace is circular, so the end is 
+connected to the beginning of the given string. If Windarik decides to 
+remove (K =) 1 type of beads, since the necklace consists of 3 types of 
+bead (A, B and C), then there are 3 possible combinations:
+</p><ul>
+<li>Remove all beads of type A, the longest remaining chain would be "CBB" or "CBC" which have the length of 3. See Figure 1 (b).</li>
+<li>Remove all beads of type B, the longest remaining chain would be "CAAA" which has the length of 4. See Figure 1 (c).</li>
+<li>Remove all beads of type C, the longest remaining chain would be "AAABA" which has the length of 5. See Figure 1 (d).</li>
+</ul>
+In this example, it seems that the length of the longest remaining chain
+ would be 5, and we can achieve it by removing all beads of type C.
+<p></p>
+
+<center><img src="g_files/g-1.gif" height="320" width="500"><br><small>Figure 1</small></center>
+
+<p>Given a string S which corresponds to the beads arrangement of the 
+necklace and an integer K, determine the longest remaining chain after 
+we remove K type of beads from the necklace.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with an integer K and a string S (0 &#8804; K
+ &#8804; &#960;(S); 1 &#8804; |S| &#8804; 20,000; S<sub>i</sub> &#8712; {A-Z} &#8704;i=1..|S|) where &#960;(S) is the number of distinct character in S.</p>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1, and <font face="Courier New">Y</font> is the length of the longest remaining chain after we remove K type of beads.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>4
+1 AABACBBACBCA
+2 AABACBBACBCA
+3 AABACBBACBCA
+5 INDONESIANATIONALCONTEST
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 5
+Case #2: 3
+Case #3: 0
+Case #4: 9
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>Remove all beads of type B and C, and we get the longest possible remaining chain "AAA" of length 3.</p><p>
+</p><p><i>Explanation for the 3<sup>rd</sup> sample input.</i></p>
+<p>K is equal to &#960;(S), so the necklace is completely gone.</p><p>
+
+
+<br><br>
+</p></com:tcontent></body></html>

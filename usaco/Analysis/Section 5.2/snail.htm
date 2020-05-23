@@ -1,0 +1,101 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 84: Snail Trail</title> </head><body 
+background="snail_files/bg3.jpg">
+<img src="snail_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Snail Trail</font></b><br>
+Brian Jacokes
+</center>
+
+<p>
+All this problem requires is basically a straightforward depth-first
+search.  We have to make sure that we check whether we have the best 
+area
+visited so far whenever we hit an obstruction or when we re-cross our
+paths.  If we hit a wall/obstruction, we can take plus/minus of the not
+('!') function of the row and column changes to get the new column 
+changes.
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#define MAX 125
+#define DMAX 4
+
+int     grid[MAX][MAX], vis[MAX][MAX];
+int     dim, bar, best, cur;
+
+int 
+ispoint (int row, int col)
+{
+    return (row &gt;= 0 &amp;&amp; col &gt;= 0 &amp;&amp; row &lt; dim &amp;&amp; col &lt; dim);
+}
+
+void 
+mark (int a, int b)
+{
+    vis[a][b] = 1;
+    cur++;
+}
+
+void 
+unmark (int a, int b)
+{
+    vis[a][b] = 0;
+    cur--;
+}
+
+void 
+check ()
+{
+    if (cur &gt; best)
+	best = cur;
+}
+
+void 
+search (int row, int col, int rc, int cc)
+{
+    int     a, b;
+    if (vis[row][col]) {
+	check ();
+	return;
+    }
+    mark (row, col);
+    if (!ispoint (row + rc, col + cc) || grid[row + rc][col + cc]) {
+	check ();
+	rc = !rc;
+	cc = !cc;
+	if (ispoint (row + rc, col + cc) &amp;&amp; !grid[row + rc][col + cc])
+	    search (row + rc, col + cc, rc, cc);
+	if (ispoint (row - rc, col - cc) &amp;&amp; !grid[row - rc][col - cc])
+	    search (row - rc, col - cc, -rc, -cc);
+    }
+    else
+	search (row + rc, col + cc, rc, cc);
+    unmark (row, col);
+}
+
+
+int 
+main ()
+{
+    FILE   *in = fopen ("snail.in", "r");
+    FILE   *out = fopen ("snail.out", "w");
+    int     a, b, c;
+    char    ch[5];
+    fscanf (in, "%d%d", &amp;dim, &amp;bar);
+    for (a = 0; a &lt; bar; a++) {
+	fscanf (in, "%s", &amp;ch);
+	grid[atoi (ch + 1) - 1][ch[0] - 'A'] = 1;
+    }
+    search (0, 0, 0, 1);
+    search (0, 0, 1, 0);
+    fprintf (out, "%d\n", best);
+    return 0;
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

@@ -1,0 +1,151 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 67: Cow Tours</title> </head><body background="cowtour_files/bg3.jpg">
+<img src="cowtour_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Cow Tours</font></b><br>
+Russ Cox
+</center>
+
+<p>We do a fair bit of precomputation before choosing the path to add.
+
+</p><p>First, we calculate the minimum distance between all connected points.
+Then, we use a recursive depth first search to identify the different
+fields.  Then we fill in diam[i], which is defined to be the distance
+to the farthest pasture that pasture i is connected to.  Fielddiam[j]
+is the diameter of field j, which is the maximum of diam[i] for all
+pastures i in the field j.
+
+</p><p>Once we have all this, selecting a path is simple.  If we add a path
+joining pastures i and j which are in different fields, the diameter of
+the new field is the maximum of:
+</p><ul>
+<li>
+    dist to point farthest from i + dist from i to j + dist to point farthest from j.
+</li><li>
+    old diameter of the field containing pasture i.
+</li><li>
+    old diameter of the field containing pasture j.
+</li></ul>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;math.h&gt;
+
+#define INF    (1e40)
+
+typedef struct Point Point;
+struct Point {
+    int x, y;
+};
+
+#define MAXPASTURE 150
+
+int n;
+double dist[MAXPASTURE][MAXPASTURE];
+double diam[MAXPASTURE];
+double fielddiam[MAXPASTURE];
+Point pt[MAXPASTURE];
+int field[MAXPASTURE];
+int nfield;
+
+double
+ptdist(Point a, Point b)
+{
+    return sqrt((double)(b.x-a.x)*(b.x-a.x)+(double)(b.y-a.y)*(b.y-a.y));
+}
+
+/* mark the field containing pasture i with number m */
+void
+mark(int i, int m)
+{
+    int j;
+    if(field[i] != -1) {
+        assert(field[i] == m);
+        return;
+    }
+
+    field[i] = m;
+    for(j=0; j&lt;n; j++)
+        if(dist[i][j] &lt; INF/2)
+            mark(j, m);
+}
+
+void
+main(void)
+{
+    FILE *fin, *fout;
+    int i, j, k, c;
+    double newdiam, d;
+
+    fin = fopen("cowtour.in", "r");
+    fout = fopen("cowtour.out", "w");
+    assert(fin != NULL &amp;&amp; fout != NULL);
+
+    fscanf(fin, "%d\n", &amp;n);
+    for(i=0; i&lt;n; i++)
+        fscanf(fin, "%d %d\n", &amp;pt[i].x, &amp;pt[i].y);
+        
+    for(i=0; i&lt;n; i++) {
+        for(j=0; j&lt;n; j++) {
+            c = getc(fin);
+            if(i == j)
+                dist[i][j] = 0;
+            else if(c == '0')
+                dist[i][j] = INF;        /* a lot */
+            else
+                dist[i][j] = ptdist(pt[i], pt[j]);
+        }
+        assert(getc(fin) == '\n');
+    }
+
+    /* Floyd-Warshall all pairs shortest paths */
+    for(k=0; k&lt;n; k++)
+    for(i=0; i&lt;n; i++)
+    for(j=0; j&lt;n; j++)
+        if(dist[i][k]+dist[k][j] &lt; dist[i][j])
+            dist[i][j] = dist[i][k]+dist[k][j];
+
+    /* mark fields */
+    for(i=0; i&lt;n; i++)
+        field[i] = -1;
+    for(i=0; i&lt;n; i++)
+        if(field[i] == -1)
+            mark(i, nfield++);
+
+    /* find worst diameters involving pasture i, and for whole field */
+    for(i=0; i&lt;n; i++) {
+        for(j=0; j&lt;n; j++)
+            if(diam[i] &lt; dist[i][j] &amp;&amp; dist[i][j] &lt; INF/2)
+                diam[i] = dist[i][j];
+        if(diam[i] &gt; fielddiam[field[i]])
+            fielddiam[field[i]] = diam[i];
+    }
+
+    /* consider a new path between i and j */
+    newdiam = INF;
+    for(i=0; i&lt;n; i++)
+    for(j=0; j&lt;n; j++) {
+        if(field[i] == field[j])
+            continue;
+
+        d = diam[i]+diam[j]+ptdist(pt[i], pt[j]);
+        if(d &lt; fielddiam[field[i]])
+            d = fielddiam[field[i]];
+        if(d &lt; fielddiam[field[j]])
+            d = fielddiam[field[j]];
+    
+        if(d &lt; newdiam)
+            newdiam = d;
+    }
+
+    fprintf(fout, "%.6lf\n", newdiam);
+    exit(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

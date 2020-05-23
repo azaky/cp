@@ -1,0 +1,443 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 73: Shaping Regions</title> </head><body 
+background="rect1_files/bg3.jpg">
+<img src="rect1_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Shaping Regions</font></b><br>
+Russ Cox
+</center>
+
+
+<h3>Analysis by Mathijs Vogelzang</h3>
+
+<p>A straightforward approach to this problem would be to make an
+array which represents the table, and then draw all the rectangles
+on it. In the end, the program can just count the colors from the
+array and output them.  Unfortunately, the maximum dimensions of
+this problem are 10,000 x 10,000, which means the program uses 100
+million integers. That's too much, so we need another approach.
+
+</p><p>An approach that does work for such large cases (and it actually 
+is
+a lot faster too) is to keep track of the rectangles, and delete 
+portions
+of them when they are covered by other rectangles.
+
+</p><p>Consider this input set:
+</p><pre>0 0 10 10 5
+5 0 15 10 10
+</pre>
+<p>The program first reads in the first rectangle and puts it in a list.
+When it reads a new rectangle it checks all items in the list if they
+overlap with the new rectangle. This is the case, and then it deletes
+the old rectangle from the list and adds all parts which aren't covered
+to the list.  (So in this case, the program would delete the first
+rectangle, add <tt>0 0 5 10 5</tt> to the list and then add the second 
+rectangle
+to the list).
+``
+</p><p>If you're unlucky, a new rectangle can create lots of new 
+rectangles
+(when the new rectangle entirely fits into another one, the program
+creates four new rectangles which represent the leftover border:
+</p><pre>+--------+      +-+--+--+
+|        |      | |2 |  |
+|        |      + +--+  |
+|  +-+   |  --&gt; | |  |  |
+|  +-+   |      |1|  |3 |
+|        |      | +--+  |
+|        |      | | 4|  |
++--------+      +-+--+--+
+</pre>
+This is not a problem however, because there can be only 2500 rectangles
+and there is plenty of memory, so rectangles have to be cut very much
+to run out of memory.
+
+<p>Note that with this approach, the only thing that matters is how
+many rectangles there are and how often they overlap. The maximum
+dimensions can be as large as you want, it doesn't matter for the
+running time.
+
+</p><h3>Further Analysis by Tomek Czajka</h3>
+
+<p>There is another solution to this problem, which runs in O(n*n*log
+n) time, but is quite tricky.  First, we add one big white rectangle
+at the bottom - the paper.  Then we make two arrays: one containing
+all vertical edges of the rectangles, and the other the horizontal
+ones.  For each edge we have its coordinates and remember, whether
+it's the left or right edge (top or bottom). We sort these edges
+from left to right and from top to bottom.  Then we go from left
+to right (sweep), jumping to every x-coordinate of vertical edges.
+At each step we update the set of rectangles seen. We also want to
+update the amount of each color seen so far. So for each x we go
+from top to bottom, for each y updating the set of rectagles at a
+point (in the structure described below) and choosing the top one,
+so that we can update the amounts of colors seen.
+
+</p><p>The structure to hold the set of rectangles at a point should
+allow adding a rectangle (number from 1..1000), deleting a rectangle,
+and finding the top one.  We can implement these operations in O(log
+n) time if we use a heap. To make adding and deleting run in O(log
+n) we must also have for each rectangle its position in the heap.
+
+</p><p>So the total time spent at each point is O(log n). Thus the
+algorithm works in O(n*n*log n) time.
+
+</p><h3> And a solution from mrsigma: </h3>
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+FILE *fp,*fo;
+
+struct rect
+{
+    int c;
+    int x1,y1,x2,y2;
+};
+
+int c[2501];
+rect r[10001];
+
+int intersect(rect a,const rect &amp;b,rect out[4])
+{
+    /* do they at all intersect? */
+    if(b.x2&lt;a.x1||b.x1&gt;=a.x2)
+        return 0;
+    if(b.y2&lt;a.y1||b.y1&gt;=a.y2)
+        return 0;
+    /* they do */
+
+    rect t;
+
+    if(b.x1&lt;=a.x1&amp;&amp;b.x2&gt;=a.x2&amp;&amp;b.y1&lt;=a.y1&amp;&amp;b.y2&gt;=a.y2)
+            return -1;
+
+    /* cutting `a' down to match b */
+    int nout=0;
+    if(b.x1&gt;=a.x1) {
+        t=a,t.x2=b.x1;
+        if(t.x1!=t.x2)
+            out[nout++]=t;
+        a.x1=b.x1;
+    }
+    if(b.x2&lt;a.x2) {
+        t=a,t.x1=b.x2;
+        if(t.x1!=t.x2)
+            out[nout++]=t;
+        a.x2=b.x2;
+    }
+    if(b.y1&gt;=a.y1) {
+        t=a,t.y2=b.y1;
+        if(t.y1!=t.y2)
+            out[nout++]=t;
+        a.y1=b.y1;
+    }
+    if(b.y2&lt;a.y2) {
+        t=a,t.y1=b.y2;
+        if(t.y1!=t.y2)
+            out[nout++]=t;
+        a.y2=b.y2;
+    }
+    return nout;
+}
+
+int main(void) {
+    fp=fopen("rect1.in","rt");
+    fo=fopen("rect1.out","wt");
+
+    int a,b,n;
+    fscanf(fp,"%d %d %d",&amp;a,&amp;b,&amp;n);
+
+    r[0].c=1;
+    r[0].x1=r[0].y1=0;
+    r[0].x2=a;
+    r[0].y2=b;
+
+    rect t[4];
+
+    int i,j,rr=1;
+    for(i=0;i&lt;n;i++) {
+        int tmp;
+        fscanf(fp,"%d %d %d %d %d",&amp;r[rr].x1,&amp;r[rr].y1,&amp;r[rr].x2,&amp;r[rr].y2,&amp;r[rr].c);
+
+        if(r[rr].x1&gt;r[rr].x2) {
+            tmp=r[rr].x1;
+            r[rr].x1=r[rr].x2;
+            r[rr].x2=tmp;
+        }
+        if(r[rr].y1&gt;r[rr].y2) {
+            tmp=r[rr].y1;
+            r[rr].y1=r[rr].y2;
+            r[rr].y2=tmp;
+        }
+
+        int nr=rr;
+        rect curr=r[rr++];
+        for(j=0;j&lt;nr;j++) {
+            int n=intersect(r[j],curr,t);
+            if(!n)
+                continue;
+            if(n==-1) {
+                memmove(r+j,r+j+1,sizeof(rect)*(rr-j-1));
+                j--;
+                rr--;
+                nr--;
+                continue;
+            }
+            r[j]=t[--n];
+            for(;n--&gt;0;)
+                r[rr++]=t[n];
+        }
+    }
+
+    for(i=0;i&lt;rr;i++)
+        c[r[i].c]+=(r[i].x2-r[i].x1)*(r[i].y2-r[i].y1);
+
+    for(i=1;i&lt;=2500;i++)
+        if(c[i])
+            fprintf(fo,"%d %d\n",i,c[i]);
+
+    return 0;
+}
+</pre>
+<h3> And another fast solution from Saber Fadaee: </h3>
+<p>
+In Shaping Regions, I changed the whole A*B page into (2*N) * (2*N).
+</p><pre>  Program rrect1;
+  Var
+    Inf,Outf            : Text;
+    A,B,N,I,Z,Middle,J  : Longint;
+    Color               : Array [1..2500] of Longint;
+    D                   : Array [1..5000,1..5000] of boolean;
+    Xar,Yar             : Array [0..2500] of Longint;
+    Col                 : Array [1..10000] of Record
+                                               x1 : Longint;
+                                               x2 : Longint;
+                                               y1 : Longint;
+                                               y2 : Longint;
+                                               c  : Longint;
+                                             End;
+
+  Function Find (K1 : integer) : Longint;
+  Var
+    Pointer,N1,N2                          : Longint;
+  Begin
+    N1 := 1;
+    N2 := N + N;
+    While N1 &gt; 0 Do Begin
+        Pointer := (N1 + N2) Div 2;
+        If Xar[Pointer] = K1 then Begin
+           Find := Pointer;
+           Exit;
+        End;
+        If Xar[Pointer] &gt; K1 Then
+          N2 := Pointer - 1;
+        If Xar[Pointer] &lt; K1 Then
+          N1 := Pointer + 1;
+    End;
+  End;
+
+  Function Find1 (K2 : Longint) : Longint;
+  Var
+    Pointer,N1,N2                          : Longint;
+  Begin
+    N1 := 1;
+    N2 := N + N;
+    While N1 &gt; 0 Do Begin
+        Pointer := (N1 + N2) Div 2;
+        If Yar[Pointer] = K2 then Begin
+           Find1 := Pointer;
+           Exit;
+        End;
+        If Yar[Pointer] &gt; K2 Then
+          N2 := Pointer - 1;
+        If Yar[Pointer] &lt; K2 Then
+          N1 := Pointer + 1;
+    End;
+  End;
+
+  Procedure Partition1 ( Lf , Rg : Longint );
+  Var
+    Pivot,L,R,Temp                 : Longint;
+  Begin
+    Pivot := Yar[Lf];
+    L := Lf;
+    R := Rg;
+    While L &lt; R Do Begin
+        While (Yar[L] &lt;= Pivot) and (L &lt;= R) Do Inc(L);
+        While (Yar[R] &gt; Pivot) And (R &gt;= L) Do Dec(R);
+        If L &lt; R Then
+          begin
+            Temp := Yar[L];
+            Yar[L] := Yar[R];
+            Yar[R] := Temp;
+          end;
+      End;
+      Middle := R;
+      Temp := Yar[Lf];
+      Yar[Lf] := Yar[R];
+      Yar[R] := Temp;
+  End;
+
+  Procedure QSort1 ( Left , Right : Longint );
+  Begin
+    if Left &lt; Right Then
+      Begin
+        Partition1 (Left,Right);
+        QSort1 (Left,Middle-1);
+        QSort1 (Middle + 1, Right);
+      End;
+  End;
+
+  Procedure Partition ( Lf , Rg : Longint );
+  Var
+    Pivot,L,R,Temp              : Longint;
+  Begin
+    Pivot := Xar[Lf];
+    L := Lf;
+    R := Rg;
+    While L &lt; R Do
+      Begin
+        While (Xar[L] &lt;= Pivot) and (L &lt;= R) Do Inc(L);
+        While (Xar[R] &gt; Pivot) And (R &gt;= L) Do Dec(R);
+        If L &lt; R Then
+          begin
+            Temp := Xar[L];
+            Xar[L] := Xar[R];
+            Xar[R] := Temp;
+          end;
+      End;
+      Middle := R;
+      Temp := Xar[Lf];
+      Xar[Lf] := Xar[R];
+      Xar[R] := Temp;
+  End;
+
+  Procedure QSort ( Left , Right : Longint );
+  Begin
+    if Left &lt; Right Then
+      Begin
+        Partition (Left,Right);
+        QSort (Left,Middle-1);
+        QSort (Middle + 1, Right);
+      End;
+  End;
+
+
+  Begin
+    Assign (Inf ,'rect1.in');
+    Reset (Inf);
+    Readln (Inf,A,B,N);
+    For I := 1 To N Do
+        Readln (Inf , Col[I].x1,col[i].y1,col[i].x2,col[i].y2,col[i].c);
+    Close (Inf);
+    For I := 1 to 2500 do Color[I] := 0;
+    Color[1] := A * B;
+    For I := 0 to n do
+      For J := 0 to n do
+        D[I,J] := False;
+    Xar[0] := 0;
+    Xar[n+n+1] := a;
+    For I := 1 To N do Xar[i] := Col[i].x1;
+    For I := N + 1 To N + N do Xar[i] := Col[i - n].x2;
+      Qsort (1,N + N);
+    Yar[0] := 0;
+    Yar[n+n+1] := b;
+    For I := 1 To N Do Yar[i] := Col[i].y1;
+    For I := N + 1 To N + N do Yar[i] := col[i - n].y2;
+      Qsort1 (1,N + N);
+    For I := N Downto 1 Do
+      For J := find(Col[i].x1) + 1 to find(col[i].x2) do
+        For Z := find1(col[i].y1) + 1 to find1(col[i].y2) do
+          If not D[J,Z] then
+            Begin
+              If col[i].c &gt; 1 then
+                Begin
+                  Middle := (Xar[j] - Xar[j-1]) * (Yar[z] - Yar[z-1]);
+                  Color[Col[i].c] := color[Col[i].c] + Middle;
+                  Color[1] := Color[1] - Middle;
+                End;
+              D[J,Z] := True;
+            End;
+    Assign (Outf, 'rect1.out');
+    Rewrite (Outf);
+    For I := 1 To 2500 Do
+      if color[i] &gt; 0 then
+        Writeln (Outf,i,' ', Color[i]);
+    Close(Outf);
+  End.
+</pre>
+<p>And, finally, an unbelievably compact recursive solution from 
+Christoph Roick:
+</p><p><i> This solution uses recursion. We start with painting the last
+rectangle and go through to the first (the white paper). We save
+the edges of every rectangle, because we shouldn't paint over the
+rectangles above it. Now we have to divide the rectangles in 0 to
+4 pieces around the rectangles covering it. In the end we have a
+lot of small rectangles and the colors can be added to an array by
+calculating the areas of the rectangle. So, we won't get any problems
+concerning too less memory.</i>
+</p><pre>program rect1;
+
+var F: Text;
+    i,a,b,n,cused,maxcolor:word;
+    inform: array[1..1001,1..5] of word;
+    used: array[1..1001,1..4] of word;
+    countcolor: array[1..2500] of longint;
+
+procedure cac(count,x1,y1,x2,y2,color: word); //cut and count
+var py1,py2 : word;
+begin
+    if count&lt;cused then begin
+        if (x1&gt;used[count,3]) or (x2&lt;used[count,1]) or (y1&gt;used[count,4]) or (y2&lt;used[count,2]) then
+            cac(succ(count),x1,y1,x2,y2,color)  //if there are no difficulties with the other rectangle
+        else begin
+            if y1&gt;used[count,2] then py1:=y1 else py1:=used[count,2];
+            if y2&lt;used[count,4] then py2:=y2 else py2:=used[count,4];
+            if y1&lt;used[count,2] then cac(succ(count),x1,y1,x2,pred(used[count,2]),color);
+            if y2&gt;used[count,4] then cac(succ(count),x1,succ(used[count,4]),x2,y2,color);
+            if x1&lt;used[count,1] then cac(succ(count),x1,py1,pred(used[count,1]),py2,color);
+            if x2&gt;used[count,3] then cac(succ(count),succ(used[count,3]),py1,x2,py2,color);
+        end;
+    end else inc(countcolor[color],succ(x2-x1)*succ(y2-y1));
+end;
+
+begin
+    Assign(F,'rect1.in');
+    Reset(F);
+    Readln(F,a,b,n);
+    inc(n);
+    for i:=2 to n do
+        Readln(F,inform[i,1],inform[i,2],inform[i,3],inform[i,4],inform[i,5]);  //x1,y1,x2,y2,color
+    Close(F);
+    inform[1,1]:=0; inform[1,2]:=0; //white paper
+    inform[1,3]:=a; inform[1,4]:=b; inform[1,5]:=1;
+    maxcolor:=1;
+    cused:=1;
+
+    for i:=n downto 1 do begin
+        cac(1,inform[i,1],inform[i,2],pred(inform[i,3]),pred(inform[i,4]),inform[i,5]);
+        if inform[i,5]&gt;maxcolor then maxcolor:=inform[i,5];  //we don't have to check all 2500 colors
+        used[cused,1]:=inform[i,1];  //saving the coordinates of the rectangle
+        used[cused,2]:=inform[i,2];
+        used[cused,3]:=pred(inform[i,3]);
+        used[cused,4]:=pred(inform[i,4]);
+        inc(cused);
+    end;
+
+    Assign(F,'rect1.out');
+    Rewrite(F);
+    for i:=1 to maxcolor do
+        if countcolor[i]&gt;0 then
+            Writeln(F,i,' ',countcolor[i]);
+  Close(F);
+end.
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

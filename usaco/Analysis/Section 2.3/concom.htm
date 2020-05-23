@@ -1,0 +1,104 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 23: Controlling Companies</title> </head><body background="concom_files/bg3.jpg">
+<img src="concom_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Controlling Companies</font></b><br>
+Russ Cox
+</center>
+
+
+<p>The method used here to solve the problem is as follows.
+We keep track of which companies control which other
+companies, and every time we hear that so and so owns
+this much percent of so and so, we update our information.
+
+</p><p>The array "owns" keeps track of how much of company j is
+owned by company i, whether directly or via controlled companies.
+The array "controls" keeps track of which companies are controlled
+by which other companies.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+
+#define NCOM 101
+
+int owns[NCOM][NCOM];        /* [i,j]: how much of j do i and its
+                                controlled companies own? */
+int controls[NCOM][NCOM];    /* [i, j]: does i control j? */
+
+/* update info: now i controls j */
+void
+addcontroller(int i, int j)
+{
+    int k;
+
+    if(controls[i][j])        /* already knew that */
+        return;
+
+    controls[i][j] = 1;
+
+    /* now that i controls j, add to i's holdings everything from j */
+    for(k=0; k&lt;NCOM; k++)
+        owns[i][k] += owns[j][k];
+
+    /* record the fact that controllers of i now control j */
+    for(k=0; k&lt;NCOM; k++)
+        if(controls[k][i])
+            addcontroller(k, j);
+
+    /* if i now controls more companies, record that fact */
+    for(k=0; k&lt;NCOM; k++)
+        if(owns[i][k] &gt; 50)
+            addcontroller(i, k);
+}
+
+/* update info: i owns p% of j */
+void
+addowner(int i, int j, int p)
+{
+    int k;
+
+    /* add p% of j to each controller of i */
+    for(k=0; k&lt;NCOM; k++)
+        if(controls[k][i])
+            owns[k][j] += p;
+
+    /* look for new controllers of j */
+    for(k=0; k&lt;NCOM; k++)
+        if(owns[k][j] &gt; 50)
+            addcontroller(k, j);
+}
+
+void
+main(void)
+{
+    FILE *fin, *fout;
+    int i, j, n, a, b, p;
+
+    fin = fopen("concom.in", "r");
+    fout = fopen("concom.out", "w");
+    assert(fin != NULL &amp;&amp; fout != NULL);
+
+    for(i=0; i&lt;NCOM; i++)
+        controls[i][i] = 1;
+
+    fscanf(fin, "%d", &amp;n);
+    for(i=0; i&lt;n; i++) {
+        fscanf(fin, "%d %d %d", &amp;a, &amp;b, &amp;p);
+        addowner(a, b, p);
+    }
+
+    for(i=0; i&lt;NCOM; i++)
+    for(j=0; j&lt;NCOM; j++)
+        if(i != j &amp;&amp; controls[i][j])
+            fprintf(fout, "%d %d\n", i, j);
+    exit(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

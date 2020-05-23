@@ -1,0 +1,76 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/aab24918137011149fb057f628da10ba/b.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem B</h2>
+<h1>Packing for Holiday</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>Yay, It's holiday! Pak Arman is very excited with his holiday because he is planning to go to Bali Island, an island of paradise. Before enjoying his trip, first he has to pack his luggage.</p>
+
+<p>There are N items Pak Arman wish to bring along with him, but because of the baggage allowance (must not exceed a certain weight limit) from the airline company, he might not be able to bring all of his items. Each item has a weight W<sub>i</sub> and Pak Arman has assigned fun value F<sub>i</sub> to all items. Some items will give more fun value with the existence of other items, for example, if you bring a camera then bringing a backup battery will increase the fun value of those items. Fun value could also be decreased if you bring some items together, for example, if you bring too many clothes then some clothes will be useless. In all cases, bringing item i and j altogether will increase the fun by F<sub>i</sub> + F<sub>j</sub> + E<sub>ij</sub>, where E<sub>ij</sub> is the extra fun point (could be negative) when item i and j are brought together. If E<sub>ab</sub> = 0, it means bringing a and b does not effect their original fun value. Pak Arman noticed that for each item i there is at most 1 item j such that E<sub>ij</sub> &#8800; 0.</p>
+
+<p>The airline baggage allowance is known to be M. Given each item's weight, its fun value and all pair of items which increase/decrease the fun value, your task is to help Pak Arman deciding which items he should bring to maximize the total fun value while the total weight not exceeding the baggage allowance. You only need to output the total fun value.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 50) the number of cases. Each case begins with three integers N (1 &#8804; N &#8804; 200), M (1 &#8804; M &#8804; 5,000) and K denoting the number of items, baggage allowance limit and the number of pair of items which increase/decrease the fun value respectively. The next N lines each contains two integers F<sub>i</sub> (1 &#8804; F<sub>i</sub> &#8804; 100) and W<sub>i</sub> (1 &#8804; W<sub>i</sub> &#8804; 100) denoting the fun value and weight of the i<sup>th</sup> item respectively with i = 1..N. The last K lines each contains three integers a, b (1 &#8804; a, b &#8804; N; a &#8800; b) and E<sub>ab</sub> (-100 &#8804; E<sub>ab</sub> &#8804; 100; E<sub>ab</sub> &#8800; 0) denoting that if item a and b are brought together than the total fun value will increase by E<sub>ab</sub> (if E<sub>ab</sub> &lt; 0 then the total fun value will decrease by |E<sub>ab</sub>|). Each item appears at most once in the K pairs.
+
+
+</p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1 and Y is the maximum total fun value Pak Arman can get by carefully selecting items such that the total weight is not exceeding baggage allowance for that case.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
+3 100 1
+10 40
+20 50
+35 80
+1 2 10
+6 100 2
+20 30
+20 30
+20 30
+40 50
+40 50
+90 65
+1 2 20
+4 5 25
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 40
+Case #2: 110
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>Pak Arman could take item 1 and 2 with total fun value: F<sub>1</sub> + F<sub>2</sub> + E<sub>12</sub> = 10 + 20 + 10 = 40, while the total weight is W<sub>1</sub> + W<sub>2</sub> = 40 + 50 = 90.</p>
+
+<br>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>Pak Arman could take item 1 and 6 with total fun value: F<sub>1</sub> + F<sub>6</sub> = 20 + 90 = 110, while the total weight is W<sub>1</sub> + W<sub>2</sub> = 30 + 65 = 95.</p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

@@ -1,0 +1,118 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 52: Calf Flac</title> </head><body background="calfflac_files/bg3.jpg">
+<img src="calfflac_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Calf Flac</font></b><br>
+Russ Cox
+</center>
+
+<p>To make the programming easier, we keep two copies of the text: the
+original, and one with the punctuation stripped out.  We find the biggest
+palindrome in the latter copy, and then figure out which part of the
+original it corresponds to.
+
+</p><p>To find the biggest palindrome in the alphabetic text, we look, for
+each letter in the text, at the biggest palindrome centered on that
+letter (in the case of an odd length palindrome) or just to the right
+of that letter (in the case of an even length palindrome).
+
+</p><p>There are 20,000 letters, and we are assured that no palindrome is
+more than 2,000 letters long, and we search for both even and odd
+palindromes, for a total of about 20,000*2,000*2 = 80,000,000 operations,
+which is perfectly reasonable within the time limit.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;ctype.h&gt;
+
+char fulltext[21000];
+char text[21000];
+
+char *pal;
+int pallen;
+
+void
+findpal(void)
+{
+    char *p, *fwd, *bkwd, *etext;
+    int len;
+
+    etext = text+strlen(text);
+    for(p=text; *p; p++) {
+	/* try palindrome with *p as center character */
+	for(fwd=bkwd=p; bkwd &gt;= text &amp;&amp; fwd &lt; etext &amp;&amp; *fwd == *bkwd;
+				fwd++, bkwd--)
+			;
+	bkwd++;
+	len = fwd - bkwd;
+	if(len &gt; pallen) {
+	    pal = bkwd;
+	    pallen = len;
+	}
+
+	/* try palindrome with *p as left middle character */
+	for(bkwd=p, fwd=p+1;
+	          bkwd &gt;= text &amp;&amp; fwd &lt; etext &amp;&amp; *fwd == *bkwd; fwd++, bkwd--)
+			;
+	bkwd++;
+	len = fwd - bkwd;
+	if(len &gt; pallen) {
+	    pal = bkwd;
+	    pallen = len;
+	}
+    }
+}
+
+void
+main(void)
+{
+    FILE *fin, *fout;
+    char *p, *q;
+    int c, i, n;
+
+    fin = fopen("calfflac.in", "r");
+    fout = fopen("calfflac.out", "w");
+    assert(fin != NULL &amp;&amp; fout != NULL);
+
+    /* fill fulltext with input, text with just the letters */
+    p=fulltext;
+    q=text;
+    while((c = getc(fin)) != EOF) {
+	if(isalpha(c))
+	    *q++ = tolower(c);
+	*p++ = c;
+    }
+    *p = '\0';
+    *q = '\0';
+
+    findpal();
+
+    fprintf(fout, "%d\n", pallen);
+
+    /* find the string we found in the original text
+       by finding the nth character */
+	n = pal - text;
+    for(i=0, p=fulltext; *p; p++)
+	if(isalpha(*p))
+	    if(i++ == n)
+		break;
+    assert(*p != '\0');
+
+    /* print out the next pallen characters */
+    for(i=0; i&lt;pallen &amp;&amp; *p; p++) {
+	fputc(*p, fout);
+	if(isalpha(*p))
+	    i++;
+    }
+    fprintf(fout, "\n");
+
+    exit(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

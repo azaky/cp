@@ -1,0 +1,95 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 87: Buy Low, Buy Lower</title> </head><body background="buylow_files/bg3.jpg">
+<img src="buylow_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Buy Low, Buy Lower</font></b><br>
+</center>
+
+
+<p> The advice to "buy low" is half the formula to success in
+the stock market. But to be considered a great investor you must also
+follow this problems' advice:
+</p><center>
+                <i>"Buy low, buy lower"</i>
+</center>
+
+<p> That is, each time you buy a stock, you must purchase more at a
+lower price than the previous time you bought it.  The more times you
+buy at a lower price than before, the better! Your goal is to see how
+many times you can continue purchasing at ever lower prices.
+
+</p><p> You will be given the daily selling prices of a stock over a
+period of time.  You can choose to buy stock on any of the days.
+Each time you choose to buy, the price must be lower than the
+previous time you bought stock. Write a program which identifies
+which days you should buy stock in order to maximize the number of
+times you buy.
+
+</p><p>
+By way of example, suppose on successive days stock is selling like this:
+</p><pre> Day   1  2  3  4  5  6  7  8  9 10 11 12
+Price 68 69 54 64 68 64 70 67 78 62 98 87
+</pre>
+
+<p> In the example above, the best investor (by this problem, anyway)
+can buy at most four times if they purchase at a lower price each time.
+One four day sequence (there might be others) of acceptable buys is:
+</p><pre>Day    2  5  6 10
+Price 69 68 64 62
+</pre>
+
+<h3>PROGRAM NAME: buylow</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> N (1 &lt;= N &lt;= 5000), the 
+number of days for which stock prices are available.</td> </tr>
+<tr> <td> Line 2..etc: </td> <td> A series of N positive space-separated
+	  integers (which may require more than one line of data) that
+	  tell the price for that day.  The integers will fit into
+	  32 bits quite nicely.</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file buylow.in) </h3>
+
+<pre>12
+68 69 54 64 68 64 70 67
+78 62 98 87
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>Two integers on a single line:
+</p><ul>
+<li> the length of the longest sequence of decreasing prices
+</li><li> the number of sequences that have this length
+</li></ul>
+
+<p> In counting the number of solutions, two potential solutions
+are considered the same (and would only count as one solution) if
+they repeat the same string of decreasing prices, that is, if they
+"look the same" when the successive prices are compared.
+Thus, two different sequence of "buy" days could produce
+the same string of decreasing prices and be counted as only a single
+solution.
+
+</p><h3>SAMPLE OUTPUT (file buylow.out)</h3>
+
+<pre>4 2
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="twKWh2IAGUk" type="hidden">
+<input name="S" value="buylow" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,52 @@
+Problem 2: Wifi Setup [Brian Dean, 2012]
+
+N sapi Petani John (1 <= N <= 2000) berdiri pada sejumlah lokasi
+berupa sebuah jalan lurus antara kandang dan rerumputan, yang bisa kita
+anggap sebuah garis satu dimensi. Sejak sapi-sapinya saling berhubungan dengan
+email, PJ ingin memasang sejumlah stasiun pemancar Wifi pada lokasi tertentu sehingga seluruh
+sapi terjangkau sinyal.
+
+Setelah berbelanja, PJ mengamati bahwa biaya dari sebuah stasiun Wifi tergantung
+dari jarak yang bisa dipancarkan : Sebuah stasiun dengan daya pemancar r biayanya A + B*r, 
+dimana A adalah biaya tetap dan B adalah biaya tiap satuan jarak pancaran.
+Jika PJ memasang sebuah alat pada posisi x, maka alat tersebut dapat memancarkan data
+pada setiap sapi antara x-r ... x+r. Sebuah alat dengan daya pemancar r=0 diperbolehkan,
+namun hanya menjangkau sebuah sapi pada lokasi yang sama dengan alat.
+
+Diberikan A dan B dan lokasi sapi PJ. Tentukan biaya termurah sehingga semua sapi
+terjangkau sinyal wireless.
+
+PROBLEM NAME: wifi
+
+INPUT FORMAT:
+
+* Baris 1: tiga bilangan bulat dipisahkan spasi : N A B (0 <= A, B <= 1000).
+
+* Baris 2..1+N: tiap baris berisi sebuah bilangan bulat dalam rentang 0..1,000,000
+		mendeskripsikan lokasi seekor sapi PJ.
+	
+SAMPLE INPUT (file wifi.in):
+
+3 20 5
+7
+0
+100
+
+INPUT DETAILS:
+
+Ada 3 sapi yang berada pada posisi 7, 0, and 100. Biaya memasang
+stasiun dengan daya r adalah 20 + 5*r
+
+OUTPUT FORMAT:
+
+* Baris 1: Biaya minimum untuk menyediakan jangkauan wireless ke semua sapi.
+
+SAMPLE OUTPUT (file wifi.out):
+
+57.5
+
+OUTPUT DETAILS:
+
+Solusi optimalnya adalah dengan membangun stasiun pemancar diposisi 3.5
+(dengan daya 3.5) dan posisi 100 (dengan daya 0). Stasiun pertama mencakup
+sapi 1 dan 2, dan stasiun kedua mencakup sapi 3.

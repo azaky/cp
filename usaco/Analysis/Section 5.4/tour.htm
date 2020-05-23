@@ -1,0 +1,190 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 17: Canada Tour</title> </head><body background="tour_files/bg3.jpg">
+<img src="tour_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Canada Tour</font></b><br>
+<b>Jacob Burnim</b>
+</center>
+<p>Because of the strict east-to-west ordering in the problem, we can use
+dynamic programming to solve it.  For any pair of distinct nodes x and y,
+we will store the most nodes that can be on a path that starts at y, goes
+west to the first city, and then goes east to x (the array used to store
+this will be BP[x][y]).  The details for initializing and filling our table
+appear in the code.
+
+</p><pre>#include &lt;fstream.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+char    name[100][32];          //name[x] stores the name of the xth city
+int     path[100][100];    //path[x][y] = is there a path from x to y
+int     N, V;
+int     BP[100][100];
+//BP[x][y] = the number of nodes on the best path that goes west from
+// city y to city 0 and then east to city x (with no repeats)
+// convert a city name to an integer / index
+
+int     lookup (const char *s)
+{
+    for (int i = 0; i &lt; N; i++)
+        if (!strcmp (name[i], s))
+            return i;
+    cerr &lt;&lt; "Error: City " &lt;&lt; s &lt;&lt; " not found.\n";
+    exit (0);
+}
+
+int 
+min (int a, int b)
+{
+    if (a &lt; b)
+	return a;
+    else
+	return b;
+}
+
+int 
+max (int a, int b)
+{
+    if (a &gt; b)
+	return a;
+    else
+	return b;
+}
+
+int 
+main (void)
+{
+    char    S1[32], S2[32];
+    int     t1, t2;
+
+    //input
+    ifstream in ("tour.in");
+    in &gt;&gt; N &gt;&gt; V;
+    ////read in the names
+    for (int i = 0; i &lt; N; i++)
+	in &gt;&gt; name[i];
+    ////set up path[][]
+    for (int i = 0; i &lt; V; i++) {
+	in &gt;&gt; S1 &gt;&gt; S2;
+	t1 = lookup (S1);
+	t2 = lookup (S2);
+	path[t1][t2] = path[t2][t1] = -1;
+    }
+    in.close ();
+
+    //init
+    // everything to negative infinity
+    for (int i = 0; i &lt; N; i++)
+	for (int j = 0; j &lt; N; j++)
+	    BP[i][j] = -1000000;
+
+    //starting condition:BP[0][0] is a path visiting one city
+    BP[0][0] = 1;
+
+    //initialize all paths that contain 2 or three cities
+    // (ie.they contain city 0 and at most one city before and one after it)
+    path[0][0] = -1;
+    for (int i = 1; i &lt; N; i++)
+	if (path[i][0]) {
+	    BP[i][0] = BP[0][i] = 2;
+	    for (int j = 1; j &lt; i; j++)
+		if (path[j][0])
+		    BP[i][j] = BP[j][i] = 3;
+	}
+
+//processing:
+    //From any path (x, y) that starts at y, goes west to 0, and then east to x
+    //      we are trying to find paths that start east of y or go farther east
+    //      than x.We only look at (x, k) and (k, y) if k is farther east than both
+    //      x and y - this prevents us from visiting a city on the eastward and
+    //      westward trips.(Eg.If we moved from (5, 8) to (7, 8), we may have
+    //      been counting a trip through 7 on the way from 8 to 0, so we are now
+    //      going through 7 twice.)
+    for (int i = 0; i &lt; N; i++)
+	for (int j = 1; j &lt; N; j++)
+	    if (i != j &amp;&amp; BP[i][j] &gt; 0)
+	        for (int k = min (max (i, j) + 1, N - 1); k &lt; N; k++) {
+		    if (path[i][k] &amp;&amp; (BP[k][j] &lt; BP[i][j] + 1)) {
+		        BP[k][j] = BP[i][j] + 1;
+		    }
+		    if (path[k][j] &amp;&amp; (BP[i][k] &lt; BP[i][j] + 1)) {
+		        BP[i][k] = BP[i][j] + 1;
+		    }
+		}
+
+    //output
+    ofstream out ("tour.out");
+    if (BP[N - 1][N - 1] &gt; 0) //a valid tour exists
+        out &lt;&lt; BP[N - 1][N - 1] - 1 &lt;&lt; endl;
+    else //no tour exists
+        out &lt;&lt; 1 &lt;&lt; endl;
+    out.close ();
+    exit (0);
+}
+</pre>
+
+<h3>Another look at 'tour'</h3>
+
+<i>Nick Pilkington of South Africa writes:</i>
+
+<p>Consider the dual problem of finding two longest mutually disjoint
+paths (cannot share a vertex, except first and last) from the
+westmost city to the eastmost. The solution to this problem lends
+itself to a very simple recursive solution, if we are careful to
+adhear to certain constraints.  Though this could also be solved
+by DP, the DP table would be sparse as not all route choices lead
+to a solution. Therefore pairing the recursive solution with a cache
+table we also get a very fast solution.  We can increase the speed
+even further if we note the symmetry of the paths (hence the swap()
+call).
+</p><pre>#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+
+#define max(a,b) (((a)&gt;(b))?(a):(b))
+#define swap(a,b) {a ^= b; b ^= a; a ^= b;}
+
+using namespace std;
+
+int cache[101][101], conn[101][101];
+ofstream outfile ("tour.out");
+ifstream infile ("tour.in");
+map &lt;string, int&gt; lookup;
+int n, m, solution;
+string j, k, str;
+
+int solve(int a, int b) {
+    int k = -1;
+    if (a &gt; b) swap (a, b);
+    if (cache[a][b] != 0)   return cache[a][b];
+    if (a == n &amp;&amp; b == n)   return 0;
+    if (a == b &amp;&amp; a+b != 2) return -100;
+    for (int i = a+1; i &lt;= n; i++)
+        if (conn[a][i]) k = max (k, 1+solve (i, b));
+    return (cache[a][b] = k);
+}
+
+void main() {
+    infile &gt;&gt; n &gt;&gt; m;
+    for(int i = 1; i &lt;= n; i++) {
+        infile &gt;&gt; str;
+        lookup.insert ( pair&lt;string,int&gt; (str, i));
+    }
+    for(int i = 0; i &lt; m; i++) {
+        infile &gt;&gt; j &gt;&gt; k;
+        conn[lookup.find(j)-&gt;second][lookup.find(k)-&gt;second] = true;
+        conn[lookup.find(k)-&gt;second][lookup.find(j)-&gt;second] = true;
+    }
+    solution = solve (1, 1);
+    outfile &lt;&lt; (solution == 2) ? solution - 1 : solution  &lt;&lt; endl;
+    return 0;
+}
+</pre>
+
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=j1jzR880RS4"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

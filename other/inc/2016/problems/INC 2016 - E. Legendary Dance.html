@@ -1,0 +1,109 @@
+
+<!-- saved from url=(0061)http://competition.binus.ac.id/contest/team/problem.php?id=25 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>INC 2016 - E. Legendary Dance</title>
+
+<style>
+body, p, li, td {
+	font-family: "Arial";
+	font-size: 12pt;
+	line-height: 1.5;
+}
+li {
+	padding-bottom: 10px;
+}
+.norm{
+	font-family: "Cambria Math";
+	font-size: 13pt;
+}
+.block{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;	
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2016</h3>
+<h2>Problem E</h2>
+<h1>Legendary Dance</h1>
+Time Limit: 4 seconds
+</center>
+<br>
+
+
+<p>Once upon a time, there was a legendary and very beautiful dance in ancient time performed only in king's coronation ceremony. The time of kings has passed and now we have a president as the head of our beloved nation. However, as a computer science student who loves art and history, Sandy is very interested in this legend and wanted to know more about this dance. He spent the whole afternoons during his short-term break in his school library, and finally found out that someone has resurrected the legendary dance. The details are put in two video records.</p>
+
+<p>Let's agree on some definitions first so that explaining the problem becomes easier.</p>
+<ul>
+<li>A dance consists of one or more dance-moves in order, or simply "move".</li>
+<li>Each move is represented by an integer. Two integers of the same value represent a same move.</li>
+<li>A sequence of moves contains one or more moves in order, but not necessarilly continuous moves.<br>For example, let a dance represented by a (complete) sequence of moves: 1 – 2 – 2 – 3 – 4 – 5. In this dance, 1 – 2 – 4 is one valid sequence, while 5 – 3 is not.</li>
+</ul>
+
+<p>Let's get back to the main story. The two video records, each contains one sequence of moves which is believed to be part of the legendary dance. Now, Sandy is curious; assuming the dance sequence in these videos are indeed part of the legendary dance, how many dance moves in total will there be in the complete legendary dance? As there are no indication that these two videos are complete, Sandy is only interested in the minimum possible number of moves of the legendary dance. Note that however these two videos may contain an overlapping dance moves.</p>
+
+<p>For example, let the two sequences be A = 10 – 17 – 10, and B = 17 – 12 – 10 – 10 – 15. Then, the minimum possible number of moves in the complete dance will be 6 (as shown below).</p>
+
+<pre>   A :  10 <font color="red">17</font>    <font color="red">10</font>
+   B :     <font color="red">17</font> 12 <font color="red">10</font> 10 15
+   ----------------------
+   C :  10 17 12 10 10 15
+</pre>
+
+<p>Of course C is not necessarily the legendary dance, but any legendary dance will have at least 6 moves as shown in C.</p>
+
+<p>Your task in this problem is, given two sequence of moves which are part of the legendary dance, determine the minimum possible number of moves in the complete legendary dance.</p>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) denoting the number of cases. Each case begins with two integers in a line N and M (1 &#8804; N, M &#8804; 1,000) denoting the number of moves recorded in both video records. The second line of each case contains N integers A<sub>i</sub> (1 &#8804; A<sub>i</sub> &#8804; 2,000) representing the a sequence of dance moves in the first record. The third line of each case contains M integers B<sub>i</sub> (1 &#8804; B<sub>i</sub> &#8804; 2,000) representing a sequence of dance moves in the second record.</p>
+
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X:</font>" where <font face="Courier New">X</font> is the case number, starts from 1, and <font face="Courier New">Y</font> is the minimum possible number of moves in the legendary dance for that particular case.</p>
+
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td align="center">
+<table border="0" cellspacing="1" cellpadding="4" width="700">
+<tbody><tr><th align="left" width="*" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF">
+<pre>4
+3 5
+10 17 10
+17 12 10 10 15
+4 4
+1 2 3 4
+5 6 7 8
+4 4
+1 2 3 4
+1 2 3 4
+4 4
+1 2 3 4
+2 3 4 5
+</pre>
+</td><td bgcolor="#FFFFFF">
+<pre>Case #1: 6
+Case #2: 8
+Case #3: 4
+Case #4: 5
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+<br><br>
+<p><i>Explanation for 2<sup>nd</sup> sample case</i></p>
+<p>There are no common moves recorded on both records. Any possible legendary dance should consist of at least 8 moves.</p>
+<br>
+<p><i>Explanation for 3<sup>rd</sup> sample case</i></p>
+<p>Both records contain the same dance moves. It might be possible that both of them are the complete legendary dance.</p>
+<br>
+
+<br><br>
+</com:tcontent><script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>

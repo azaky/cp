@@ -1,0 +1,104 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 105: Frame Up</title> </head><body background="frameup_files/bg3.jpg">
+<img src="frameup_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Frame Up</font></b><br>
+</center>
+
+
+<p> Consider the following five picture frames shown on an 9 x 8 array:
+
+</p><pre>........   ........   ........   ........   .CCC....
+EEEEEE..   ........   ........   ..BBBB..   .C.C....
+E....E..   DDDDDD..   ........   ..B..B..   .C.C....
+E....E..   D....D..   ........   ..B..B..   .CCC....
+E....E..   D....D..   ....AAAA   ..B..B..   ........
+E....E..   D....D..   ....A..A   ..BBBB..   ........
+E....E..   DDDDDD..   ....A..A   ........   ........
+E....E..   ........   ....AAAA   ........   ........
+EEEEEE..   ........   ........   ........   ........
+
+   1          2           3          4          5
+</pre>
+
+<p> Now place all five picture frames  on top of one another starting
+with 1 at the bottom and ending up with 5 on top. If any part of a frame
+covers another frame, it hides that part of the frame below. Viewing
+the stack of five frames we see the following.
+
+</p><pre>           .CCC...
+           ECBCBB..
+           DCBCDB..
+           DCCC.B..
+           D.B.ABAA
+           D.BBBB.A
+           DDDDAD.A
+           E...AAAA
+           EEEEEE..
+</pre>
+
+<p> Given a picture like this, determine the order of the frames stacked
+from bottom to top.
+
+</p><p> Here are the rules for this challenge: 
+</p><ul>
+<li> The width of the frame is always exactly 1 character and the sides
+are never shorter than 3 characters. </li>
+<li> It is possible to see at least one part of each of the four sides
+of a frame.  A corner is part of two sides. </li>
+<li> The frames will be lettered with capital letters, and no two frames
+will be assigned the same letter. </li>
+</ul>
+
+<h3>PROGRAM NAME: frameup</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> Two space-separated integers: the height
+H (3 &lt;= H &lt;=30) and the width W (3 &lt;= W &lt;= 30).  </td> </tr>
+<tr> <td> Line 2..H+1: </td> <td> H lines, each with a string W
+characters wide.
+</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file frameup.in) </h3>
+
+<pre>9 8
+.CCC....
+ECBCBB..
+DCBCDB..
+DCCC.B..
+D.B.ABAA
+D.BBBB.A
+DDDDAD.A
+E...AAAA
+EEEEEE..
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>Print the letters of the frames in the order they were stacked from
+bottom to top.  If there are multiple possibilities for an ordering,
+list all such possibilities -- in alphabetical order -- on successive
+lines.  There will always be at least one legal ordering.
+
+</p><h3>SAMPLE OUTPUT (file frameup.out)</h3>
+
+<pre>EDABC
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="0ar9DUdJsoT" type="hidden">
+<input name="S" value="frameup" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=0ar9DUdJsoT"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,142 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 26: Electric Fences</title> </head><body 
+background="fence3_files/bg3.jpg">
+<img src="fence3_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Electric Fences</font></b><br>
+Brian Jacokes
+</center>
+
+
+<p> To solve this problem, all we need to do is place the power source 
+in
+a random location and start trying to move it around in various 
+directions,
+decreasing the amount that we move it by as time goes on.  To begin 
+with,
+we can place the power source at (0,0), although any location will work
+just as well.  Next, we move it in large increments (20 works well at
+first) about 10 times or so.  This will put us in the general location 
+of
+the optimal location.  Now we decrease the amount by which we move the
+power source to 1/10 of what it previously was and run the same process
+again.  Running the whole placement process about 5 times, decreasing 
+the
+amount by which we move the power source each time, will give us the 
+best
+location for the power source.
+
+</p><pre>/*
+PROG: fence3
+ID: bjacoke001
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#define FMAX 135
+#define MOVES 50
+#define IMAX 4
+
+int     numfence;
+FILE   *in, *out;
+struct fence;
+double  totaldist (double, double);
+void    swap (int &amp;, int &amp;);
+
+struct fence {
+    int     minx, miny, maxx, maxy;
+    void    setvals () {
+	fscanf (in, "%d%d%d%d", &amp;minx, &amp;miny, &amp;maxx, &amp;maxy);
+	if (minx &gt; maxx)
+	    swap (minx, maxx);
+	if (miny &gt; maxy)
+	    swap (miny, maxy);
+    }
+}       fences[FMAX];
+
+double 
+totaldist (double x, double y)
+{
+    int     a;
+    double  answer = 0, xdiff, ydiff;
+    for (a = 0; a &lt; numfence; a++) {
+	if (fences[a].minx &gt; x)
+	    xdiff = fences[a].minx - x;
+	else if (fences[a].maxx &lt; x)
+	    xdiff = x - fences[a].maxx;
+	else
+	    xdiff = 0;
+	if (fences[a].miny &gt; y)
+	    ydiff = fences[a].miny - y;
+	else if (fences[a].maxy &lt; y)
+	    ydiff = y - fences[a].maxy;
+	else
+	    ydiff = 0;
+	answer += sqrt ((xdiff * xdiff) + (ydiff * ydiff));
+    }
+    return answer;
+}
+
+void 
+swap (int &amp;a, int &amp;b)
+{
+    int     temp = a;
+    a = b;
+    b = temp;
+}
+
+int 
+main ()
+{
+    in = fopen ("fence3.in", "r");
+    out = fopen ("fence3.out", "w");
+    int     a, b, c, best;
+    double  elecx, elecy, xchange, ychange, tsum;
+    double  xinc[IMAX], yinc[IMAX], pi;
+    double  bestsum = 100000.0;
+    pi = acos (-1);
+    for (a = 0; a &lt; IMAX; a++) {
+	xinc[a] = cos (2 * pi * a / IMAX);
+	yinc[a] = sin (2 * pi * a / IMAX);
+    }
+    fscanf (in, "%d", &amp;numfence);
+    for (a = 0; a &lt; numfence; a++)
+	fences[a].setvals ();
+    elecx = 0;
+    elecy = 0;
+    xchange = 20;
+    ychange = 20;
+    bestsum = totaldist (elecx, elecy);
+    for (b = 1; b &lt;= MOVES; b++) {
+	if (b % 10 == 0) {
+	    xchange = xchange * 0.1;
+	    ychange = ychange * 0.1;
+	}
+	best = -1;
+	for (c = 0; c &lt; IMAX; c++) {
+	    elecx += xchange * xinc[c];
+	    elecy += ychange * yinc[c];
+	    tsum = totaldist (elecx, elecy);
+	    if (tsum &lt; bestsum) {
+		best = c;
+		bestsum = tsum;
+	    }
+	    elecx -= xchange * xinc[c];
+	    elecy -= ychange * yinc[c];
+	}
+	if (best != -1) {
+	    elecx += xchange * xinc[best];
+	    elecy += ychange * yinc[best];
+	}
+	bestsum = totaldist (elecx, elecy);
+    }
+    fprintf (out, "%.1lf %.1lf %.1lf\n", elecx, elecy, bestsum);
+    return 0;
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg">USACO Gateway</a>
+ | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

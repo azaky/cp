@@ -1,0 +1,151 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/b575b2f3abc1bdda8eddb20aeb0dea00/g.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body, td {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem G</h2>
+<h1>Rolling Block</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>There is a (not-so) well known game in which you control a 1x1x2 block and navigate it through a 2D map to until it reach a certain cell (the goal). Initially the block start at one cell in a standing position. At any time, it can ROLL to its adjacent cell in 4 directions (north, south, east, west) given any part of the block is not going out of the map and there is no obstacle at the destination cell/cells. By ROLL, we mean the block is moved such that there is one edge of the block that does not move, that is the edge at the bottom which adjacent to the destination cell. While moving, the block can be either standing or lying depends on the movement. If the block is in vertical (standing) position then it will occupy one cell, while if it's in horizontal (lying) position then it will occupy two cells. Figure 1, 2 and 3 show the movements of the block (the left most image is the initial condition before moving).</p>
+
+
+<table cellpadding="12" cellspacing="1" border="0" bgcolor="BLACK">
+<tbody><tr bgcolor="WHITE">
+	<td width="80">Figure 1.</td>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tbody><tr align="center">
+			<td><img src="./g_files/baloknormal.png" width="160"><br><small>-</small></td>
+			<td><img src="./g_files/baloknorth.png" width="160"><br><small>NORTH</small></td>
+			<td><img src="./g_files/baloksouth.png" width="160"><br><small>SOUTH</small></td>
+			<td><img src="./g_files/balokeast.png" width="160"><br><small>EAST</small></td>
+			<td><img src="./g_files/balokwest.png" width="160"><br><small>WEST</small></td>
+		</tr>
+		</tbody></table>
+	</td>
+</tr>
+<tr bgcolor="WHITE">
+	<td width="80">Figure 2.</td>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tbody><tr align="center">
+			<td><img src="./g_files/balokeast.png" width="160"><br><small>-</small></td>
+			<td><img src="./g_files/balokeast-1.png" width="160"><br><small>NORTH</small></td>
+			<td><img src="./g_files/balokeast-2.png" width="160"><br><small>SOUTH</small></td>
+			<td><img src="./g_files/balokeast-4.png" width="160"><br><small>EAST</small></td>
+			<td><img src="./g_files/balokeast-3.png" width="160"><br><small>WEST</small></td>
+		</tr>
+		</tbody></table>
+	</td>
+</tr>
+<tr bgcolor="WHITE">
+	<td width="80">Figure 3.</td>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tbody><tr align="center">
+			<td><img src="./g_files/baloknorth.png" width="160"><br><small>-</small></td>
+			<td><img src="./g_files/baloknorth-2.png" width="160"><br><small>NORTH</small></td>
+			<td><img src="./g_files/baloknorth-1.png" width="160"><br><small>SOUTH</small></td>
+			<td><img src="./g_files/baloknorth-3.png" width="160"><br><small>EAST</small></td>
+			<td><img src="./g_files/baloknorth-4.png" width="160"><br><small>WEST</small></td>
+		</tr>
+		</tbody></table>
+	</td>
+</tr>
+<tr bgcolor="WHITE">
+	<td>Figure 4.</td>
+	<td><img src="./g_files/balok1.png" width="220"><img src="./g_files/balok2.png" width="220"><img src="./g_files/balok3.png" width="220"></td>
+</tr>
+<tr bgcolor="WHITE">
+	<td>Figure 5.</td>
+	<td><img src="./g_files/balok4.png" width="220"></td>
+</tr>
+</tbody></table>
+
+<p>Figure 4 shows the movement of a block toward a goal cell. Note that there's always only one goal cell and the game is considered finish if and only if the block occupy the goal cell in standing position.</p>
+
+<p>Figure 5 shows the failed movement where the destination cell contains an obstacle.</p>
+
+<p>Given the map which contains the starting position, goal cell and possibly obstacles, determine the minimum number of moves required for the block to reach the goal cell in standing position, or output -1 if it is not possible to do it.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the number of cases. Each case begins with two integers N and M (10 &#8804; N, M &#8804; 100) the number of rows and columns of the map respectively. The next N line each contains M characters which represents the map. Each character in the map contains only:
+</p><ul>
+<li><font face="Courier New">.</font> : empty/free cell</li>
+<li><font face="Courier New">#</font> : obstacle</li>
+<li><font face="Courier New">S</font> : starting position</li>
+<li><font face="Courier New">F</font> : goal cell</li>
+</ul>
+S and F will appear exactly once in each map.
+<p></p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1, and Y is the minimum number of moves required for the block to reach the goal cell in standing position or -1 if it is impossible to finish the game.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
+10 10
+.........#
+.....#....
+.#.....#..
+..#.......
+..#..#..#.
+.#.....#..
+.S......#.
+.#........
+..#......F
+..........
+10 10
+#.#......#
+.#........
+...#...#..
+.#..#...#.
+....#...#.
+....#.....
+S#...#F...
+....#....#
+......#...
+...#....#.
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 9
+Case #2: 19
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+
+<h4 style="font-style:italic">Explanation for sample case 1</h4>
+<p>
+The moves of the block consists of
+</p><ol>
+	<li>Move the block from the start cell (7,2) to the east, so the block occupy cell (7,3) and (7,4).</li>
+	<li>Move the block from the cell (7,3) and (7,4) to the east, so the block occupy cell (7,5). Note that the block is in standing position.</li>
+	<li>Move the block from the cell (7,5) to the south, so the block occupy cell (8,5) and (9,5).</li>
+	<li>Move the block from the cell (8,5) and (9,5) to the east, so the block occupy cell (8,6) and (9,6).</li>
+	<li>Move the block from the cell (8,6) and (9,6) to the east, so the block occupy cell (8,7) and (9,7).</li>
+	<li>Move the block from the cell (8,7) and (9,7) to the south, so the block occupy cell (10,7).</li>
+	<li>Move the block from the cell (10,7) to the east, so the block occupy cell (10,8) and (10,9).</li>
+	<li>Move the block from the cell (10,8) and (10,9) to the north, so the block occupy cell (9,8) and (9,9).</li>
+	<li>Move the block from the cell (9,8) and (9,9) to the east, so the block occupy cell (9,10), which is the goal cell.</li>
+</ol>
+<p></p>
+</com:tcontent></body></html>

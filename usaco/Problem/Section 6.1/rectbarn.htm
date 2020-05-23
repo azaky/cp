@@ -1,0 +1,83 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=TiRGviIoJfu&S=rectbarn -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>A Rectangular Barn</title>
+</head>
+
+<body background="./rectbarn_files/bg3.jpg">
+<img src="./rectbarn_files/cow1.jpg" width="742" height="118">
+
+<center> <h1>A Rectangular Barn</h1> </center>
+<center>Mircea Pasoi -- 2003</center>
+
+<p>Ever the capitalist, Farmer John wants to extend his milking
+business by purchasing more cows. He needs space to build a new
+barn for the cows.
+
+</p><p>FJ purchased a rectangular field with R (1 &#8804; R &#8804; 3,000)
+rows numbered 1..R and C (1 &#8804; C &#8804; 3,000) columns numbered
+1..C.  Unfortunately, he realized too late that some 1x1 areas in
+the field are damaged, so he cannot build the barn on the entire
+RxC field.
+
+</p><p>FJ has counted P (0 &#8804; P &#8804; 30,000) damaged 1x1 pieces and
+has asked for your help to find the biggest rectangular barn (i.e.,
+the largest area) that he can build on his land without building
+on the damaged pieces.
+
+</p><h3>PROGRAM NAME: rectbarn</h3>
+
+<h3>INPUT FORMAT</h3>
+<ul><li> Line 1: Three space-separated integers: R, C, and P.
+</li><li> Lines 2..P+1: Each line contains two space-separated integers, r and c, that give
+the row and column numbers of a damaged area of the field
+</li></ul>
+
+<h3>SAMPLE INPUT (file rectbarn.in)</h3>
+<pre>3 4 2
+1 3
+2 1
+</pre>
+
+
+<h3>OUTPUT FORMAT</h3>
+
+<ul><li> Line 1: The largest possible area of the new barn
+</li></ul>
+
+<h3>SAMPLE OUTPUT (file rectbarn.out) </h3>
+
+<pre>6
+</pre>
+
+<h3>OUTPUT DETAILS</h3>
+
+<pre>  1 2 3 4
+ +-+-+-+-+
+1| | |X| |
+ +-+-+-+-+
+2|X|#|#|#|
+ +-+-+-+-+
+3| |#|#|#|
+ +-+-+-+-+
+</pre>
+
+Pieces marked with 'X' are damaged and pieces marked with '#' are part of 
+the new barn.
+
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="TiRGviIoJfu">
+<input type="hidden" name="S" value="rectbarn">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=TiRGviIoJfu"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+</body></html>

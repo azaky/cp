@@ -1,0 +1,323 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Big Numbers
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Big%20Numbers_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Big Numbers
+</font></font></b></td>
+   </tr>
+</tbody></table>
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problem: Factorial</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given N (1 &lt;= N &lt;= 200), calculate N! exactly.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The Problem</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">All built-in integers have a limited value range. Sometimes, a
+problem will ask for the calculation of a number which is outside
+that range for all the available numbers. For example, 200! has
+375 digits and would require a 1246 bit number (if one chose to
+store the number in binary) to hold it, which is unlikely to be
+available as a native datatype in contest environments. Thus, what
+is needed is a way to store and manipulate large numbers.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The Structure</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> One method to store these numbers is actually fairly
+straight-forward: a list of numbers and a sign.  This list can be
+either an array, if an upper bound is known on the length of the
+numbers, or a linked list, if the numbers have no upper bound.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> One way to think of this storage method is keeping the `digits'
+of a number in a huge base.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Let <i>b</i> be the base in which the number is stored, and
+<i>a<sub>0</sub></i>, <i>a<sub>1</sub></i>, ..., an be the
+digits stored.  Then, the number represented is <i>(-1)<sup>sign
+</sup>times (a<sub>0</sub>+ b<sup>1</sup>a<sub>1</sub>+
+b<sup>2</sup>a<sub>2</sub>+ ... + b<sup>n</sup>a<sub>
+n</sub>)</i>.  Note that <i>a<sub>0</sub>, a<sub>1</sub>, ...,
+a<sub>n</sub></i> must be in the range 0..<i>b</i>-1.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Generally, the base <i>b</i> is selected to be a power of 10,
+as it makes displaying the number very easy (but don't forget the
+leading zeroes).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Note that this representation stores the numbers in the order
+presented: <i>a<sub>0</sub></i>, then <i>a<sub>1</sub></i>, then <i>a<sub>2</sub></i>, etc.  This is the reverse of the obvious ordering, and,
+for linked lists, it may be worthwhile to keep a deque, as some of
+the algorithms will want to walk through the list in the opposite
+order.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Operations</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> For this data structure, figuring out how to do the various
+operations requires recalling how to do the operations by hand.
+The main problem that one has to be aware of is overflow.  Always
+make sure that every addition and multiplication will not result
+in an overflow, or the entire operation will be incorrect.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> For simplicity, the algorithms presented here will assume
+arrays, so if a number is <i>a<sub>0</sub></i>, <i>a<sub>
+1</sub></i>, ..., <i>a<sub>k</sub></i>, then for all <i>i &gt; k</i>, <i>a<sub>i</sub></i> = 0. For linked lists, the algorithms become a bit more
+difficult.  In addition, the result bignums are assumed to be
+initialized to be 0, which will not be true in most cases.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Comparison</font></h5>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">To compare two numbers <i>a<sub>0</sub></i>, <i>a<sub>1</sub></i>, ..., <i>a<sub>n</sub></i> and <i>b<sub>0</sub></i>, <i>b<sub>1</sub></i>, ..., <i>b<sub>k</sub></i>,
+with signs signA and signB goes as follows:
+
+<br>
+<tt><font size="2"> <br>
+#&nbsp;note&nbsp;that&nbsp;sign<br>
+#&nbsp;sizeA&nbsp;=&nbsp;number&nbsp;of&nbsp;digits&nbsp;of&nbsp;A<br>
+#&nbsp;signA&nbsp;=&nbsp;sign&nbsp;of&nbsp;A<br>
+#&nbsp;(0&nbsp;=&gt;&nbsp;positive,&nbsp;1&nbsp;=&gt;&nbsp;negative)<br>
+&nbsp;1&nbsp;&nbsp;&nbsp;if&nbsp;(signA&nbsp;&lt;&nbsp;signB)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;A&nbsp;is&nbsp;smaller<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;else&nbsp;if&nbsp;(signA&nbsp;&gt;&nbsp;signB)<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;A&nbsp;is&nbsp;larger<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;else<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;max(sizeA,sizeB)&nbsp;to&nbsp;0<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(a(i)&nbsp;&gt;&nbsp;b(i))<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(signA&nbsp;=&nbsp;0)<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;A&nbsp;is&nbsp;larger<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;A&nbsp;is&nbsp;smaller<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;A&nbsp;=&nbsp;B<br>
+</font></tt>
+
+</font><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Addition</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given two numbers <i>a<sub>0</sub></i>, <i>a<sub>1</sub></i>, ..., <i>a<sub>n</sub></i> and <i>b<sub>0</sub></i>, <i>b<sub>1</sub></i>, ..., <i>b<sub>k</sub></i>, calculate the sum and store it
+in <i>c</i>.  In order for addition to be possible, <i>2  x  b</i> must be
+smaller than the largest representable number.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> If the numbers have opposite signs, then: calculate which is
+larger in absolute value, subtract the smaller from the larger,
+and set the sign to be the same as the larger number.  Otherwise,
+simply add the numbers from 0 to <i>max ( n, k)</i>, maintaining a carry
+bit.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Note that if it is known that both numbers have positive sign,
+the operation becomes much simpler and doesn't even require the
+writing of 
+<tt>absolute_subtract</tt>.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Here is the pseudocode for addition:
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;absolute_subtract(bignum&nbsp;A,&nbsp;bignum&nbsp;B,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bignum&nbsp;C)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;borrow&nbsp;=&nbsp;0<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;0&nbsp;to&nbsp;max(sizeA,&nbsp;sizeB)<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;A(pos)-B(pos)-borrow<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(C(pos)&nbsp;&lt;&nbsp;0)<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;C(pos)&nbsp;+&nbsp;base<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;borrow&nbsp;=&nbsp;1<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;borrow&nbsp;=&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;it&nbsp;has&nbsp;to&nbsp;be&nbsp;done&nbsp;this&nbsp;way,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;to&nbsp;handle&nbsp;the&nbsp;case&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;subtracting&nbsp;two&nbsp;very&nbsp;close&nbsp;nums<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;(e.g.,&nbsp;7658493&nbsp;-&nbsp;7658492)<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;C(pos)&nbsp;!=&nbsp;0<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;pos<br>
+12&nbsp;&nbsp;&nbsp;assert&nbsp;(borrow&nbsp;==&nbsp;0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"|B|&nbsp;&gt;&nbsp;|A|;&nbsp;can't&nbsp;handle&nbsp;this")&nbsp;<br><br>
+13&nbsp;absolute_add(bignum&nbsp;A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bignum&nbsp;B,&nbsp;bignum&nbsp;C)<br>
+14&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;0<br>
+15&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;0&nbsp;to&nbsp;max(sizeA,sizeB)<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;A(pos)+B(pos)+carry<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;C(pos)&nbsp;/&nbsp;base<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;C(pos)&nbsp;mod&nbsp;base<br>
+19&nbsp;&nbsp;&nbsp;if&nbsp;carry&nbsp;!=&nbsp;0<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK&nbsp;FOR&nbsp;OVERFLOW<br>
+21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(max(sizeA,sizeB)+1)&nbsp;=&nbsp;carry<br>
+22&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;max(sizeA,sizeB)+1<br>
+23&nbsp;&nbsp;&nbsp;else<br>
+24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;max(sizeA,&nbsp;sizeB)&nbsp;<br><br>
+25&nbsp;add&nbsp;(bignum&nbsp;A,&nbsp;bignum&nbsp;B,&nbsp;bignum&nbsp;C)<br>
+26&nbsp;&nbsp;&nbsp;if&nbsp;signA&nbsp;==&nbsp;signB<br>
+27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;absolution_add(A,B)<br>
+28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signC&nbsp;=&nbsp;signA<br>
+29&nbsp;&nbsp;&nbsp;else<br>
+30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(Compare(A,B)&nbsp;=&nbsp;A&nbsp;is&nbsp;larger)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then<br>
+31&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;absolute_subtract(A,B)<br>
+32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signC&nbsp;=&nbsp;signA<br>
+33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;absolute_subtract(B,A)<br>
+35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signC&nbsp;=&nbsp;signB<br>
+</font></tt>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Subtraction</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Subtraction is simple, given the addition operation above.  To
+calculate A - B, negate the sign of B and add A and (-B).
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Multiplication by scalar</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> To multiply a bignum A by the scalar s, if |<i>s  x b</i>| is
+less than the maximum number representable, can be done in a similar
+manner to how it is done on paper.
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;&nbsp;&nbsp;if&nbsp;(s&nbsp;&lt;&nbsp;0)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signB&nbsp;=&nbsp;1&nbsp;-&nbsp;signA<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;=&nbsp;-s<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;else<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signB&nbsp;=&nbsp;signA<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;0<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;0&nbsp;to&nbsp;sizeA<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B(pos)&nbsp;=&nbsp;A(pos)&nbsp;*&nbsp;s&nbsp;+&nbsp;carry<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;B(pos)&nbsp;/&nbsp;base<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B(pos)&nbsp;=&nbsp;B(pos)&nbsp;mod&nbsp;base<br>
+11&nbsp;&nbsp;&nbsp;pos&nbsp;=&nbsp;sizeA+1<br>
+12&nbsp;&nbsp;&nbsp;while&nbsp;carry&nbsp;!=&nbsp;0<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK&nbsp;OVERFLOW<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B(pos)&nbsp;=&nbsp;carry&nbsp;mod&nbsp;base<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;carry&nbsp;/&nbsp;base<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos&nbsp;=&nbsp;pos&nbsp;+&nbsp;1<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;sizeB&nbsp;=&nbsp;pos&nbsp;-&nbsp;1<br>
+</font></tt>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Multiplication of two bignums</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Multiplying two numbers, if <i>b<sup>2</sup></i> is below the largest
+representable number is a combination of scalar multiplication and
+in-place addition.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Basically, multiply one of the numbers by each digit of the
+other, and add it (with the appropriate offset) to a running total,
+the exact same way one does long multiplication on paper.
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;multiply_and_add(bignum&nbsp;A,&nbsp;int&nbsp;s,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;offset,&nbsp;bignum&nbsp;C)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;0<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;0&nbsp;to&nbsp;sizeA<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos+offset)&nbsp;=&nbsp;C(pos+offset)&nbsp;+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(pos)&nbsp;*&nbsp;s&nbsp;+&nbsp;carry<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;C(pos+offset)&nbsp;/&nbsp;base<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos+offset)&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos+offset)&nbsp;mod&nbsp;base<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;pos&nbsp;=&nbsp;sizeA&nbsp;+&nbsp;offset&nbsp;+&nbsp;1<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;while&nbsp;carry&nbsp;!=&nbsp;0<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK&nbsp;OVERFLOW<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;C(pos)&nbsp;+&nbsp;carry<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carry&nbsp;=&nbsp;C(pos)&nbsp;/&nbsp;base<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;C(pos)&nbsp;mod&nbsp;base<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos&nbsp;=&nbsp;pos&nbsp;+&nbsp;1<br>
+14&nbsp;&nbsp;&nbsp;if&nbsp;(sizeC&nbsp;&lt;&nbsp;pos&nbsp;-&nbsp;1)<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;pos&nbsp;-&nbsp;1&nbsp;<br>
+<br><br>
+16&nbsp;multiply(bignum&nbsp;A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bignum&nbsp;B,&nbsp;bignum&nbsp;C)<br>
+17&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;0&nbsp;to&nbsp;sizeB<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply_and_add(A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B(pos),&nbsp;pos,&nbsp;C)<br>
+19&nbsp;&nbsp;&nbsp;signC&nbsp;=&nbsp;(signA&nbsp;+&nbsp;signB)&nbsp;mod&nbsp;2<br>
+</font></tt>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Division by scalar</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">In order to divide the bignum <i>b</i> by a scalar <i>s</i>, <i>s  x  b</i>
+must be representable.  Division is done in a very similar manner
+to long division.
+
+<br>
+<tt><font size="2"> <br>
+20&nbsp;divide_by_scalar&nbsp;(bignum&nbsp;A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;s,&nbsp;bignum&nbsp;C)<br>
+21&nbsp;&nbsp;&nbsp;rem&nbsp;=&nbsp;0<br>
+22&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;0<br>
+23&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;sizeA&nbsp;to&nbsp;0<br>
+24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rem&nbsp;=&nbsp;(rem&nbsp;*&nbsp;b)&nbsp;+&nbsp;A(pos)<br>
+25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;rem&nbsp;/&nbsp;s<br>
+26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;C(pos)&nbsp;&gt;&nbsp;0&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos&nbsp;&gt;&nbsp;sizeC&nbsp;then<br>
+27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;pos<br>
+28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rem&nbsp;=&nbsp;rem&nbsp;mod&nbsp;s<br>
+#&nbsp;remainder&nbsp;has&nbsp;the&nbsp;remainder<br>
+#&nbsp;of&nbsp;the&nbsp;division<br>
+</font></tt>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Division by bignum</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This is similar to division by scalar, except the division is
+done by multiple subtractions.  Note that if <i>b</i> is large, this
+particular formulation takes too long.
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;divide_by_bignum&nbsp;(bignum&nbsp;A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bignum&nbsp;B,&nbsp;bignum&nbsp;C)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;bignum&nbsp;rem&nbsp;=&nbsp;0<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;sizeA&nbsp;to&nbsp;0<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult_by_scalar_in_place(rem,&nbsp;b)<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add_scalar_in_place(rem,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(pos))<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;0<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(greater(rem,&nbsp;B))<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;C(pos)&nbsp;+&nbsp;1<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract_in_place(rem,&nbsp;B)<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;C(pos)&nbsp;&gt;&nbsp;0&nbsp;and&nbsp;pos&nbsp;&gt;&nbsp;sizeC<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;pos<br>
+</font></tt>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Binary Search</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Binary search is a very helpful thing in general, but in particular
+for bignums, as operations are expensive.  Given an upper and lower
+bound, check the mean of those two to see if it is above or below
+those bounds, and cut the range by (almost) a factor of 2.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> For example, if <i>b</i> is large, then division by a bignum is slow
+to do by the method above, but the following works well:
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;divide_by_bignum2&nbsp;(bignum&nbsp;A,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bignum&nbsp;B,&nbsp;bignum&nbsp;C)<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;bignum&nbsp;rem&nbsp;=&nbsp;0<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;for&nbsp;pos&nbsp;=&nbsp;sizeA&nbsp;to&nbsp;0<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult_by_scalar_in_place(rem,&nbsp;b)<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add_scalar_in_place(rem,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(pos))&nbsp;<br><br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;0<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upper&nbsp;=&nbsp;s-1<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;upper&nbsp;&gt;&nbsp;lower<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mid&nbsp;=&nbsp;(upper&nbsp;+&nbsp;lower)/2&nbsp;+&nbsp;1<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult_by_scalar(B,&nbsp;mid,&nbsp;D)<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract(rem,&nbsp;D,&nbsp;E)<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;signE&nbsp;=&nbsp;0<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;mid<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upper&nbsp;=&nbsp;mid&nbsp;-&nbsp;1&nbsp;<br><br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(pos)&nbsp;=&nbsp;lower<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult_by_scalar(B,&nbsp;lower,&nbsp;D)<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract_in_place(rem,&nbsp;D)&nbsp;<br><br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;C(pos)&nbsp;&gt;&nbsp;0&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos&nbsp;&gt;&nbsp;sizeC<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeC&nbsp;=&nbsp;pos<br>
+</font></tt>
+
+
+</font></p></div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=twKWh2IAGUk">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

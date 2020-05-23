@@ -1,0 +1,33 @@
+1
+10
+Rank
+Username
+Name
+<a href='/SSE/problems/SSE1'>SSE1</a>
+<a href='/SSE/problems/SSE2'>SSE2</a>
+<a href='/SSE/problems/SSE3'>SSE3</a>
+<a href='/SSE/problems/SSE4'>SSE4</a>
+<a href='/SSE/problems/SSE5'>SSE5</a>
+Solved
+Score
+2
+1
+<a href='/SSE/users/kid1997'>kid1997</a>
+&#12520;&#12471;&#12522;&#12450;
+<font color='#00CC00'><b>100.00</b></font>
+<font color='#00CC00'><b>100.00</b></font>
+<font color='#FF0033'><b>83.33</b></font>
+<b>-</b>
+<b>-</b>
+2
+283.33
+2
+<a href='/SSE/users/kucingimba'>kucingimba</a>
+Aufar Gilbran
+<font color='#00CC00'><b>100.00</b></font>
+<b>-</b>
+<font color='#FF0033'><b>66.67</b></font>
+<b>-</b>
+<b>-</b>
+1
+166.67

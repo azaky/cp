@@ -1,0 +1,270 @@
+
+<!-- saved from url=(0052)http://ace.delos.com/usacoanal2?a=ouEuSk2OTj1&S=vans -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Postal Vans</title> </head>
+<body background="./vans_files/bg3.jpg">
+<center><img src="./vans_files/cow1.jpg" width="742" height="118"></center>
+
+<center>
+<b><font size="7">Postal Vans</font></b><br>
+Alex Schwendner
+</center>
+
+<p>This is a DP problem. The key to any dynamic programming problem
+is, of course, finding the subproblems. In this case, one noteworthy
+aspect of the problem is that while the grid may have up to 1000
+vertical streets, it has only 4 horizontal streets. Consider a
+vertical cross-section cutting through the four horizontal street
+(and not intersecting a vertical street). There are only a few
+different possible ways in which our route could use these streets.
+Thus, we let the "state" for our DP be the distance from one end
+(say the right end) of the grid and the configuration of these four
+streets.
+
+</p><p>What are the possible configurations? Note that because we must
+connect whichever streets we use into a cycle, our path must traverse
+an even number of the four streets (i.e., either 2 or 4). Thus, the
+configuration is one of the 8 following patterns (the last two of
+which appear similar; read on):
+
+<table border="1">
+<tbody><tr>
+<td><pre>-
+-
+&nbsp;
+&nbsp;</pre></td>
+<td><pre>-
+&nbsp;
+-
+&nbsp;</pre></td>
+<td><pre>-
+&nbsp;
+&nbsp;
+-</pre></td>
+<td><pre>&nbsp;
+-
+-
+&nbsp;</pre></td>
+<td><pre>&nbsp;
+-
+&nbsp;
+-</pre></td>
+<td><pre>&nbsp;
+&nbsp;
+-
+-</pre></td>
+<td><pre>-
+-
+-
+-</pre></td>
+<td><pre>-
+-
+-
+-</pre></td>
+</tr>
+</tbody></table>
+
+</p><p>The first 6 patterns with two lines represent all configurations
+in which two streets are used in the van route. The last two patterns
+both represent all four streets being used in the van route, but
+differ in the connection of the paths. In #7, the top two paths are
+connected and the bottom two paths are connected by the part of the
+van route to the right. In #8, the top and bottom paths are connected,
+and the middle two paths are connected by the rest of the van route
+(to the right).
+
+</p><p>So how do we go from one state to another? To go one intersection
+farther to the left, we must visit all four intersections of one
+vertical street with the four hourzontial streets. This means, for
+instance, that we cannot connect two Type 1 patterns, because then
+we would not be visiting the bottom two intersections. Also, we
+cannot connect a Type 1 pattern with a Type 6 pattern, because both
+parts of the path would have to traverse the same section of the
+vertical street, and we can't visit an intersection twice. On the
+other hand, we could connect a Type 1 pattern with a Type 3 pattern.
+Lastly, we cannot connect the Type 7 and Type 8 patterns (with all
+four streets used) in such a way as to disconnect the route. Putting
+this all togeather, we have the following transition matrix:
+</p><pre>0 0 1 0 0 0 0 1
+0 0 0 0 1 0 0 0
+1 0 0 1 0 1 1 0
+0 0 1 0 0 0 0 0
+0 1 0 0 0 0 0 0
+0 0 1 0 0 0 0 1
+1 0 0 0 0 1 1 0
+0 0 1 0 0 0 0 1
+</pre>
+
+<p>Above, we have a 1 in the i-th row and j-th column if we can
+transition to a Type i pattern from a Type j pattern. Thus, we know
+how to go from state to state: to calculate the numbers of routes
+with the 8 patterns on the left edge at a certain distance X from
+the right edge of the grid, apply the matrix to the numbers of
+routes with the 8 patterns on the left edge at distance X-1. The
+matrix is asymetric because patterns 7 and 8 differ in how the paths
+are connected to the right. Thus transitioning from a Type 7 or 8
+pattern is not the same as transitioning to a Type 7 or 8 pattern.
+
+</p><p>We just need initial and final conditions. To start (on the
+right), we can have either a Type 3 pattern or a Type 7 pattern.
+We need to cover all 4 intersections, so it has to use both the top
+and bottom streets, but we can't connect the paths in the right way
+for a Type 8 pattern without more room. For a Type 7 we just have
+two backwards "C" shaped pieces. At the end, when we get to the
+left side of the grid, to get our answer, we add up the number of
+ways to end with a Type 3 pattern or a Type 8 pattern. (Type 8 this
+time because we don't have room to reconnect a Type 7, but for a
+Type 8, we just connect the top two streets to each other and the
+bottom two to each other, with two "C" shaped pieces.) We then
+multiply by two, because we can traverse the route in two directions.
+
+
+</p><pre>#include &lt;fstream.h&gt;
+#include &lt;string.h&gt;
+
+class bigint {
+public:
+  int n;
+  char *d;
+
+  bigint(void){
+    n = 1;
+    d = new char [1];
+    memset(d, 0, n);
+  }
+
+  bigint(int x){
+    n = 1;
+    d = new char [1];
+    memset(d, 0, n);
+    d[0] = x;
+  }
+
+  bigint(const bigint &amp;q){
+    n = q.n;
+    d = new char [n];
+    memcpy(d, q.d, n*sizeof(char));
+  }
+
+  bigint &amp;operator =(const bigint &amp;q){
+    delete []d;
+    n = q.n;
+    d = new char [n];
+    memcpy(d, q.d, n*sizeof(char));
+    return(*this);
+  }
+
+  ~bigint(void){
+    delete []d;
+  }
+
+  int dig(void) const {
+    for(int i = n-1; i &gt; 0; --i){
+      if(d[i] != 0){
+	return(i+1);
+      }
+    }
+    return(1);
+  }
+
+};
+
+bigint operator +(const bigint &amp;a, const bigint &amp;b){
+  bigint c;
+  delete []c.d;
+  c.n = 1 + (a.dig() &gt;? b.dig());
+  c.d = new char [c.n];
+  int carry = 0;
+  for(int i = 0; i &lt; c.n; ++i){
+    if(i &lt; a.n){
+      carry += a.d[i];
+    }
+    if(i &lt; b.n){
+      carry += b.d[i];
+    }
+    c.d[i] = carry % 10;
+    carry /= 10;
+  }
+  return(c);
+}
+
+
+const int p = 8;
+const bool trans[p][p] =
+  {
+    {0,0,1,0,0,0,1,0},
+    {0,0,0,0,1,0,0,0},
+    {1,0,0,1,0,1,0,1},
+    {0,0,1,0,0,0,0,0},
+    {0,1,0,0,0,0,0,0},
+    {0,0,1,0,0,0,1,0},
+    {0,0,1,0,0,0,1,0},
+    {1,0,0,0,0,1,0,1}
+  };
+
+
+const int MAXN = 1000;
+int n;
+
+
+int main(){
+
+  ifstream filein("vans.in");
+  filein &gt;&gt; n;
+  filein.close();
+
+
+  if(n == 1){
+    ofstream fileout("vans.out");
+    fileout &lt;&lt; 0 &lt;&lt; '\n';
+    fileout.close();
+    return(0);
+  }
+  if(n == 0){
+    ofstream fileout("vans.out");
+    fileout &lt;&lt; 1 &lt;&lt; '\n';
+    fileout.close();
+    return(0);
+  }
+
+
+  bigint alpha[p],beta[p];
+  bigint *a,*b;
+  a = &amp;alpha[0];
+  b = &amp;beta[0];
+  for(int i = 0; i &lt; p; ++i){
+    a[i] = 0;
+  }
+  a[2] = a[6] = 1;
+
+  for(int i = 0; i &lt; n - 2; ++i){
+    for(int j = 0; j &lt; p; ++j){
+      b[j] = 0;
+    }
+    for(int j = 0; j &lt; p; ++j){
+      for(int k = 0; k &lt; p; ++k){
+	if(trans[j][k]){
+	  b[k] = b[k] + a[j];
+	}
+      }
+    }
+    bigint *c = a;
+    a = b;
+    b = c;
+  }
+
+
+  ofstream fileout("vans.out");
+  bigint ans = a[2]+a[2]+a[7]+a[7];
+  for(int i = ans.dig()-1; i &gt;= 0; --i){
+    fileout &lt;&lt; char('0' + ans.d[i]);
+  }
+  fileout &lt;&lt; '\n';
+  fileout.close();
+  return(0);
+}
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=ouEuSk2OTj1">USACO Gateway</a> | <a href="mailto:kolstad.delos.com">Comment or Question</a>
+</center>
+
+</body></html>

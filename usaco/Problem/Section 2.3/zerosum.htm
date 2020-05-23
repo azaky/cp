@@ -1,0 +1,64 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 36: Zero Sum</title> </head><body 
+background="zerosum_files/bg3.jpg">
+<img src="zerosum_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Zero Sum</font></b><br>
+</center>
+
+<p> Consider the sequence of digits from 1 through N (where N=9) in
+increasing order:  <tt>1 2 3 ... N</tt>.
+
+</p><p> Now insert either a `+' for addition or a `-' for subtraction or
+ a
+` ' [blank] to run the digits together between each pair of digits (not
+in front of the first digit). Calculate the result that of the 
+expression
+and see if you get zero.
+
+</p><p> Write a program that will find all sequences of length N that 
+produce
+a zero sum.
+
+
+</p><h3>PROGRAM NAME: zerosum</h3>
+
+<h3>INPUT FORMAT</h3>
+
+A single line with the integer N (3 &lt;= N &lt;= 9).
+
+<h3>SAMPLE INPUT (file zerosum.in) </h3>
+
+<pre>7
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+In ASCII order, show each sequence that can create 0 sum with a `+',
+`-', or ` ' between each pair of numbers.
+
+<h3>SAMPLE OUTPUT (file zerosum.out)</h3>
+
+<pre>1+2-3+4-5-6+7
+1+2-3-4+5+6-7
+1-2 3+4+5+6+7
+1-2 3-4 5+6 7
+1-2+3+4-5+6-7
+1-2-3-4-5+6+7
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="zerosum" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

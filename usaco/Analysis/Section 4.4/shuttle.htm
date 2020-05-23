@@ -1,0 +1,121 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 27: Shuttle Puzzle</title> </head><body 
+background="shuttle_files/bg3.jpg">
+<img src="shuttle_files/cow1.jpg" width="742" height="118">
+
+<center>
+<b><font size="7">Shuttle Puzzle</font></b><br>
+Hal Burch
+</center>
+
+<p>Examine the form the sample output gives:
+</p><center><img src="shuttle_files/prob27.gif"></center>
+The black squares that outline the moved marble in the sample
+solution form a pattern:
+<center><img src="shuttle_files/prob27a.gif"></center>
+There are two parts of the pattern, the
+expanding portion and the contracting portion.  The boundary of
+the movement expands by one each pass in the expanding portion,
+and contracts by one each pass in the contracting portion.  In each
+pass, the selection moves two until it reaches the other end of the
+boundary, and then goes moves to the new boundary.  This pattern
+can be calculated and outputted to produce the optimal answer.
+
+<p>Since each step can be computing in constant time, this algorithm 
+should
+run easily within time.
+
+</p><pre>#include &lt;stdio.h&gt;
+
+#define MAXS 32
+
+int size;  /* `size' of board, in terms of number of black marbles */
+int bsize; /* real size of board, in terms of holes */
+int eloc;  /* location of empty hole */
+
+FILE *fout, *fin;
+
+void outmove(int i)
+ {
+  static int mcnt = 0;
+  if (i == -1) /* possible newline needed at the end */
+   {
+    if (mcnt) fprintf (fout, "\n");
+    return;
+   }
+
+  eloc = i;
+  fprintf (fout, "%i", i+1); /* output the answer */
+  /* handle spacing and newlines */
+  if (++mcnt &lt; 20) fprintf (fout, " ");
+  else
+   { 
+    fprintf (fout, "\n");
+    mcnt = 0;
+   }
+ }
+
+int main(int argc, char **argv)
+ {
+  int lv, lv2;
+
+  if ((fin = fopen("shuttle.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("shuttle.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  fscanf (fin, "%d", &amp;size);
+
+  eloc = size;
+  bsize = 2*size+1;
+
+  /* expansion phase of pattern */
+  for (lv = 0; lv &lt;= size; lv++)
+   {
+    if (lv % 2 == 0) /* even moves left */
+     {
+      for (lv2 = 0; lv2 &lt; lv; lv2++)
+        outmove(eloc-2);
+      /* expand by one step */
+      if (eloc-1 &gt;= 0) outmove(eloc-1);
+     } else { /* odd moves right */
+      for (lv2 = 0; lv2 &lt; lv; lv2++)
+        outmove(eloc+2);
+      /* expand by one step */
+      if (eloc+1 &lt; bsize) outmove(eloc+1);
+     }
+   }
+
+  /* contraction phase of pattern */
+  for (lv = size-1; lv &gt;= 0; lv--)
+   {
+    if (eloc &lt; size) /* if eloc is to left of center, move right */
+     {
+      outmove(eloc+1); /* contract by one step */
+      for (lv2 = 0; lv2 &lt; lv; lv2++)
+        outmove(eloc+2);
+     } else { /* if eloc is to the right of center, move left */
+      outmove(eloc-1); /* contract by one step */
+      for (lv2 = 0; lv2 &lt; lv; lv2++)
+        outmove(eloc-2);
+     }
+   }
+  outmove(-1); /* clean-up newlines */
+  return 0;
+ }
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Zeq1JEUeQxb"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,84 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      1917,         74]
+NotebookOptionsPosition[      1475,         53]
+NotebookOutlinePosition[      1845,         69]
+CellTagsIndexPosition[      1802,         66]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 16", "Title",
+ CellChangeTimes->{{3.536400825870448*^9, 3.5364008352772646`*^9}}],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["2", "15"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.\n\nWhat is \
+the sum of the digits of the number ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["2", "1000"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "?"
+}], "Text",
+ CellChangeTimes->{{3.536400841752276*^9, 3.5364008547938986`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Total", "[", 
+  RowBox[{"IntegerDigits", "[", 
+   SuperscriptBox["2", "1000"], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.536400859427107*^9, 3.5364008817195463`*^9}}],
+
+Cell[BoxData["1366"], "Output",
+ CellChangeTimes->{{3.536400868007122*^9, 3.5364008820315466`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{48, Automatic}, {Automatic, 60}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 108, 1, 83, "Title"],
+Cell[690, 25, 436, 13, 65, "Text"],
+Cell[CellGroupData[{
+Cell[1151, 42, 194, 4, 33, "Input"],
+Cell[1348, 48, 99, 1, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

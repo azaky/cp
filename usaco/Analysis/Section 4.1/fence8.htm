@@ -1,0 +1,397 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 48: Fence Rails</title> </head><body 
+background="fence8_files/bg3.jpg">
+<img src="fence8_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Fence Rails</font></b><br>
+Hal Burch
+</center>
+
+<p>This is a high dimensionality multiple knapsack problem, so we just
+have to test the cases.  Given that the search space has a high
+out-degree, we will use depth first search with iterative deepening in
+order to limit the depth of the tree.  However, straight DFSID will be
+too slow, so some tree-pruning is necessary.
+
+</p><p>Note that if there is a way to cut k rails, there is a way to cut
+the k shortest rails, so we will only consider subsets of the rails that
+contain the k shortest rails.  Also, we know the sum or the rails cut
+cannot exceed the sum of the lengths of the rails, so we can stop our
+DFS-ID if it finds a way to cut the largest set of shortest rails such
+that the sum of the lengths of the rails is less than the sum of the
+board lengths.
+
+</p><p>Since finding a board from which to cut a longer rail is more
+difficult than finding a board for a shorter rail, we will perform the
+search in such that the longest rail is cut first, then the second
+longest rail, etc.
+
+</p><p>Also, if two rails are of the same length, then cutting the first
+from board A and the second from board B is the same as cutting the
+first from board B and the second from board A, so within sets of rails
+of the same length, we will ensure that the rails are cut from boards
+of non-decreasing index.
+
+</p><p>If there are two boards of the same length, we need to check 
+cutting
+the rail from only the first.
+
+</p><p>If there is a board of the same length of the rail, then cutting 
+that
+rail from that board is optimal.
+
+</p><p>If, when cutting a board, we get a length of board less than the
+shortest rail, it is useless, and we can discard it from consideration.
+This reduces the total amount of board-feet left from which to cut the
+rest of the rails.
+
+</p><p> Here is Reid Barton's solution, which might or might not match
+the above description (sorry).
+
+</p><pre>/*
+ID: reid001
+PROG: fence8
+*/
+
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define MAXBOARDS 50
+#define MAXRAILS 1024
+
+int nboards;
+int boards[MAXBOARDS];
+int next_board;
+
+int nrails;
+int rails[MAXRAILS];
+int used[MAXRAILS];
+int nused;
+
+int best;
+
+int num_V, num_L, num_R;
+
+int comp_func( const void *a, const void *b );
+int rev_comp_func( const void *a, const void *b );
+void search( void );
+int maximal( int k, int next, int other, int smin, int smax,
+			 int remain[], int origid[], int bound );
+
+inline int max( int a, int b )
+{
+	return (a &lt; b) ? b : a;
+}
+
+int main( void )
+{
+	FILE *input = fopen( "fence8.in", "r" );
+	fscanf( input, "%d", &amp;nboards );
+	for (int i = 0; i &lt; nboards; i++)
+		fscanf( input, "%d", &amp;boards[i] );
+	fscanf( input, "%d", &amp;nrails );
+	for (int i = 0; i &lt; nrails; i++)
+		fscanf( input, "%d", &amp;rails[i] );
+	rails[nrails++] = 1000000;
+	qsort( boards, nboards, sizeof(int), comp_func );
+	qsort( rails, nrails, sizeof(int), comp_func );
+	
+	int ans;
+	if (boards[nboards-1] &gt;= 1000000)
+		// the answer might be off by one if we could supply the big rail.
+		// but then we could supply all the other rails, so no need to search.
+		ans = nrails - 1;
+	else
+	{
+		next_board = 0;
+		search();
+		ans = best;
+	}
+	
+	FILE *output = fopen( "fence8.out", "w" );
+	fprintf( output, "%d\n", ans );
+	
+	//fprintf( stderr, "%d %d %d %d\n", ans, num_V, num_L, num_R );
+	
+	return 0;
+}
+
+int comp_func( const void *a, const void *b )
+{
+	const int *p = (const int *)a;
+	const int *q = (const int *)b;
+	if (*p &lt; *q)
+		return -1;
+	else if (*p &gt; *q)
+		return 1;
+	else
+		return 0;
+}
+
+int rev_comp_func( const void *a, const void *b )
+{
+	return -comp_func( a, b );
+}
+
+
+void search( void )
+{
+	if (next_board == nboards)
+	{
+		if (best &lt; nused)
+			best = nused;
+//		fprintf( stderr, "nused = %d best = %d\n", nused, best );
+		return;
+	}
+	
+int nremain;
+int remain[MAXRAILS];
+int origid[MAXRAILS];
+
+	// find remaining rails,
+	// as well as max # for this board, all remaining boards
+	int boardsum = 0;
+	for (int j = next_board; j &lt; nboards; j++)
+		boardsum += boards[j];
+	
+	nremain = 0;
+	int k = 0, l = 0;
+	for (int j = 0, sum = 0; j &lt; nrails; j++)
+		if (used[j] == 0)
+		{
+			remain[nremain] = rails[j];
+			origid[nremain] = j;
+			nremain++;
+			sum += rails[j];
+			if (sum &lt;= boards[next_board])
+				k++;
+			if (sum &lt;= boardsum)
+				l++;
+		}
+	
+	int bound;
+	if ((bound = nused + l) &lt;= best)
+		return;
+	// try all maximal m-subsets of remaining boards
+	for (int m = k; m &gt;= 0; m--)
+		maximal( m, l-1, nremain-1, 0, boards[next_board],
+				 remain, origid, bound );
+}
+
+int maximal( int k, int next, int other, int smin, int smax,
+			 int remain[], int origid[], int bound )
+{
+	if (k == 0)
+	{
+		if ((smin &lt;= 0) &amp;&amp; (0 &lt;= smax))
+		{
+			next_board++;
+			search();
+			next_board--;
+		}
+		return 0;
+	}
+	
+	if (k &gt; next+1)
+		return 0;		// not enough boards left
+	
+	num_V++;
+	
+	int low_sum = 0;
+	for (int j = 0; j &lt; k; j++)
+		low_sum += remain[j];
+	if (low_sum &gt; smax)
+	{
+		num_L++;
+		return 0;
+	}
+	int hi_sum = 0;
+	for (int j = 0; j &lt; k; j++)
+		hi_sum += remain[next-j];
+	if (hi_sum &lt; smin)
+	{
+		num_R++;
+		return 0;
+	}
+	
+	int last = other;
+	for (int m = next; m &gt;= k-1; m--)
+	{
+		if (remain[m] != remain[last] &amp;&amp; (low_sum - remain[k-1] + remain[m]) &lt;= smax)
+		{
+			int new_min = max( smin - remain[m], smax - remain[last] + 1 );
+			used[origid[m]] = 1;
+			nused++;
+			int x = maximal( k-1, m-1, last, new_min, smax - remain[m],
+							 remain, origid, bound );
+			used[origid[m]] = 0;
+			nused--;
+			
+			if (k == 1)
+				return 0;
+			
+			if (bound &lt;= best)
+				return 0;
+		}
+		last = m;
+	}
+	
+	return 0;
+}
+</pre>
+<br><br>
+
+Hassan Eslami submitted a dramatically faster solution:
+
+<pre>#include &lt;cstdlib&gt;
+#include &lt;fstream&gt;
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+
+using namespace std;
+
+const int maxboard=50+1;
+const int maxrail=1023+1;
+
+// the arrays contains rails and boards lenght's
+int rail[maxrail], board[maxboard];
+
+// the array contains how much of the i_th board remain for cutting the rails from
+int remain[maxboard];
+
+// number of boards and rails
+int nboard, nrail;
+
+// sumlen[i] contains sum of the length of first i rails in the case
+// that rails are in the sorted order
+
+int sumlen[maxrail];
+
+// minindex[i] contains the index of smallest board that i_th rail
+// can cut from it(rails and boards are in the sorted order)
+int minindex[maxrail];
+
+//amount of board that 'can' be waste during one run of DSF
+long long maywaste;
+
+//amount of board that waste yet
+int waste;
+
+//best solution that we want to find
+int best;
+
+ifstream fin("fence8.in");
+ofstream fout("fence8.out");
+
+
+//r is the rail that we want cut from board index1 or index1+1 or ... or nboard-1
+void DFS(int r, int index1){
+    
+    //if r is equal to 0 we must search for the last step of solution
+    if (r == 0) {
+        for (int i=index1; i&lt;nboard; ++i)
+            if (remain[i]&gt;=rail[0]){
+                
+                //if we can cut best+1 rails, we print the solution
+                fout &lt;&lt; best+1 &lt;&lt; endl;
+                fout.close();
+                exit(0);
+            }
+        return;
+    }
+    
+    
+    for (int i=index1; i&lt;nboard; ++i)
+        
+        //for cutting r_th rail from i_th board this condition must hold
+        if (remain[i]&gt;=rail[r]) {
+            int oldwaste=waste;
+            remain[i]-=rail[r];
+            
+	    //now we check if i_th board being useless, amount of
+	    // wasted board must be less than 'maywaste'
+            if (remain[i]&lt;rail[0] &amp;&amp; waste+remain[i]&gt;maywaste) {
+                remain[i]+=rail[r];
+                continue;
+            }
+            
+            // if i_th board being useless we must update 'waste'
+            if (remain[i]&lt;rail[0]) waste+=remain[i];
+            
+	    // now we check if two rails have equal size, then the
+	    // usage of board for them must be in non-decreasing order
+
+            if (rail[r-1] == rail[r]) DFS(r-1, i);
+            else DFS(r-1, minindex[r-1]);
+            
+            // at last we set the initial state again
+            remain[i]+=rail[r];
+            waste=oldwaste;
+        }
+}
+
+int main() {
+    
+    // reading the input and compute sum of the boards length's,
+    // also set the initial state of 'remain'
+
+    fin &gt;&gt; nboard;
+    long long sum=0;
+    for (int i=0; i&lt;nboard; ++i) {
+        fin &gt;&gt; board[i];
+        sum+=board[i];
+        remain[i]=board[i];
+    }
+    fin &gt;&gt; nrail;
+    for (int i=0; i&lt;nrail; ++i)
+        fin &gt;&gt; rail[i];
+    fin.close();
+    
+    // sort the rails and boards
+    sort(&amp;board[0], &amp;board[nboard]);
+    sort(&amp;rail[0], &amp;rail[nrail]);
+    
+    // set maximum number of rails that we want to use, with out loss anything
+    int temp=0;
+    sumlen[0]=rail[0];
+    for (; temp&lt;nrail &amp;&amp; sumlen[temp]&lt;=sum; ++temp, sumlen[temp]=sumlen[temp-1]+rail[temp])
+	;
+    nrail=temp;
+    
+    // set minindex array
+    for (int i=0, j=0; i&lt;nrail; ++i) {
+        while (j&lt;nboard &amp;&amp; rail[i]&gt;board[j]) j++;
+        minindex[i]=j;
+        if (j == nboard) {
+            nrail=i;
+            break;
+        }
+    }
+    
+    // check out one special case
+    if (nrail == 0) {
+        fout &lt;&lt; 0 &lt;&lt; endl;
+        fout.close();
+        return 0;
+    }
+    
+    // main part of code that use DFS+ID
+    for (int i=nrail-1; i&gt;=0; --i){
+        waste=0;
+        maywaste=sum-sumlen[i];
+        best=i;
+        DFS(i, minindex[i]);
+    }
+}
+</pre>
+
+
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

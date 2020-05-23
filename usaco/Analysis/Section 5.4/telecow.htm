@@ -1,0 +1,231 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 43: Telecowmmunications</title> </head><body background="telecow_files/bg3.jpg">
+<img src="telecow_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Telecowmunications</font></b><br>
+Alex Schwendner
+</center>
+
+<p>We have a graph, and we wish to determine the minimum "cost" (i.e., the
+minimum number of computer "accidents") necessary to disconnect two given
+nodes. Thus, we immediately think "min-cut" or "network flow".
+
+</p><p>However, there is an extra twist: we wish to find the minimum number of
+computers (not the minimum number/cost of edges, as in the standard min-cut
+problem) that must be removed in order to disconnect C1 and C2. To account
+for this, we represent each computer as two nodes, one node being the
+"in-node", where all flow enters, and the other node being the "out-node",
+where all flow exits, and we connect the "in-node" and the "out-node" with
+a bidirectional edge of capacity 1.
+
+</p><p>Thus, we in effect make the computer an edge, so that we can use the
+standard min-cut algorithm for edges. We represent each computer connection
+between computers i and j as two directed edges, each of infinite capacity,
+one from i's out-node to j's in-node, and the other from j's out-node to
+i's in-node. Then, we apply the standard min-cut algorithm to the graph
+that we have created. The minimum number of computer accidents necessary
+to disconnect C1 and C2 is thus the maximum flow between the source (i.e.,
+the out-node of computer C1) and the sink (i.e., the in-node of computer
+C2).
+
+</p><p>To find the minimal set of computers which when shut down, disconnect C1
+and C2, we shutdown each computer in turn, starting with computer #1, and
+we recalculate the flow. If shutting down the computer decreased the
+maximum flow between the source and the sink, then we leave the computer
+off, add it to the min-cut, and move on to the next computer; otherwise,
+we turn the computer back on, and try the next computer.
+
+</p><pre>#include &lt;fstream.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;string.h&gt;
+
+template &lt; class type &gt; inline type min (const type &amp; a, const type &amp; b)
+{
+    return ((a &lt; b) ? a : b);
+}
+
+const int BIG = 1000000;
+const int MAXCOMPUTERS = 1000;
+const int MAXNODES = 2 * MAXCOMPUTERS;
+
+int     computers;
+int     c1, c2;
+bool    connected[MAXCOMPUTERS][MAXCOMPUTERS];
+bool    routing[MAXCOMPUTERS];
+
+int     nodes;
+int     source;
+int     sink;
+
+int 
+augment (int cap[MAXNODES][MAXNODES])
+{
+    assert (source != sink);
+    assert (cap[source][sink] == 0);
+    assert (cap[sink][source] == 0);
+
+    int     flow[MAXNODES];
+    int     last[MAXNODES];
+    for (int i = 0; i &lt; nodes; ++i) {
+	flow[i] = 0;
+	last[i] = -1;
+    }
+    flow[source] = BIG;
+
+    bool    set[MAXNODES];
+    memset (set, false, nodes);
+
+    for (int i = 0; i &lt; nodes; ++i) {
+	int     best = -1;
+	for (int j = 0; j &lt; nodes; ++j) {
+	    if (!set[j]) {
+		if (best == -1 || flow[best] &lt; flow[j]) {
+		    best = j;
+		}
+	    }
+	}
+	assert (best != -1);
+
+	assert (!set[best]);
+	set[best] = true;
+
+	for (int j = 0; j &lt; nodes; ++j) {
+	    if (flow[j] &lt; min (flow[best], cap[best][j])) {
+		flow[j] = min (flow[best], cap[best][j]);
+		last[j] = best;
+		assert (!set[j]);
+	    }
+	}
+    }
+
+    assert (set[sink]);
+
+    if (flow[sink] == 0) {
+	return (0);
+    }
+
+    int     place;
+    for (place = sink; last[place] != -1; place = last[place]) {
+	cap[last[place]][place] -= flow[sink];
+	cap[place][last[place]] += flow[sink];
+    }
+    assert (place == source);
+
+    return (flow[sink]);
+
+}
+
+int     cap[MAXNODES][MAXNODES];
+int 
+maxflow (void)
+{
+
+    nodes = 2 * computers;
+    //node 2 * k is in - node, node 2 * k + 1 is out node
+	source = c1 * 2 + 1;
+    sink = c2 * 2;
+
+    for (int i = 0; i &lt; nodes; ++i) {
+	for (int j = 0; j &lt; nodes; ++j) {
+	    cap[i][j] = 0;
+	}
+    }
+
+    assert (!connected[c1][c2]);
+    for (int i = 0; i &lt; computers; ++i) {
+	for (int j = 0; j &lt; computers; ++j) {
+	    if (connected[i][j]) {
+		cap[2 * i + 1][2 * j] = BIG;
+	    }
+	}
+    }
+
+    for (int i = 0; i &lt; computers; ++i) {
+	if (routing[i]) {
+	    cap[2 * i][2 * i + 1] = 1;
+	    cap[2 * i + 1][2 * i] = 0;
+	}
+    }
+
+    int     flow = 0;
+    int     inc = 1;
+    while (inc &gt; 0) {
+	inc = augment (cap);
+	flow += inc;
+	assert (inc &gt;= 0);
+    }
+
+    return (flow);
+}
+
+int 
+main ()
+{
+
+    int     connections;
+    ifstream filein ("telecow.in");
+    filein &gt;&gt; computers &gt;&gt; connections &gt;&gt; c1 &gt;&gt; c2;
+    --c1;
+    --c2;
+    for (int i = 0; i &lt; connections; ++i) {
+	int     a, b;
+	filein &gt;&gt; a &gt;&gt; b;
+	--a;
+	//1-&gt;0
+	    -- b;
+	//1-&gt;0
+	    connected[a][b] = true;
+	connected[b][a] = true;
+    }
+    filein.close ();
+    memset (routing, true, computers);
+
+    int     mincut = maxflow ();
+    int     flow = mincut;
+
+    for (int i = 0; i &lt; computers &amp;&amp; flow &gt; 0; ++i) {
+	if (i != c1 &amp;&amp; i != c2) {
+	    assert (routing[i]);
+
+	    routing[i] = false;
+	    int     temp = maxflow ();
+	    routing[i] = true;
+
+	    if (temp &lt; flow) {
+		assert (temp == flow - 1);
+		flow = temp;
+		routing[i] = false;
+	    }
+	}
+    }
+
+    assert (flow == 0);
+
+    ofstream fileout ("telecow.out");
+    fileout &lt;&lt; mincut &lt;&lt; endl;
+    bool    any = false;
+    for (int i = 0; i &lt; computers; ++i) {
+	if (!routing[i]) {
+	    if (!any) {
+		fileout &lt;&lt; (i + 1);
+		any = true;
+	    }
+	    else {
+		fileout &lt;&lt; ' ' &lt;&lt; (i + 1);
+	    }
+	}
+    }
+    fileout &lt;&lt; endl;
+    fileout.close ();
+
+    return (0);
+}
+</pre>
+<br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=j1jzR880RS4"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

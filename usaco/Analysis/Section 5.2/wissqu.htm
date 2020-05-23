@@ -1,0 +1,281 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 100: Wisconsin Squares</title> </head><body 
+background="wissqu_files/bg3.jpg">
+<img src="wissqu_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Wisconsin Squares</font></b><br>
+<b>Stefan Ciobaca</b>
+</center>
+
+<p>The solution to this problem is to just try every possible way to go.
+We use a DFS search of the solution space. However, a lot of 
+optimization
+is required.
+
+</p><p>We use an array "left". Left[0] is how many 'A' herds we need to 
+bring,
+left[1] how many 'B' herds we need to bring etc.
+
+</p><p>We also have array p[k][i][j]. p[k][i][j] is the number of herds 
+of type
+k that are on or near point i,j. If we have p[k][i][j] &gt; 0 than we 
+can't
+move a k herd onto i,j.
+
+</p><p>mark[i][j] is 1 if we have already moved a herd into position 
+i,j, else 0.
+
+</p><p>Function fill(int x, int y, int k, int inc) updates the p array. 
+For
+example, if we remove herd k from a position x,y, we call fill 
+(x,y,k,-1).
+This will add -1 (therefore subtract 1) from each position near x,y in
+p[k].
+
+</p><p>The backbone of the program is function back(int k).  This 
+function
+recursivly generates every possible move. When a solution is discovered,
+function solution() is called. If this is the first solution, than it is
+saved for printing to the output, else the number of solutions is
+incremented. Notice that because of the layout of the function back(int 
+k)
+the solutions are also ordered in lexicographic order.
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define MAX 4
+#define MAXLETTER 5
+
+FILE   *ferr;
+
+typedef int array[MAX][MAX];
+
+int     st[MAX * MAX], stx[MAX * MAX], sty[MAX * MAX], foundsol = 0,
+        sol[MAX * MAX], solx[MAX * MAX], soly[MAX * MAX], left[MAXLETTER];
+
+array   a, p[MAXLETTER], mark;
+
+void 
+readinput ()
+{
+    FILE   *fin = fopen ("wissqu.in", "r");
+    int     i, j;
+    char    k;
+
+    assert (fin != NULL);
+ /* read the matrix from the input file */
+    for (i = 0; i &lt; MAX; i++)
+	for (j = 0; j &lt; MAX; j++) {
+	    do {
+		k = fgetc (fin);
+	    } while (k &lt; 'A' || k &gt; 'E');
+	/* keep reading until we get a legal char */
+	    assert (k &gt;= 'A' &amp;&amp; k &lt;= 'E');
+	    a[i][j] = k - 'A';
+	}
+    fclose (fin);
+}
+
+/* called when a solution is found */
+void 
+solution ()
+{
+    int     i;
+
+    if (!foundsol) {		/* first solution ? */
+	foundsol = 1;
+    /* then save the solution */
+	for (i = 0; i &lt; MAX * MAX; i++) {
+	    sol[i] = st[i];
+	    solx[i] = stx[i];
+	    soly[i] = sty[i];
+	}
+    }
+    else			/* inc no of solutions */
+	foundsol++;
+}
+
+/* checks whether x and y are both in range 0..3 */
+inline int 
+ok (int x, int y)
+{
+    return x &gt;= 0 &amp;&amp; x &lt; MAX &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; MAX;
+}
+
+/* mark each surrounding position */
+void 
+fill (int x, int y, int k, int inc)
+{
+    int     i, j;
+
+    for (i = -1; i &lt;= 1; i++)
+	for (j = -1; j &lt;= 1; j++)
+	    if (ok (x + i, y + j)) {
+	    /* stupid sanity check */
+		assert (k &gt;= 0 &amp;&amp; k &lt;= 4);
+		assert (x + i &gt;= 0 &amp;&amp; x +
+		    i &lt; MAX);
+		assert (y + j &gt;= 0 &amp;&amp; y +
+		    j &lt; MAX);
+		p[k][x + i][y + j] +=
+		    inc;
+	    /* how many letters k are in the vecinity of x + i, y + i */
+	    /* if inc is negative, it means that we have just removed a k */
+	    /* else we have just added one */
+	    }
+}
+
+/* the main routine - does all the work */
+/* ABCDE */
+/* 01234 */
+void 
+back (int k)
+{
+    int     i, j, c, save;
+
+    assert (k &gt;= 0 &amp;&amp; k &lt;= MAX * MAX);
+
+/*
+	mark[i][j] - have we already moved a piece into position i,j?
+	p[c][i][j] - number of letters of type c ('A' &lt;= c &lt;= 'E')
+                     that are near or on point i,j
+*/
+
+    if (k == MAX * MAX)		/* we have built an solution */
+	solution ();
+    else {
+	if (k == 0) {
+	/* move a 'D' herd first */
+	    for (i = 0; i &lt; MAX; i++)
+		for (j = 0; j &lt; MAX; j++)
+		    if (p[3][i][j] == 0 &amp;&amp; mark[i][j] == 0) {
+			mark[i][j] = 1;
+
+		    /* save onto the stack */
+			st[k] = 3;
+			stx[k] = i;
+			sty[k] = j;
+
+		    /* remove old herd and add the new one */
+			save = a[i][j];
+			fill (i, j, a[i][j], -1);
+			a[i][j] = 3;
+			fill (i, j, a[i][j], 1);
+
+			back (k + 1);
+
+		    /* recreate the position */
+			fill (i, j, a[i][j], -1);
+			a[i][j] = save;
+			fill (i, j, a[i][j], 1);
+			mark[i][j] = 0;
+		    }
+	}
+	else {			/* 1 &lt;= k &lt; MAX * MAX ==&gt; may move any kind
+				   of herd */
+	    for (c = 0; c &lt; MAXLETTER; c++)
+		if (left[c] &gt; 0)/* check each letter we need */
+		    for (i = 0; i &lt; MAX; i++)
+			for (j = 0; j &lt; MAX; j++)
+			    if (p[c][i][j] == 0 &amp;&amp; mark[i][j] == 0)
+			    /* if we can move a type c herd into i,j and
+			       i,j hasn't been already occupied */
+			    {
+			    /* mark as occupied */
+				mark[i][j] = 1;
+				st[k] = c;	/* save it onto the stack */
+				stx[k] = i;
+				sty[k] = j;
+
+			    /* remove the old herd and bring in the new one */
+				save = a[i][j];
+				fill (i, j, a[i][j], -1);
+				a[i][j] = c;
+				fill (i, j, a[i][j], 1);
+				left[c]--;	/* we have just moved a
+						   herd of type c */
+				back (k + 1);
+
+			    /* restore everything */
+				fill (i, j, a[i][j], -1);
+				a[i][j] = save;
+				fill (i, j, a[i][j], 1);
+				left[c]++;
+				mark[i][j] = 0;
+			    }
+	}
+    }
+}
+
+void 
+solve ()
+{
+    int     i, j, k;
+
+ /* left[i] - is the number of herds of type i that haven't been already
+    moved */
+
+    for (i = 0; i &lt; MAXLETTER; i++)
+	left[i] = 3;
+
+ /* left['D' - 'A'] should have been 4, but at the first move we make the D
+    herd must be moved in */
+
+ /* mark[i][j] - have we brought a new herd into i,j ? */
+ /* initially all the locations are occupied by old herds */
+
+    for (i = 0; i &lt; MAX; i++)
+	for (j = 0; j &lt; MAX; j++)
+	    mark[i][j] = 0;
+
+ /* p[k][i][j] - how many type k herds are in the vecinity of position i,j? */
+
+    for (k = 0; k &lt; MAXLETTER; k++)
+	for (i = 0; i &lt; MAX; i++)
+	    for (j = 0; j &lt; MAX; j++)
+		p[k][i][j] = 0;
+
+    for (i = 0; i &lt; MAX; i++)
+	for (j = 0; j &lt; MAX; j++)
+	    fill (i, j, a[i][j], 1);
+
+ /* start the actual processing */
+    back (0);
+}
+
+void 
+writeoutput ()
+{
+    FILE   *fout = fopen ("wissqu.out", "w");
+    int     i;
+
+    if (foundsol != 0) {
+	for (i = 0; i &lt; MAX * MAX; i++)
+	    fprintf (fout, "%c %d %d\n", sol
+		[i] + 'A', solx[i] + 1, soly[i] + 1);
+    }
+    fprintf (fout, "%d\n", foundsol);
+    fclose (fout);
+}
+
+int 
+main ()
+{
+    readinput ();
+    solve ();
+    writeoutput ();
+
+    return 0;
+}
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

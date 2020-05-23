@@ -1,0 +1,87 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 packdel Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="packdel_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'packdel' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>
+This is a slight adaptation from the shortest path algorithm, where 
+instead of 
+minimizing distance, we are minimizing the number of treats used. This 
+means we 
+can use Dijkstra's algorithm to solve this. However, since this graph 
+can be 
+sparse, using an O(V^2) algorithm will be too slow, so we rely on a 
+priority 
+queue, which will reduce the complexity to O(E log V).
+</p>
+
+<p>
+Below is a sample solution by Damon.
+</p>
+
+<pre>#include &lt;queue&gt;
+#include &lt;vector&gt;
+#include &lt;stdio.h&gt;
+using namespace std;
+
+typedef unsigned long long ull;
+
+const int MAXN = 50005; const ull INF = -1;
+FILE *fin = fopen("packdel.in", "r"), *fout = fopen("packdel.out", "w");
+
+int N, M;
+ull best[MAXN];
+vector&lt;pair&lt;int, int&gt; &gt; adj[MAXN];
+priority_queue&lt;pair&lt;int, int&gt; &gt; Q;
+
+int main() {
+	int a, b, c;
+	fscanf(fin, "%d%d", &amp;N, &amp;M);
+
+	for (int i = 1; i &lt;= N; i++)
+		best[i] = INF;
+
+	for (int i = 0; i &lt; M; i++) {
+		fscanf(fin, "%d%d%d", &amp;a, &amp;b, &amp;c);
+		adj[a].push_back(make_pair(b, c));
+		adj[b].push_back(make_pair(a, c));
+	}
+
+	Q.push(make_pair(0, 1));
+
+	while (!Q.empty()) {
+		c = -Q.top().first;
+		a = Q.top().second;
+		Q.pop();
+
+		if (a == N)
+			break;
+
+		if (best[a] &lt; c)
+			continue;
+		
+		for (int i = 0; i &lt; adj[a].size(); i++) {
+			int next = adj[a][i].first, cost = adj[a][i].second;
+			if (c + cost &lt; best[next]) {
+				best[next] = c + cost;
+				Q.push(make_pair(-(c + cost), next));
+			}
+		}
+	}
+
+	fprintf(fout, "%llu\n", best[N]);
+	fclose(fin); fclose(fout);
+	return 0;
+}
+</pre>
+
+
+
+</body></html>

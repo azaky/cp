@@ -1,0 +1,374 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     13638,        365]
+NotebookOptionsPosition[     13187,        344]
+NotebookOutlinePosition[     13558,        360]
+CellTagsIndexPosition[     13515,        357]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 43", "Title",
+ CellChangeTimes->{{3.5363202860623407`*^9, 3.5363202980476847`*^9}}],
+
+Cell["\<\
+The number, 1406357289, is a 0 to 9 pandigital number because it is made up \
+of each of the digits 0 to 9 in some order, but it also has a rather \
+interesting sub-string divisibility property.
+
+Let d1 be the 1st digit, d2 be the 2nd digit, and so on. In this way, we note \
+the following:
+
+d2d3d4=406 is divisible by 2
+d3d4d5=063 is divisible by 3
+d4d5d6=635 is divisible by 5
+d5d6d7=357 is divisible by 7
+d6d7d8=572 is divisible by 11
+d7d8d9=728 is divisible by 13
+d8d9d10=289 is divisible by 17
+Find the sum of all 0 to 9 pandigital numbers with this property.\
+\>", "Text",
+ CellChangeTimes->{3.5363203074184003`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"list", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\n", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"m", "=", "0"}], ",", 
+   RowBox[{
+    RowBox[{"17", "*", "m"}], "<", "1000"}], ",", 
+   RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "0"}], ",", 
+      RowBox[{"i", "\[LessEqual]", "10"}], ",", 
+      RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"d", "[", "i", "]"}], "=", "0"}], ";", " ", 
+       RowBox[{
+        RowBox[{"digit", "[", "i", "]"}], "=", "0"}]}]}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"t", "=", 
+     RowBox[{"17", "*", "m"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "10"}], ",", 
+      RowBox[{"i", ">", "7"}], ",", 
+      RowBox[{"i", "--"}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"d", "[", "i", "]"}], "=", 
+        RowBox[{"Mod", "[", 
+         RowBox[{"t", ",", "10"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"t", "=", 
+        RowBox[{"\[LeftFloor]", 
+         RowBox[{"t", "/", "10"}], "\[RightFloor]"}]}], ";", 
+       RowBox[{
+        RowBox[{"digit", "[", 
+         RowBox[{"d", "[", "i", "]"}], "]"}], "++"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"digit", "[", 
+           RowBox[{"d", "[", "i", "]"}], "]"}], ">", "1"}], ",", 
+         RowBox[{"Goto", "[", "end", "]"}]}], "]"}]}]}], "]"}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"num", "=", 
+     RowBox[{
+      RowBox[{"10", "*", 
+       RowBox[{"d", "[", "8", "]"}]}], "+", 
+      RowBox[{"d", "[", "9", "]"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "0"}], ",", 
+      RowBox[{"i", "\[LessEqual]", "9"}], ",", 
+      RowBox[{"i", "++"}], ",", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Mod", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"100", "*", "i"}], "+", "num"}], ",", "13"}], "]"}], 
+         "\[Equal]", "0"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"d", "[", "7", "]"}], "=", "i"}], ";", 
+         RowBox[{
+          RowBox[{"digit", "[", 
+           RowBox[{"d", "[", "7", "]"}], "]"}], "++"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"digit", "[", 
+             RowBox[{"d", "[", "7", "]"}], "]"}], ">", "1"}], ",", 
+           RowBox[{"Goto", "[", "end", "]"}]}], "]"}]}]}], "]"}]}], "]"}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"d", "[", "7", "]"}], "\[Equal]", "0"}], ",", 
+      RowBox[{"Goto", "[", "end", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"num", "=", 
+     RowBox[{
+      RowBox[{"10", "*", 
+       RowBox[{"d", "[", "7", "]"}]}], "+", 
+      RowBox[{"d", "[", "8", "]"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "0"}], ",", 
+      RowBox[{"i", "\[LessEqual]", "5"}], ",", 
+      RowBox[{"i", "+=", "5"}], ",", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Mod", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"100", "*", "i"}], "+", "num"}], ",", "11"}], "]"}], 
+         "\[Equal]", "0"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"d", "[", "6", "]"}], "=", "i"}], ";", 
+         RowBox[{
+          RowBox[{"digit", "[", 
+           RowBox[{"d", "[", "6", "]"}], "]"}], "++"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"digit", "[", 
+             RowBox[{"d", "[", "6", "]"}], "]"}], ">", "1"}], ",", 
+           RowBox[{"Goto", "[", "end", "]"}]}], "]"}]}]}], "]"}]}], "]"}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"d", "[", "6", "]"}], "\[Equal]", "0"}], ",", 
+      RowBox[{"Goto", "[", "end", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"d5", "=", "0"}], ",", 
+      RowBox[{"d5", "\[LessEqual]", "9"}], ",", 
+      RowBox[{"d5", "++"}], ",", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"digit", "[", "d5", "]"}], "\[Equal]", "0"}], "&&", 
+         RowBox[{
+          RowBox[{"Mod", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"100", "*", "d5"}], "+", 
+             RowBox[{"10", "*", 
+              RowBox[{"d", "[", "6", "]"}]}], "+", 
+             RowBox[{"d", "[", "7", "]"}]}], ",", "7"}], "]"}], "\[Equal]", 
+          "0"}]}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"d", "[", "5", "]"}], "=", "d5"}], ";", " ", 
+         RowBox[{
+          RowBox[{"digit", "[", "d5", "]"}], "++"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"d4", "=", "0"}], ",", 
+           RowBox[{"d4", "\[LessEqual]", "8"}], ",", 
+           RowBox[{"d4", "+=", "2"}], ",", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"digit", "[", "d4", "]"}], "\[Equal]", "0"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"d", "[", "4", "]"}], "=", "d4"}], ";", " ", 
+              RowBox[{
+               RowBox[{"digit", "[", "d4", "]"}], "++"}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"For", "[", 
+               RowBox[{
+                RowBox[{"d3", "=", "0"}], ",", 
+                RowBox[{"d3", "\[LessEqual]", "9"}], ",", 
+                RowBox[{"d3", "++"}], ",", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"digit", "[", "d3", "]"}], "\[Equal]", "0"}], "&&", 
+                   RowBox[{
+                    RowBox[{"Mod", "[", 
+                    RowBox[{
+                    RowBox[{"d3", "+", "d4", "+", "d5"}], ",", "3"}], "]"}], 
+                    "\[Equal]", "0"}]}], ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"d", "[", "3", "]"}], "=", "d3"}], ";", " ", 
+                   RowBox[{
+                    RowBox[{"digit", "[", "d3", "]"}], "++"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"For", "[", 
+                    RowBox[{
+                    RowBox[{"a", "=", "0"}], ",", 
+                    RowBox[{"a", "\[LessEqual]", "9"}], ",", 
+                    RowBox[{"a", "++"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"digit", "[", "a", "]"}], "\[Equal]", "0"}], ",", 
+                    RowBox[{
+                    RowBox[{"d1", "=", "a"}], ";", 
+                    RowBox[{"Break", "[", "]"}]}]}], "]"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"For", "[", 
+                    RowBox[{
+                    RowBox[{"a", "=", "9"}], ",", 
+                    RowBox[{"a", "\[GreaterEqual]", "0"}], ",", 
+                    RowBox[{"a", "--"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"digit", "[", "a", "]"}], "\[Equal]", "0"}], ",", 
+                    RowBox[{
+                    RowBox[{"d2", "=", "a"}], ";", 
+                    RowBox[{"Break", "[", "]"}]}]}], "]"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"d", "[", "1", "]"}], "=", "d2"}], ";", " ", 
+                   RowBox[{
+                    RowBox[{"d", "[", "2", "]"}], "=", "d1"}], ";", " ", 
+                   RowBox[{"list", "=", 
+                    RowBox[{"Append", "[", 
+                    RowBox[{"list", ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"d", "[", "i", "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "1", ",", "10"}], "}"}]}], "]"}]}], 
+                    "]"}]}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"d1", ">", "0"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"d", "[", "1", "]"}], "=", "d1"}], ";", 
+                    RowBox[{
+                    RowBox[{"d", "[", "2", "]"}], "=", "d2"}], ";", " ", 
+                    RowBox[{"list", "=", 
+                    RowBox[{"Append", "[", 
+                    RowBox[{"list", ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"d", "[", "i", "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "1", ",", "10"}], "}"}]}], "]"}]}], 
+                    "]"}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"digit", "[", "d3", "]"}], "--"}]}]}], "]"}]}], 
+               "]"}], ";", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"digit", "[", "d4", "]"}], "--"}]}]}], "]"}]}], "]"}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"digit", "[", "d5", "]"}], "--"}]}]}], "]"}]}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Label", "[", "end", "]"}], ";"}]}], "\[IndentingNewLine]", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Sum", "[", 
+    RowBox[{
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["10", 
+         RowBox[{"10", "-", "i"}]], "\[Times]", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"k", ",", "i"}], "]"}], "]"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"Length", "[", 
+          RowBox[{"list", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"k", ",", "1", ",", 
+       RowBox[{"Length", "[", "list", "]"}]}], "}"}]}], "]"}], "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.536320320157305*^9, 3.536320449492275*^9}, {
+   3.5363205416689415`*^9, 3.53632063475208*^9}, {3.536320675672518*^9, 
+   3.5363209594474163`*^9}, {3.5363210148182096`*^9, 
+   3.5363210881051636`*^9}, {3.536321164274132*^9, 3.5363212048051915`*^9}, {
+   3.5363212433773804`*^9, 3.5363214447567472`*^9}, {3.5363215035257053`*^9, 
+   3.536321738741124*^9}, {3.536321777692522*^9, 3.5363218746331367`*^9}, {
+   3.5363219305139227`*^9, 3.536321937367905*^9}, {3.536322025015438*^9, 
+   3.536322313237528*^9}, {3.536322398040097*^9, 3.53632241539109*^9}, {
+   3.5363224696381927`*^9, 3.5363225457357335`*^9}, {3.5363225866580997`*^9, 
+   3.5363226755341997`*^9}, {3.5363228022632666`*^9, 
+   3.5363228375164633`*^9}, {3.5363228778719206`*^9, 3.536322979383684*^9}, {
+   3.5363230251743116`*^9, 3.536323026936209*^9}, {3.536323071589604*^9, 
+   3.536323091357691*^9}, {3.5363974109225187`*^9, 3.536397412186121*^9}, 
+   3.536397525749196*^9}],
+
+Cell[BoxData["16695334890"], "Print",
+ CellChangeTimes->{{3.5363228065774956`*^9, 3.5363228381342936`*^9}, {
+   3.5363228876994605`*^9, 3.536322900501258*^9}, 3.5363229797914953`*^9, 
+   3.5363230294843407`*^9, {3.5363230806874866`*^9, 3.5363230917127113`*^9}, 
+   3.5363231910954747`*^9, 3.5363235351349297`*^9, {3.5363973987700977`*^9, 
+   3.536397412747722*^9}, 3.536397526856798*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{264, Automatic}, {Automatic, 30}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 110, 1, 83, "Title"],
+Cell[692, 25, 632, 17, 245, "Text"],
+Cell[CellGroupData[{
+Cell[1349, 46, 11420, 287, 734, "Input"],
+Cell[12772, 335, 387, 5, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

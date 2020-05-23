@@ -1,0 +1,1 @@
+int t,n,i,j,x,d[111],a;int m(a,b){return a>b?a:b;}int main(){scanf("%d",&t);while(t--){scanf("%d",&n);a=d[n+1]=0;for(i=n;i;--i){for(j=i;j<=n;++j){scanf("%d",&x);d[j]=x+(j==i?d[j+1]:m(d[j],d[j+1]));a=m(a,d[j]);}}printf("%d\n",a);}return 0;}

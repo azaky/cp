@@ -1,0 +1,74 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 charms Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="charms_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'charms' Analysis</h2>
+<h4>by Sherry Wu</h4>
+<p>Notice that the top part of the bracelet (the portion "above" the 
+nail) droops
+down, as does the bottom of the bracelet. </p>
+
+<p>For simplicity's sake, let us consider the first case. The distance 
+of the
+charm from the nail is the sum of the length of the charm's string and 
+the
+distance from the nail location to the start of the charm's string, 
+which can
+be written as N - P_i + S_i.</p>
+
+<p>Now consider the latter case. Again, the distance of the charm from 
+the nail is
+the sum of the length of the charm's string and the distance from the 
+nail
+location to the start of the charm's string, which can be written as P_i
+ - N +
+S_i.</p>
+
+<p>We can combine the two expressions because abs(P_i - N) (or abs(N - 
+P_i)) is N
+- P_i when N &gt;= P_i and P_i - N when N &lt; P_i, which results in 
+abs(P_i - N) +
+S_i. Now we loop over all i beads and sum the distances.</p>
+
+<p>Here is my code that solves the problem:</p>
+
+<pre>/*
+LANG: C++
+*/
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+
+using namespace std;
+
+ifstream in("charms.in");
+ofstream out("charms.out");
+int L, C, N;
+
+int main()
+{
+	in &gt;&gt; L &gt;&gt; C &gt;&gt; N;
+	for(int i = 0; i &lt; C; ++i)
+	{
+		int S_i, P_i;
+		in &gt;&gt; S_i &gt;&gt; P_i;
+		out &lt;&lt; abs(P_i - N) + S_i &lt;&lt; "\n";
+	}
+
+	in.close();
+	out.close();
+
+	return 0;
+}
+</cstdlib></fstream></iostream></pre>
+
+
+
+</body></html>

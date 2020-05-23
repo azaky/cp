@@ -1,0 +1,153 @@
+
+<!-- saved from url=(0061)http://competition.binus.ac.id/contest/team/problem.php?id=26 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>INC 2016 - F. Shady Antique Collector</title>
+
+<style>
+body, p, li, td {
+	font-family: "Arial";
+	font-size: 12pt;
+	line-height: 1.5;
+}
+li {
+	padding-bottom: 10px;
+}
+.norm{
+	font-family: "Cambria Math";
+	font-size: 13pt;
+}
+.block{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;	
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2016</h3>
+<h2>Problem F</h2>
+<h1>Shady Antique Collector</h1>
+Time Limit: 10 seconds
+</center>
+<br>
+
+<p>Blue is a shady antique collector. Recently, through his shady connection, he managed to get himself a map of a certain dungeon which is known to be the home of some antique treasures. Fortunately for him, the map also came with the location of each treasure. The dungeon can be represented as a grid map of R rows and C columns. Each character in the map is:
+</p><ul>
+<li>'<font face="Courier New">E</font>' – represents the entrance/exit to the dungeon (you're also able to pass through this cell without exiting),</li>
+<li>'<font face="Courier New">.</font>' – represents an empty cell,</li>
+<li>'<font face="Courier New">#</font>' – represents an obstacle (you cannot go through this cell),</li>
+<li>'<font face="Courier New">0</font>' .. '<font face="Courier New">9</font>' – represents a cell with treasure (different number means different kind of treasure).</li>
+</ul>
+You always starts from the cell indicated by character '<font face="Courier New">E</font>', which also serves as your exit point. From any cell, you can only move to its adjacent cells (north, south, west, east) given the destination cell is not an obstacle or out of the map.<p></p>
+
+<p>Blue is a shady antique collector; he is neither an explorer nor hunter. He can hire one or more explorers from the Association for Collector and Marvel. However, the price of hiring explorers does not depend on the number of explorers being hired (he can hire all the available explorers if he want), but strictly depends on the time used by the explorers to do the exploring; specifically, the longest time spent by any explorer. Moreover, the explorers accept the direction given by Blue, in other words, the explorers movement are fully determined by Blue.</p>
+
+<p>Blue decides to get at least K unique treasures from this dungeon. Note that there may be more than one of each treasure which are identical (represented by the same number in the map), but Blue's only concern is K unique treasures regardless of the total quantity.
+Help him to determine the minimum time required to collect at least K unique treasures when there are M explorers available for hire. Assume moving to adjacent cell cost 1 unit of time and picking any treasure cost no time.</p>
+
+<p>For example, let's consider the following map of 5 x 5:</p>
+
+<pre>E#1.0
+.##.#
+....#
+###.4
+32442</pre>
+
+<p>There are 5 unique treasures in this map (<font face="Courier New">0</font>, <font face="Courier New">1</font>, <font face="Courier New">2</font>, <font face="Courier New">3</font>, and <font face="Courier New">4</font>) with some duplicates (e.g., there are two treasure <font face="Courier New">2</font>, and three treasure <font face="Courier New">4</font>).</p>
+
+<p>Let K = 4, if there is only 1 available explorer, then he needs 24 unit of times. Follow is one example path. Blue color represents the starting point, red color represents the path; notice that there are 24 red marks on this example. The collected treasures are <font face="Courier New">0</font>, <font face="Courier New">1</font>, <font face="Courier New">2</font>, and <font face="Courier New">4</font>.</p>
+
+<style>
+font.path  { color:red; font-weight:bold; }
+font.start { color:blue; font-weight:bold; }
+</style>
+
+<pre><font class="start">E</font>#1<font class="path">.0</font>   E#<font class="path">1.</font><font class="start">0</font>   E#<font class="start">1</font><font class="path">.</font>0   E#1.0   <font class="path">E</font>#1.0
+<font class="path">.</font>##<font class="path">.</font>#   .##.#   .##<font class="path">.</font>#   .##.#   <font class="path">.</font>##.#
+<font class="path">....</font>#   ....#   ...<font class="path">.</font>#   ....#   <font class="path">....</font>#
+###.4   ###.4   ###<font class="path">.</font>4   ###.4   ###<font class="path">.</font>4
+32442   32442   324<font class="path">4</font>2   324<font class="start">4</font><font class="path">2</font>   324<font class="path">4</font><font class="start">2</font>
+</pre>
+
+<p>If there are 2 available explorers (and K = 4), then they need 18 unit of time. Follow is one example to achieve that. Explorer #1 collects treasure <font face="Courier New">0</font> and <font face="Courier New">1</font> in 18 unit of time, while Explorer #2 collects treasure <font face="Courier New">2</font> and <font face="Courier New">4</font> in 16 unit of time. Thus, the total time is max(18, 16) = 18 unit of time.</p>
+
+<p>Path for Explorer #1 (collecting treasure <font face="Courier New">0</font> and <font face="Courier New">1</font>) – 18 unit of time:</p>
+<pre><font class="start">E</font>#1<font class="path">.0</font>   E#<font class="path">1.</font><font class="start">0</font>   <font class="path">E</font>#<font class="start">1</font><font class="path">.</font>0
+<font class="path">.</font>##<font class="path">.</font>#   .##.#   <font class="path">.</font>##<font class="path">.</font>#
+<font class="path">....</font>#   ....#   <font class="path">....</font>#
+###.4   ###.4   ###.4
+32442   32442   32442
+</pre>
+
+<p>Path for Explorer #2 (collecting treasure <font face="Courier New">2</font> and <font face="Courier New">4</font>) – 16 unit of time:</p>
+<pre><font class="start">E</font>#1.0   E#1.0   <font class="path">E</font>#1.0
+<font class="path">.</font>##.#   .##.#   <font class="path">.</font>##.#
+<font class="path">....</font>#   ....#   <font class="path">....</font>#
+###<font class="path">.</font>4   ###.4   ###<font class="path">.</font>4
+324<font class="path">4</font>2   324<font class="start">4</font><font class="path">2</font>   324<font class="path">4</font><font class="start">2</font>
+</pre>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (T &#8804; 100) denoting the number of cases. Each case begins with four integers: R, C, K, M (2 &#8804; R, C &#8804; 30; 0 &#8804; K &#8804; 10; 1 &#8804; M &#8804; 50) denoting the number of rows and columns of the map, minimum number of unique treasures required by Blue, and number of available explorers, respectively. The next R following lines each contains C characters representing the given map. Each character in the map is one of the following: <font face="Courier New">E0123456789.#</font> which meaning can be found in the problem statement. There will be exactly one '<font face="Courier New">E</font>' in the map.</p>
+
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number, starts from 1, and <font face="Courier New">Y</font> is the minimum time required to collect at least K unique treasures with M explorers for that particular case, or -1 if it's not possible to do so.</p>
+
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td align="center">
+<table border="0" cellspacing="1" cellpadding="4" width="700">
+<tbody><tr><th align="left" width="*" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF">
+<pre>4
+5 5 4 1
+E#1.0
+.##.#
+....#
+###.4
+32442
+5 5 4 2
+E#1.0
+.##.#
+....#
+###.4
+32442
+3 5 5 5
+..E.3
+.###0
+.73#3
+7 7 4 4
+..#321.
+2.#.#..
+3##.###
+0..E..2
+###.##1
+..#.#.0
+.301#..
+</pre>
+</td><td bgcolor="#FFFFFF">
+<pre>Case #1: 24
+Case #2: 18
+Case #3: -1
+Case #4: 6
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+<br><br>
+<p><i>Explanation for 3<sup>rd</sup> sample case</i></p>
+<p>There are only 3 unique treasures in the given map (<font face="Courier New">0</font>, <font face="Courier New">3</font>, and <font face="Courier New">7</font>), thus, there's no way to get 5 unique treasures in this case.</p>
+<br>
+<p><i>Explanation for 4<sup>th</sup> sample case</i></p>
+<p>Dispatch each explorer to different direction and collects only the nearest treasure.</p>
+<br>
+
+<br><br>
+</com:tcontent><script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>

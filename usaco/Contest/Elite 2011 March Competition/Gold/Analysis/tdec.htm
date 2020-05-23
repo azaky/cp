@@ -1,0 +1,99 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 tdec Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="tdec_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'tdec' Analysis</h2>
+<h4>by Paul Christiano</h4>
+<p>
+In a single depth first search through the tree, we can recursively 
+compute the
+minimum cost of placing an ornament in each rooted subtree and the 
+minimum
+number of ornaments needed in each subtree to satisfy all constraints 
+(the
+number of ornaments needed in a subtree might be larger than C_i).  
+</p>
+
+<p>
+Once we have this information we can find the optimal ornament 
+configuration
+greedily. For each subtree, we compute the number of additional 
+ornaments
+needed to satisfy that subtree once all of its children have already 
+been
+satisfied. Each of these additional ornaments might as well be placed at
+ the
+least expensive location within the subtree. Summing these costs over 
+every
+subtree we obtain the optimum. 
+</p>
+
+Solution by Travis Hance:
+
+<pre>#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+typedef long long ll;
+
+#define nmax 100005
+
+vector&lt;int&gt; edges[nmax];
+ll min_ornaments[nmax];
+ll cost[nmax];
+ll placed_ornaments[nmax];
+ll min_cost[nmax];
+
+ll total_cost = 0;
+
+
+void dfs(int a) {
+	placed_ornaments[a] = 0;
+	min_cost[a] = cost[a];
+	for(int i = 0; i &lt; edges[a].size(); i++) {
+		dfs(edges[a][i]);
+		placed_ornaments[a] += placed_ornaments[edges[a][i]];
+		if(min_cost[edges[a][i]] &lt; min_cost[a])
+			min_cost[a] = min_cost[edges[a][i]];
+	}
+	if(placed_ornaments[a] &lt; min_ornaments[a]) {
+		total_cost += min_cost[a] * (min_ornaments[a] - placed_ornaments[a]);
+		placed_ornaments[a] = min_ornaments[a];
+	}
+}
+
+int main() {
+#ifndef NOTGRADER
+	freopen("tdec.in","r",stdin);
+	freopen("tdec.out","w",stdout);
+#endif
+
+	int n;
+	scanf("%d", &amp;n);
+	for(int i = 0; i &lt; n; i++) {
+		int parent;
+		scanf("%d", &amp;parent);
+		if(parent != -1)
+			edges[parent-1].push_back(i);
+		int mo, c;
+		scanf("%d", &amp;mo);
+		scanf("%d", &amp;c);
+		min_ornaments[i] = (ll)mo;
+		cost[i] = (ll)c;
+	}
+
+	dfs(0);
+
+	printf("%lld\n", total_cost);
+}
+</pre>
+
+
+
+</body></html>

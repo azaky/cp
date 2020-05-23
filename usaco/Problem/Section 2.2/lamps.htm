@@ -1,0 +1,114 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 22: Party Lamps</title> </head><body 
+background="lamps_files/bg3.jpg">
+<img src="lamps_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Party Lamps</font></b><br>
+<b>IOI 98</b>
+</center>
+
+<p>To brighten up the gala dinner of the IOI'98 we have a set of <b>N</b>
+(10 &lt;= N &lt;= 100) colored lamps numbered from 1 to <b>N</b>.
+
+</p><p>The lamps are connected to four buttons:</p><p>
+</p><ul>
+<li>Button 1:  When this button is pressed, all the lamps change their
+    state: those that are ON are turned OFF and those that are OFF are 
+turned
+    ON.</li>
+
+<li>Button 2: Changes the state of all the odd numbered lamps.</li>
+
+<li>Button 3: Changes the state of all the even numbered lamps.</li>
+
+<li>Button 4: Changes the state of the lamps whose number is of the form
+3xK+1 (with K&gt;=0), i.e., 1,4,7,...</li>
+</ul>
+
+<p>A counter C records the total number of button presses.
+
+</p><p>When the party starts, all the lamps are ON and the counter C
+is set to zero.
+
+</p><p>You are given the value of counter C (0 &lt;= C &lt;= 10000) and 
+the
+final state of some of the lamps after some operations have been 
+executed.
+Write a program to determine all the possible final configurations of
+the N lamps that are consistent with the given information, without
+repetitions.
+
+</p><h3>PROGRAM NAME: lamps</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p> No lamp will be listed twice in the input.
+
+</p><table border="1">
+<tbody><tr> <td> Line 1: </td> <td>N </td> </tr>
+<tr> <td> Line 2: </td> <td>Final value of C </td> </tr>
+<tr> <td> Line 3: </td> <td> Some lamp numbers ON in the final
+			     configuration, separated by one space and
+			     terminated by the integer -1.  </td> </tr>
+<tr> <td> Line 4: </td> <td> Some lamp numbers OFF in the final
+			     configuration, separated by one space and
+			     terminated by the integer -1.
+</td> </tr>
+
+</tbody></table>
+
+<h3>SAMPLE INPUT (file lamps.in) </h3>
+
+<pre>10
+1
+-1
+7 -1
+</pre>
+
+<p>In this case, there are 10 lamps and only one button has been 
+pressed.
+Lamp 7 is OFF in the final configuration.
+
+</p><h3>OUTPUT FORMAT</h3>
+
+<p>Lines with all the possible final configurations (without 
+repetitions)
+of all the lamps.  Each line has N characters, where the first character
+represents the state of lamp 1 and the last character represents the
+state of lamp N.  A 0 (zero) stands for a lamp that is OFF, and a 1
+(one) stands for a lamp that is ON.  The lines must be ordered from
+least to largest (as binary numbers).
+
+</p><p>If there are no possible configurations, output a single line 
+with
+the single word `IMPOSSIBLE'
+
+</p><h3>SAMPLE OUTPUT (file lamps.out)</h3>
+
+<pre>0000000000
+0101010101
+0110110110
+</pre>
+
+In this case, there are three possible final configurations:
+<ul>
+<li>All lamps are OFF</li>
+<li>Lamps 1, 4, 7, 10 are OFF and lamps 2, 3, 5, 6, 8, 9 are <b>ON</b>.</li>
+<li>Lamps 1, 3, 5, 7, 9 are OFF and lamps 2, 4, 6, 8, 10 are <b>ON</b>.</li>
+</ul>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="7hbC2bLFLrV" type="hidden">
+<input name="S" value="lamps" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=7hbC2bLFLrV"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,111 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - H</title>
+
+<style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem H</h2>
+<h1>The Shortest Problem</h1>
+Time Limit: 4 seconds
+</center>
+<br>
+
+<p>Hooray! You have came to the right problem! This problem has the shortest description... at least in this contest :-)</p>
+<p>In this task, you are given an undirected unrooted tree of N vertices and Q queries; you should process all queries one by one.</p>
+<p>
+There are two types of query:
+</p><ul>
+<li><font face="Courier New">u A B K</font>&nbsp;&nbsp;: add all vertices' value that lie in the path from node A to B, inclusive, by K (could be negative).</li>
+<li><font face="Courier New">q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>&nbsp;&nbsp;: output the highest value of any vertex in the entire tree at that moment.</li>
+</ul>
+Initially all vertices have zero value.
+<p></p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with two integers N and Q (1 &#8804; N &#8804; 
+20,000; 1 &#8804; Q &#8804; 5,000) denoting the number of vertices in the tree and 
+the number of queries respectively. The vertices are numbered from 1..N.
+ The next N-1 lines each contains two integers a<sub>i</sub> and b<sub>i</sub> (1 &#8804; a<sub>i</sub>, b<sub>i</sub> &#8804; N; a &#8800; b) representing an edge connecting vertex a<sub>i</sub> and vertex b<sub>i</sub>. The next Q lines contains one of the two following format:
+</p><ol>
+<li><font face="Courier New">u a<sub>i</sub> b<sub>i</sub> k<sub>i</sub></font> (1 &#8804; a<sub>i</sub>, b<sub>i</sub> &#8804; N; -1,000 &#8804; k<sub>i</sub> &#8804; 1,000) .</li>
+<li><font face="Courier New">q</font></li>
+</ol>
+There will be at least one <font face="Courier New">q</font> query.<p></p>
+<p><i>Warning: This problem has a large input file.</i></p><br>
+
+
+<p></p>
+
+<h3>Output</h3>
+<p>For each case, output in a line "<font face="Courier New">Case #X:</font>" where <font face="Courier New">X</font> is the case number starts from 1. For each <font face="Courier New">q</font> query in the input, output in a line the highest value in any vertex in the tree at that moment. </p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="600" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="250" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
+5 7
+1 2
+2 3
+3 4
+2 5
+u 1 3 2
+u 5 4 3
+q
+u 2 3 -4
+q
+u 1 1 10
+q
+3 5
+1 2
+2 3
+q
+u 1 2 -5
+q
+u 2 3 -6
+q
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1:
+5
+3
+12
+Case #2:
+0
+0
+-5
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br><br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>The initial condition:</p>
+<img src="h_files/h-1.gif" height="129" width="279">
+<p>After the first update (<font face="Courier New">u 1 3 2</font>):</p>
+<img src="h_files/h-2.gif" height="129" width="279">
+<p>After the second update (<font face="Courier New">u 5 4 3</font>):</p>
+<img src="h_files/h-3.gif" height="129" width="279">
+<p><font face="Courier New">q</font> query on this tree will output 5 (node 2 and node 3 have such value).</p>
+<p>After the third update (<font face="Courier New">u 2 3 -4</font>):</p>
+<img src="h_files/h-4.gif" height="129" width="279">
+<p><font face="Courier New">q</font> query on this tree will output 3 (node 4 and node 5 have such value).</p>
+<p>After the fourth update (<font face="Courier New">u 1 1 10</font>):</p>
+<img src="h_files/h-5.gif" height="129" width="279">
+<p><font face="Courier New">q</font> query on this tree will output 12 (node 1 has such value).</p>
+
+
+<br><br>
+</com:tcontent></body></html>

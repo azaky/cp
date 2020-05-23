@@ -1,0 +1,124 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3191,        115]
+NotebookOptionsPosition[      2640,         90]
+NotebookOutlinePosition[      3009,        106]
+CellTagsIndexPosition[      2966,        103]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 56", "Title",
+ CellChangeTimes->{{3.536402094154317*^9, 3.5364021001915274`*^9}}],
+
+Cell[TextData[{
+ "A googol ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    SuperscriptBox["10", "100"]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ") is a massive number: one followed by one-hundred zeros; ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["100", "100"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is almost unimaginably large: one followed by two-hundred zeros. Despite \
+their size, the sum of the digits in each number is only 1.\n\nConsidering \
+natural numbers of the form, ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["a", "b"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", where a, b < 100, what is the maximum digital sum?"
+}], "Text",
+ CellChangeTimes->{{3.536402104996336*^9, 3.536402123591569*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Max", "[", 
+  RowBox[{"Flatten", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Total", "[", 
+      RowBox[{"IntegerDigits", "[", 
+       SuperscriptBox["a", "b"], "]"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"a", ",", "100"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"b", ",", "100"}], "}"}]}], "]"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.5364021342619877`*^9, 3.5364022434475794`*^9}, {
+  3.5364835920450687`*^9, 3.5364836101471167`*^9}}],
+
+Cell[BoxData["972"], "Output",
+ CellChangeTimes->{
+  3.536402244383581*^9, {3.5364835841923094`*^9, 3.5364836114199743`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Max", "@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"Total", "@", 
+     RowBox[{"IntegerDigits", "[", 
+      RowBox[{"a", "^", "b"}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "100"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"b", ",", "100"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.5364837307965627`*^9, 3.5364837307975626`*^9}}],
+
+Cell[BoxData["972"], "Output",
+ CellChangeTimes->{3.5364837316966143`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{96, Automatic}, {8, Automatic}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 108, 1, 83, "Title"],
+Cell[690, 25, 764, 21, 85, "Text"],
+Cell[CellGroupData[{
+Cell[1479, 50, 499, 13, 33, "Input"],
+Cell[1981, 65, 125, 2, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2143, 72, 392, 11, 31, "Input"],
+Cell[2538, 85, 74, 1, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

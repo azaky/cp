@@ -1,0 +1,84 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>INC 2013 - J</title>
+
+<style>
+body, p {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2013</h3>
+<h2>Problem J</h2>
+<h1>Longest Common Prefix</h1>
+Time Limit: 2 seconds
+</center>
+<br>
+
+<p>A prefix of a string S = a<sub>1</sub>...a<sub>n</sub> is defined as S' = a<sub>1</sub>...a<sub>m</sub> where m &#8804; n. In other words, prefix of S is a continuous substring which starts from the beginning of S.</p>
+
+<p>For example, let S = "CODER".</p>
+<img src="j_files/j-1.gif"><br>
+<p>There are 5 prefixes of S, which are: "C", "CO", "COD", "CODE" and "CODER" itself.</p>
+
+<p>Now, a common prefix of a collection of string U = {S<sub>1</sub>, ..., S<sub>N</sub>} is defined as a string which is a prefix for all strings in U.</p>
+<p>For example, let U = { "MAU", "MAKAN", "MALAM" }.</p>
+<img src="j_files/j-2.gif"><br>
+<p>There are 2 common prefixes of U, which are: "M" and "MA". Among 
+these common prefixes, the longest common prefix is "MA" which has a 
+length of 2.</p>
+
+<p>In this task, you are given a collection of N strings and you have to
+ determine what the longest common prefix of those N strings is.</p>
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the 
+number of cases. Each case begins with an integer N (2 &#8804; N &#8804; 5) denoting
+ the number of strings in the collection. The next N lines each contains
+ a string S<sub>i</sub>. Each string consists of only uppercase alphabets ('A'..'Z') with length between 1 and 100.</p>
+
+<h3>Output</h3>
+<p>For each case, output in a line the "<font face="Courier New">Case #X: Y</font>" where <font face="Courier New">X</font> is the case number starts from 1, and <font face="Courier New">Y</font> is the longest common prefix of the given collection. You may assume the length of the longest common prefix is at least 1.</p>
+<br>
+
+<br><table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>
+<table width="700" border="0" cellpadding="4" cellspacing="1">
+<tbody><tr><th width="*" align="left" bgcolor="#FFFFFF">Sample Input</th><th width="250" align="left" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>4
+3
+MAU
+MAKAN
+MALAM
+2
+CODER
+CODING
+2
+ICPC
+INDONESIA
+3
+ABCDEF
+ABCD
+ABCDEFGHIJ
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: MA
+Case #2: COD
+Case #3: I
+Case #4: ABCD
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+
+
+
+
+
+<br><br>
+</com:tcontent></body></html>

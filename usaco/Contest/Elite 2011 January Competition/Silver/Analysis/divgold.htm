@@ -1,0 +1,203 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 divgold Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="divgold_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'divgold' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>The first key thing to notice here is that the sum of one pile
+is uniquely determined by the sum of the other pile. Let <tt>S</tt>
+denote the sum of all the values of the coins (<tt>S = v<sub>1</sub>
++ v<sub>2</sub> + v<sub>3</sub> + ... + v<sub>N</sub></tt>).  </p>
+
+<p> We can see that the cows want to split the pile as close to
+<tt>S / 2</tt> as possible. This then becomes a knapsack problem,
+where <tt>S / 2</tt> is our goal, and the <tt>v<sub>i</sub>'s</tt>
+are the items we can use.  </p>
+
+<p> We keep two one-dimensional arrays. One is called <tt>dp</tt>,
+and the other is called <tt>ways</tt>. <tt>dp [i]</tt> is true if
+we can make a pile value <tt>i</tt> with some of the coins. <tt>ways
+[i]</tt> is the number of ways to make that pile (<tt>ways [i] =
+0</tt> if <tt>!dp [i]</tt>). We need to be careful in that we include
+each coin only exactly once, so we traverse the array backward (this
+is a useful trick to remember). For each coin (<tt>i</tt>), we then
+traverse the array and set <tt>dp [j]</tt> to be true if <tt>dp [j
+- v_i]</tt> is true and add <tt>ways [j - v_i]</tt> to <tt>ways
+[j]</tt>. Since we are only interested in the last 6 digits, we
+take the modulus of ways each time (since <tt>(a+b)%m =
+((a%m)+(b%m))%m)</tt>. Our base case is that <tt>ways [0]</tt> is
+1, and <tt>dp [0]</tt> = true, since there is only one way to reach
+0 (the empty set of coins).  </p>
+
+<p> Let <tt>p</tt> be the closest reachable number to <tt>S / 2</tt>.
+The pile sizes will then be <tt>p</tt> and <tt>S - p</tt>, and we
+just take the difference to get our answer. To get our answer, we
+start from <tt>S / 2</tt> and decrease <tt>p</tt> one by one until
+<tt>dp [p]</tt> is true. Then, we just output <tt>(S-p)-p</tt> and
+<tt>ways [p]</tt> and we are done.  </p>
+
+<p> The running-time for this algorithm is <tt>O(NS)</tt>, where
+<tt>N</tt> is the number of items, and <tt>S</tt> is the sum of all
+the values </p>
+
+<p> Here is my solution which implements this algorithm </p>
+
+<div><div id="highlighter_891932" class="syntaxhighlighter  java"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="java keyword">import</code> <code class="java plain">java.io.*;</code></div><div
+ class="line number2 index1 alt1"><code class="java keyword">import</code>
+ <code class="java plain">java.util.*;</code></div><div class="line 
+number3 index2 alt2"><code class="java keyword">import</code> <code 
+class="java keyword">static</code> <code class="java plain">java.lang.Integer.parseInt;</code></div><div
+ class="line number4 index3 alt1">&nbsp;</div><div class="line number5 
+index4 alt2"><code class="java keyword">public</code> <code class="java 
+keyword">class</code> <code class="java plain">divgold {</code></div><div
+ class="line number6 index5 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">BufferedReader in;</code></div><div 
+class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">private</code> <code class="java keyword">static</code>
+ <code class="java plain">PrintWriter out;</code></div><div class="line 
+number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java 
+keyword">public</code> <code class="java keyword">static</code> <code 
+class="java keyword">void</code> <code class="java plain">main (String 
+[] args) </code><code class="java keyword">throws</code> <code 
+class="java plain">IOException {</code></div><div class="line number10 
+index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">in = </code><code class="java keyword">new</code> <code
+ class="java plain">BufferedReader (</code><code class="java keyword">new</code>
+ <code class="java plain">FileReader (</code><code class="java string">"divgold.in"</code><code
+ class="java plain">));</code></div><div class="line number11 index10 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out = </code><code class="java keyword">new</code> <code
+ class="java plain">PrintWriter (</code><code class="java keyword">new</code>
+ <code class="java plain">BufferedWriter (</code><code class="java 
+keyword">new</code> <code class="java plain">FileWriter (</code><code 
+class="java string">"divgold.out"</code><code class="java plain">)));</code></div><div
+ class="line number12 index11 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number13 index12 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">N = parseInt 
+(in.readLine ());</code></div><div class="line number14 index13 alt1"><code
+ class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number15 index14 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">sum = </code><code
+ class="java value">0</code><code class="java plain">;</code></div><div 
+class="line number16 index15 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">[] gold = </code><code
+ class="java keyword">new</code> <code class="java keyword">int</code> <code
+ class="java plain">[N];</code></div><div class="line number17 index16 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">i = </code><code
+ class="java value">0</code><code class="java plain">; i &lt; N; i++) {</code></div><div
+ class="line number18 index17 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">gold [i] = parseInt (in.readLine ());</code></div><div
+ class="line number19 index18 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">sum += gold [i];</code></div><div class="line 
+number20 index19 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number21 index20 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number22 index21 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">boolean</code> <code class="java plain">[] dp = </code><code
+ class="java keyword">new</code> <code class="java keyword">boolean</code>
+ <code class="java plain">[sum / </code><code class="java value">2</code>
+ <code class="java plain">+ </code><code class="java value">1</code><code
+ class="java plain">];</code></div><div class="line number23 index22 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">[] ways = </code><code
+ class="java keyword">new</code> <code class="java keyword">int</code> <code
+ class="java plain">[sum / </code><code class="java value">2</code> <code
+ class="java plain">+ </code><code class="java value">1</code><code 
+class="java plain">];</code></div><div class="line number24 index23 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">ways [</code><code class="java value">0</code><code 
+class="java plain">] = </code><code class="java value">1</code><code 
+class="java plain">; dp [</code><code class="java value">0</code><code 
+class="java plain">] = </code><code class="java keyword">true</code><code
+ class="java plain">;</code></div><div class="line number25 index24 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">k : gold) {</code></div><div
+ class="line number26 index25 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(</code><code 
+class="java keyword">int</code> <code class="java plain">j = sum / </code><code
+ class="java value">2</code><code class="java plain">; j &gt;= k; j--) {</code></div><div
+ class="line number27 index26 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">ways [j] = (ways [j] + ways [j - k]) % </code><code 
+class="java value">1000000</code><code class="java plain">;</code></div><div
+ class="line number28 index27 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">if</code> <code class="java plain">(dp [j - k]) dp
+ [j] = </code><code class="java keyword">true</code><code class="java 
+plain">;</code></div><div class="line number29 index28 alt2"><code 
+class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number30 index29 
+alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">}</code></div><div class="line number31 index30 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number32 index31 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">int</code> <code class="java plain">p = sum / </code><code
+ class="java value">2</code><code class="java plain">;</code></div><div 
+class="line number33 index32 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java keyword">for</code> <code class="java plain">(; !dp [p]; 
+p--);</code></div><div class="line number34 index33 alt1"><code 
+class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number35 index34 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.println ((sum - p) - p);</code></div><div 
+class="line number36 index35 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.println (ways [p]);</code></div><div class="line
+ number37 index36 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">out.close ();</code></div><div class="line number38 
+index37 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="java plain">System.exit (</code><code class="java value">0</code><code
+ class="java plain">);</code></div><div class="line number39 index38 
+alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code 
+class="java plain">}</code></div><div class="line number40 index39 alt1"><code
+ class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="divgold_files/shCore.js"></script>
+<script type="text/javascript" src="divgold_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="divgold_files/shBrushJava.js"></script>
+<link href="divgold_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="divgold_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+</body></html>

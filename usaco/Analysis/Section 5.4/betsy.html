@@ -1,0 +1,214 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 19: Betsy's Tour</title> </head><body background="betsy_files/bg3.jpg">
+<img src="betsy_files/cow1.jpg" height="118" width="742">
+<center>
+<b><font size="7">Betsy's Tour</font></b><br>
+Adam D'Angelo
+</center>
+
+
+<p> The state size of this problem is too large for dynamic programming,
+so we must use a method like recursive descent to enumerate all paths from
+corner to corner.
+
+</p><p> To start, we will consider a "stupid" solution that generates all
+paths.  When a path gets to the market, it checks to see whether it has
+touched every square.
+
+</p><p> Testing the solution, we see that it runs in time only for N &lt;= 5. So,
+some optimizations are needed. Here are some:
+
+</p><ul>
+<li>
+If we keep a running total of the number of squares touched by the current
+path, we can check in O(1) time whether a path has touched every square when
+it reaches the market.
+</li><li>
+If we use an array with a sentinel-buffer around the edges, we can avoid extra
+complexity introduced by further optimizations. Some speed is gained, too.
+</li><li>
+If we keep a running sum of the total number of squares touched in each column
+and in each row, we can check whether we have created a "wall" between the
+market and our current position, and prune these states.
+</li><li>
+If we ever reach the right-hand wall at a distance vertically of Y without
+having touched the square at Y-1, we know we have created a wall in some shape
+that separates our current position with the square at Y-1. The same holds for
+every wall.
+</li></ul>
+
+<p> These speed increases are good, but the program is still far too slow
+for N = 7. What else can we prune? With a little visualization, it is easy
+to see that the program generates many "dead ends," squares that once
+entered, lead to the end of the path.  Because our path must eventually
+touch them and will terminate when it does, a lot of searching could be
+saved by pruning off states that create dead ends.
+
+</p><p> To do this efficiently, we keep track of the number of neighbor-squares
+that have been touched at each square. Each time we touch a square, we
+increment its neighbors' neighbor-sum. When a sum reaches 3, we know that
+we can stop because there is now a dead end at that square (unless we are
+going to that square next.)
+
+</p><p> This gives us a huge speed gain, enough to do N = 7 in about half a
+second.
+
+</p><pre>#include &lt;stdio.h&gt;
+
+#define MAX_N 10
+#define GOOD_SQUARE 10 
+/*
+  GOOD_SQUARE is subtracted from the neighbors touched in cases when we
+  don't care what the value is
+*/
+
+int n;
+int count; /* number of good paths */
+int touched[MAX_N][MAX_N];
+int col_touched[MAX_N];
+int row_touched[MAX_N];
+int total_touched;
+
+int target;
+int neighbors_touched[MAX_N][MAX_N];
+
+void go(int x, int y)
+{
+  if(x == 1 &amp;&amp; y == n) {
+    
+    if(total_touched == target)
+      count++;
+    return;
+  }
+  
+  if(touched[x][y])
+    return;
+  
+  /* prune horizontal/vertical walls we've created */
+  if(col_touched[x-1] == n)
+    return;
+  
+  if(row_touched[y+1] == n)
+    return;
+  
+  /* prune block-offs */
+  if(x == n &amp;&amp; !touched[n][y-1])
+    return;
+  
+  if(y == n &amp;&amp; !touched[x+1][n])
+    return;
+  
+  if(x == 1 &amp;&amp; !touched[1][y-1])
+    return;
+  
+  if(y == 1 &amp;&amp; !touched[x-1][1])
+    return;
+  
+  neighbors_touched[x+1][y]++;
+  neighbors_touched[x][y+1]++;
+  neighbors_touched[x-1][y]++;
+  neighbors_touched[x][y-1]++;
+  
+  
+  int dead_ends=0;
+  
+  if(neighbors_touched[x+1][y] &gt; 2)
+    dead_ends++;
+  if(neighbors_touched[x][y+1] &gt; 2)
+    dead_ends++;
+  if(neighbors_touched[x-1][y] &gt; 2)
+    dead_ends++;
+  if(neighbors_touched[x][y-1] &gt; 2)
+    dead_ends++;
+  
+  /* prune cases of more than one dead end */
+  
+  if(dead_ends &lt;= 1) {
+    
+    touched[x][y] = 1;
+    neighbors_touched[x][y] -= GOOD_SQUARE;
+    
+    col_touched[x]++;
+    row_touched[y]++;
+    
+    total_touched++;
+    
+    /* if there is one "dead end", make sure we go to it next */
+    
+    if(dead_ends == 1) {
+      if(neighbors_touched[x+1][y] &gt; 2)
+        go(x+1, y);
+      if(neighbors_touched[x][y+1] &gt; 2)
+        go(x, y+1);
+      if(neighbors_touched[x-1][y] &gt; 2)
+        go(x-1, y);
+      if(neighbors_touched[x][y-1] &gt; 2)
+        go(x, y-1);
+    }
+    else if(dead_ends == 0) {
+      go(x+1, y);
+      go(x, y+1);
+      go(x-1, y);
+      go(x, y-1);
+    }
+    
+    total_touched--;
+    
+    row_touched[y]--;
+    col_touched[x]--;
+    neighbors_touched[x][y] += GOOD_SQUARE;
+    touched[x][y] = 0;
+  }
+  
+  neighbors_touched[x+1][y]--;
+  neighbors_touched[x][y+1]--;
+  neighbors_touched[x-1][y]--;
+  neighbors_touched[x][y-1]--;
+}
+
+
+int main()
+{
+  FILE *in = fopen("betsy.in", "r");
+  
+  fscanf(in, "%d", &amp;n);
+  
+  target = n*n-1;
+  
+  for(int i=1; i&lt;=n; i++) {
+    touched[i][n+1] = 1;
+    touched[i][0] = 1;
+    touched[n+1][i] = 1;
+    touched[0][i] = 1;
+    
+    neighbors_touched[1][i]++;
+    neighbors_touched[n][i]++;
+    neighbors_touched[i][1]++;
+    neighbors_touched[i][n]++;
+  }
+  
+  for(int i=0; i&lt;=n+1; i++) {
+    neighbors_touched[0][i] = -GOOD_SQUARE;
+    neighbors_touched[i][0] = -GOOD_SQUARE;
+    neighbors_touched[n+1][i] = -GOOD_SQUARE;
+    neighbors_touched[i][n+1] = -GOOD_SQUARE;
+  }
+  
+  neighbors_touched[1][n] = -GOOD_SQUARE;
+  
+  go(1, 1);
+    
+  FILE *out = fopen("betsy.out", "w");
+  fprintf(out, "%d\n", count);
+  fclose(out);
+}
+
+</pre>
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=IvIn7TchG8N"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

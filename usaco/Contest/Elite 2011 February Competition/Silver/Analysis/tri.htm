@@ -1,0 +1,283 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO FEB11 tri Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="tri_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO FEB11 Problem 'tri' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>
+We can see that a sub-triangle is defined by three traits
+</p><ul>
+<li> Whether it is facing up or down
+</li><li> Where the point of the tip is
+</li><li> The side length of the triangle
+</li></ul>
+For the first condition, we have two possibilities, for the second, we 
+have
+about N<sup>2</sup>, and for the 
+third, we have about N. Therefore, the best we can possibly get if we 
+tried
+every single sub-triangle would be 
+about 2N<sup>3</sup>. Therefore, let us first try to get this solution.
+<p></p>
+
+<p>
+We can deal with upside down and right side up triangles in similar 
+ways. The
+naive solution would be 
+O(N<sup>5</sup>), which would be for every point, compute the 
+sub-triangle with
+side length K by summing up 
+all the elements then dividing by the number of elements. This can 
+easily be
+reduced to O(N<sup>4</sup>) by 
+seeing that if we calculated the sub-triangle with length K - 1 at a 
+point P,
+all we have to do to calculate the 
+sub-triangle with length K at the point P is to add in the last row. To 
+reduce
+this even further, we can take 
+partial sums in each row, so that <tt>sum [i][j]</tt> contains <tt>v_i1 +
+ v_i2
++ v_i3 + ... + v_ij</tt>. Then, 
+we can compute the sum of a part of the row in constant time. This will 
+reduce
+the complexity to O(N<sup>3</sup>).
+</p>
+
+<p>
+However, this O(N<sup>3</sup>) solution is still too slow for N &lt;= 
+700. Let's
+look into the problem a little more. 
+We want to compute the maximum <i>average</i> of a sub-triangle. This 
+gives us
+a clever idea. If we have a sub-
+triangle of size 2K+1 (odd), we can split it up into four smaller
+sub-triangles, three with size K, and one with 
+size K+1. In addition, if we have a sub-triangle of size 2K (even), we 
+can
+split it up into four smaller sub-triangles, 
+three with size K, and one with size K-1. Below is an example of how we 
+can do
+this:
+</p>
+
+<pre>ODD:                        EVEN:
+                                   []
+       []                         [][]
+      [][]                       [][][]
+     ------                      ------
+    \[][][]/                   []\[][]/[]
+   []\[][]/[]                 [][]\[]/[][]
+  [][]\[]/[][]               [][][]\/[][][]
+</pre>
+
+<p>
+Since we can split up these triangles into four smaller regions, the 
+average of
+the bigger triangle must be 
+less or equal to the maximum average of the four smaller sub-triangles. 
+That
+means, we only really need to 
+check triangles of size K...2K since any triangle with size greater than
+ 2K can
+be split up into smaller 
+sub-triangles that fit within our range. Therefore, since we only need 
+to check
+K+1 values for our height, this 
+reduces our complexity to O(K N<sup>2</sup>)
+</p>
+
+<p>
+Sample solution below:
+</p>
+
+<div><div id="highlighter_333989" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div
+ class="line number47 index46 alt2">47</div><div class="line number48 
+index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div
+ class="line number50 index49 alt1">50</div><div class="line number51 
+index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div
+ class="line number53 index52 alt2">53</div><div class="line number54 
+index53 alt1">54</div></td><td class="code"><div class="container"><div 
+class="line number1 index0 alt2"><code class="cpp preprocessor">#include
+ &lt;cstdio&gt;</code></div><div class="line number2 index1 alt1"><code 
+class="cpp preprocessor">#include &lt;algorithm&gt;</code></div><div 
+class="line number3 index2 alt2">&nbsp;</div><div class="line number4 
+index3 alt1"><code class="cpp preprocessor">#define FOR(i,a,b) for (i = 
+a; i &lt;= b; i++)</code></div><div class="line number5 index4 alt2"><code
+ class="cpp preprocessor">#define DFR(i,j,b) FOR(i,1,b) FOR(j,1,i)</code></div><div
+ class="line number6 index5 alt1">&nbsp;</div><div class="line number7 
+index6 alt2"><code class="cpp keyword bold">using</code> <code 
+class="cpp keyword bold">namespace</code> <code class="cpp plain">std;</code></div><div
+ class="line number8 index7 alt1">&nbsp;</div><div class="line number9 
+index8 alt2"><code class="cpp keyword bold">typedef</code> <code 
+class="cpp color1 bold">long</code> <code class="cpp color1 bold">long</code>
+ <code class="cpp plain">ll;</code></div><div class="line number10 
+index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code 
+class="cpp color1 bold">FILE</code> <code class="cpp plain">*fin = </code><code
+ class="cpp functions bold">fopen</code> <code class="cpp plain">(</code><code
+ class="cpp string">"tri.in"</code><code class="cpp plain">, </code><code
+ class="cpp string">"r"</code><code class="cpp plain">), *fout = </code><code
+ class="cpp functions bold">fopen</code> <code class="cpp plain">(</code><code
+ class="cpp string">"tri.out"</code><code class="cpp plain">, </code><code
+ class="cpp string">"w"</code><code class="cpp plain">);</code></div><div
+ class="line number12 index11 alt1">&nbsp;</div><div class="line 
+number13 index12 alt2"><code class="cpp keyword bold">const</code> <code
+ class="cpp color1 bold">int</code> <code class="cpp plain">MAXN = 760;</code></div><div
+ class="line number14 index13 alt1"><code class="cpp keyword bold">const</code>
+ <code class="cpp plain">ll INF = (1ll &lt;&lt; 50);</code></div><div 
+class="line number15 index14 alt2">&nbsp;</div><div class="line number16
+ index15 alt1"><code class="cpp color1 bold">int</code> <code class="cpp
+ plain">N, K;</code></div><div class="line number17 index16 alt2"><code 
+class="cpp plain">ll sum [MAXN][MAXN];</code></div><div class="line 
+number18 index17 alt1">&nbsp;</div><div class="line number19 index18 
+alt2"><code class="cpp keyword bold">inline</code> <code class="cpp 
+keyword bold">void</code> <code class="cpp plain">maxc (ll &amp;a, ll b)
+ {</code><code class="cpp keyword bold">if</code> <code class="cpp 
+plain">(b &gt; a) a = b;}</code></div><div class="line number20 index19 
+alt1"><code class="cpp keyword bold">inline</code> <code class="cpp 
+color1 bold">int</code> <code class="cpp plain">min (</code><code 
+class="cpp color1 bold">int</code> <code class="cpp plain">a, </code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">b) {</code><code
+ class="cpp keyword bold">return</code> <code class="cpp plain">a &lt; b
+ ? a : b;}</code></div><div class="line number21 index20 alt2">&nbsp;</div><div
+ class="line number22 index21 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">main () {</code></div><div class="line number23
+ index22 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d %d"</code><code class="cpp plain">, &amp;N, 
+&amp;K);</code></div><div class="line number24 index23 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+color1 bold">int</code> <code class="cpp plain">i, j, k, val, upper;</code></div><div
+ class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">DFR (i, j, N) {</code></div><div class="line number26
+ index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d"</code><code class="cpp plain">, &amp;val);</code></div><div
+ class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sum [i][j] = val + sum [i][j - 1];</code></div><div 
+class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number29 index28 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">ll max = -INF, up, down, </code><code class="cpp 
+functions bold">div</code><code class="cpp plain">;</code></div><div 
+class="line number31 index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">DFR (i, j, N) {</code></div><div class="line number32
+ index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">up = 0, down = 0, </code><code class="cpp functions 
+bold">div</code> <code class="cpp plain">= 0;</code></div><div 
+class="line number33 index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div
+ class="line number34 index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// right side up triangles</code></div><div 
+class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">upper = N - i + 1;</code></div><div class="line 
+number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(upper &gt;=
+ K) FOR (k, 1, min (2 * K, upper)) {</code></div><div class="line 
+number37 index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">div</code> <code class="cpp plain">+= k;</code></div><div
+ class="line number38 index37 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">down += sum [i + k - 1][j + k - 1] - sum [i + k - 
+1][j - 1];</code></div><div class="line number39 index38 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(k &gt;= K) 
+{maxc (max, down / </code><code class="cpp functions bold">div</code><code
+ class="cpp plain">);}</code></div><div class="line number40 index39 
+alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number41 index40 alt2">&nbsp;</div><div
+ class="line number42 index41 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">// upside down triangles</code></div><div 
+class="line number43 index42 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">div</code> <code class="cpp plain">= 0;</code></div><div
+ class="line number44 index43 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">upper = min (j, i - j + 1);</code></div><div 
+class="line number45 index44 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(upper &gt;=
+ K) FOR (k, 1, min (2 * K, upper)) {</code></div><div class="line 
+number46 index45 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">div</code> <code class="cpp plain">+= k;</code></div><div
+ class="line number47 index46 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">up += sum [i - k + 1][j] - sum [i - k + 1][j - k];</code></div><div
+ class="line number48 index47 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(k &gt;= K) 
+{maxc (max, up / </code><code class="cpp functions bold">div</code><code
+ class="cpp plain">);}</code></div><div class="line number49 index48 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number50 index49 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number51 index50 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number52 index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fprintf</code> <code class="cpp plain">(fout,
+ </code><code class="cpp string">"%lld\n"</code><code class="cpp plain">,
+ max);</code></div><div class="line number53 index52 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+keyword bold">return</code> <code class="cpp plain">0;</code></div><div 
+class="line number54 index53 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="tri_files/shCore.js"></script>
+<script type="text/javascript" src="tri_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="tri_files/shBrushJava.js"></script>
+<link href="tri_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="tri_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

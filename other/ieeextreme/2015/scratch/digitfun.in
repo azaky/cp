@@ -1,0 +1,808 @@
+Recurrence relations are an important tool for the computer scientist. Many algorithms, particularly those that use divide and conquer, have time complexities best modeled by recurrence relations. A recurrence relation allows us to recursively define a sequence of values by defining the nth value in terms of certain of its predecessors.
+
+Many natural functions, such as factorials and the Fibonacci sequence, can easily be expressed as recurrences. The function of interest for this problem is described below.
+
+Let |An| denote the number of digits in the decimal representation of An. Given any number A0, we define a sequence using the following recurrence:
+
+Ai = |Ai-1| for i > 0
+
+The goal of this problem is to determine the smallest positive i such that Ai = Ai-1.
+
+Input Format
+
+Input consists of multiple lines, each terminated by an end-of-line character. Each line (except the last) contains a value for A0, where each value is non-negative and no more than a million digits. The last line of input contains the word END.
+
+Output Format
+
+For each value of A0 given in the input, the program should output one line containing the smallest positive i such that Ai = Ai-1.
+
+Sample Input
+
+9999
+0
+1
+9999999999
+END
+Sample Output
+
+3
+2
+1
+4
+Explanation
+
+The first input value is A0 = 9999, resulting in A1 = |9999| = 4. Because 4 does not equal 9999, we find A2 = |A1| = |4| = 1. Since 1 is not equal to 4, we find A3 = |A2| = |1| = 1. A3 is equal to A2, making 3 the smallest positive i such that Ai = Ai-1.
+
+The second input value is A0 = 0, resulting in A1 = |0| = 1. Because 0 does not equal 1, we find A2 = |A1| = |1| = 1. A2 is equal to A1, making 2 the smallest positive i such that Ai = Ai-1.
+
+The third input value is A0 = 1, resulting in A1 = |1| = 1. A1 is equal to A0, making 1 the smallest positive i such that Ai = Ai-1.
+
+The last input value is A0 = 9999999999, resulting in A1 = |9999999999| = 10. Because 10 does not equal 9999999999, we find A2 = |A1| = |10| = 2. Since 2 is not equal to 10, we find A3 = |A2| = |2| = 1. Since 1 is not equal to 2, we find A4 = |A3| = |1| = 1. A4 is equal to A3, making 4 the smallest positive i such that Ai = Ai-1.
+
+In a Prediction Game, two or more players attempt to predict the score of a series of upcoming sporting competitions. Each player's predictions are then evaluated based on the sum of the categories listed below. These descriptions use the following variables:
+
+S1: Actual score earned by team 1.
+
+S2: Actual score earned by team 2.
+
+P1: A player's predicted score for team 1.
+
+P2: A player's predicted score for team 2.
+
+Point System
+
+Winner: 10 points if they correctly picked the winner, i.e. the team with more points at the end of the competition.
+
+Team 1 Score: Maximum(0, 5 - |S1 - P1|). In other words, if they pick the correct score for Team 1, they earn 5 points. If they were off by one in their prediction, they earn 4 points. If they are off by two, they earn 3 points, and so on. If they are off by 5 or more points, they earn 0 points in this category.
+
+Team 2 Score: Maximum(0, 5 - |S2 - P2|).
+
+Point Spread: Maximum(0, 5 - |(P1 - P2) - (S1 - S2)|). In other words, if the player predicts the correct number of points by which one team beats another, they earn 5 points. If they are off by one, they are 4 points, and so on. If they are off by 5 or more points, they earn 0 points in this category.
+
+Some, but perhaps not all, of the competition scores have been received. Your task is to provide a list of players who might end up with the highest point total when all scores are recorded.
+
+Notes:
+
+Whenever we refer to a "game," we are referring to the "Prediction Game." When we refer to a competition, we mean the sporting event that teams are playing.
+
+No competition will end in a tie. In addition, the players are not allowed to predict a tie score as a final result for a competition.
+
+The smallest score possible in a competition is 0 points. The maximum possible score in a competition is 200 points.
+
+A player can earn points in the Team 1 Score, Team 2 Score, and Point Spread categories, even if they do not correctly pick the winner. For example, if a player predicts a score of 24-17 (i.e. 24 points for team 1 and 17 points for team 2) and the final result is 23-30, the player would earn 4 points for the Team 1 Score category (since the difference between the prediction (24) and the true score (23) is only one, he would get 5-1=4 points). He would receive no points for the Team 2 Score category or for the Point Spread since they are both off by more than 5 points. Similarly, if a player predicted a score of 10-9 and the actual score was 9-10, the player would earn a total of 11 points as follows: 4 points for Team 1 Score (again 5-1=4 points since the difference between the predicted and the actual score is 1), 4 points for Team 2 Score (for the same reason as with scoring analysis for Team 1), and 3 points for the Point Spread (since according to the formula the point spread is |(P1 - P2) - (S1 - S2)| = |(9-10) - (10-9)|=|-1-1|=|-2|=2, and thus the score obtained for this prediction should equal 5 - Spread = 5 - 2 = 3 points).
+
+Input Format
+
+The first line of input contains an integer t, 1 <= t <= 20, indicating how many test cases are in the input.
+
+Each test case follows in the following format. First comes a line with two space separated integers, p and c, where p indicates how many players there are, and c indicates how many competitions are being played.
+
+The following is repeated for each of the p players. The first line contains the player's name. Then follows c lines with two space separated integers. These are the predictions for this player. The first of these prediction lines contains P1 and P2 for the first competition. The second contains the predicted scores for the second competition, and so on.
+
+Finally there are c lines indicating the (possibly) partial results for the competition. The first competition's result is reported on the first of these lines, the second competition's on the second of these lines, and so on. Each of these lines will contain two space separated values. If the score for the team is known, the values will be integers giving the score. If the result of the competition has not yet reported, the line will read ? ?.
+
+Notes:
+
+Each player's name is unique. All of the names are comprised of an initial uppercase letter, followed by up to 30 lowercase letters.
+
+2 <= p <= 20
+
+1 <= c <= 1000
+
+Either both scores will be given or neither will be given. You will never be given a competition result where only one of the scores has not yet been reported.
+
+Output Format
+
+For each of the test cases, you should output a line containing, in alphabetical order, a space-separated list of the players who could earn the maximum number of points. If there is only one winner possible, then only the winner's name should be reported on a line of its own.
+
+Sample Input
+
+3
+2 3
+Alice
+14 17
+20 7
+30 7
+Bob
+20 7
+21 17
+14 13
+14 17
+17 13
+? ?
+2 3
+Dave
+14 17
+20 17
+30 7
+Chuck
+20 10
+27 17
+30 7
+? ?
+27 17
+30 7
+3 1
+Francis
+14 7
+Eve
+10 21
+George
+7 30
+0 1
+Sample Output
+
+Alice
+Chuck Dave
+Eve George
+Explanation
+
+There are three test cases.
+
+Test Case 1
+
+In the first competition, Alice predicted a score of 14-17, which was also the actual score. She earned 25 points for this prediction (10 points for the winner and 5 points in each of the other categories).
+
+In the second competition, Alice predicted a score of 20-7, and the actual score was 17-13. She earned 12 points for this prediction, 10 points for the correct winner and 2 points for the score prediction for team 1 [ 5 - |20 - 17| = 2 ].
+
+In the first competition, Bob predicted a score of 20-7, and the actual score was 14-17. He earned 0 points for this competition, because he was wrong about the winner, and he was off by more than 5 on both team scores and on the point spread.
+
+In the second competition, Bob predicted a score of 21-17, and the actual score was 17-13. He earns 17 points for this prediction (10 points for picking the winner, 1 point for team 1 score, 1 point for team 2 score, and 5 points for correctly predicting the spread).
+
+With these known results, Alice is leading Bob, 37 points to 17 points. Since both Alice and Bob picked the same winner for the third competition, there is no way for Bob to catch up. Therefore you would output just "Alice" for this test case.
+
+Test Case 2
+
+In this test case, Dave currently has 40 points: 15 points from the second competition (10 points for picking the winner and 5 points for picking team 2's score), and 25 points for picking the correct score for the third competition. Chuck has 50 points for picking the correct scores in the second and third competitions.
+
+Suppose the result of the first competition was 10-17. Then, Dave would end with 57 points and Chuck would end with 50 points.
+
+On the other hand, suppose the result was 30-0. Then Chuck would end with 60 points and Dave would end with 40.
+
+Therefore, since either Chuck or Dave could end with the highest number of points in the game, you would output "Chuck Dave" (since "Chuck" comes before "Dave" in alphabetical order).
+
+Test Case 3
+
+Here all of the results are in, and Eve and George have the high score of 10 points each.
+
+Inspirational Quote
+
+Here's a quote to reward you for reading the entire problem, and inspire you to solve it!
+
+"It's tough to make predictions, especially about the future." - Yogi Berra
+
+The NeoCubist artistic movement has a very distinctive approach to art. It starts with a rectangle which is divided into a number of squares. Then multiple rounds of layering and scraping occur. In a layering round, a rectangular region of this canvas is selected and a layer of cubes, 1 cube deep, is added to the region. In a scraping round, a rectangular region of the canvas is selected, and a layer of cubes, again 1 cube deep, is removed.
+
+The famous artist I.M. Blockhead seeks your help during the creation of this artwork. As he is creating his art, he is curious to know how many blocks are in different regions of the canvas.
+
+Your task is to write a program that tracks the creation of a work of Pseudo-Cubist art, and answers I.M.’s periodic queries about the number of blocks that are on the canvas. Consider, for example, the following artwork created on a canvas with 5 rows and 15 columns or squares. The canvas starts without any blocks, like in the figure below. We label cells in the canvas based on the tuple (row,column), with the upper left corner being designated (1,1). The numbers in each cell represent the height of the blocks in that cell.
+
+fig1.jpg
+
+After adding a layer in blocks to the rectangle with upper left corner at (2,3) and a lower right corner of (4, 10), the canvas now looks like the following:
+
+fig2.jpg
+
+After adding a layer of blocks in the rectangle with upper left corner at (3,8) and a lower right corner of (5, 15), the canvas now looks like the following:
+
+fig3.jpg
+
+If Blockhead were to ask how many blocks are currently in the artwork in the rectangle with upper left corner (1,1) and lower right corner (5,15), you would tell him 48.
+
+Now, if we remove a layer of blocks from the rectangle with upper left corner at (3,6) and a lower right corner of (4, 12), the canvas now looks like the following:
+
+fig4.jpg
+
+If Blockhead were to ask how many blocks are now in the artwork in the rectangle with upper left corner (3,5) and lower right corner (4,13), you would tell him 10.
+
+“Beautiful!” exclaims Blockhead.
+
+Input Format
+
+The first line in each test case are two integers r and c, 1 <= r <= 12, 1 <= c <= 106, where r is the number of rows and c is the number of columns in the canvas.
+
+The next line of input contains an integer n, 1 <= n <= 104.
+
+The following n lines of input contain operations and queries done on the initially empty canvas. The operations will be in the following format:
+
+[operation] [top left row] [top left column] [bottom right row] [bottom right column]
+
+[operation] is a character, either “a” when a layer of blocks is being added, “r” when a layer of blocks is being removed, and “q” when Blockhead is asking you for the number of blocks in a region.
+
+The remaining values on the line correspond to the top left and bottom right corners of the rectangle.
+
+Note: You will never be asked to remove a block from a cell that has no blocks in it.
+
+Output Format
+
+For each “q” operation in the input, you should output, on a line by itself, the number of blocks in the region of interest.
+
+Sample Input
+
+5 15
+5
+a 2 3 4 10
+a 3 8 5 15
+q 1 1 5 15
+r 3 6 4 12
+q 3 5 4 13
+Sample Output
+
+48
+10
+Explanation
+
+This test case corresponds to the description given above.
+
+Alice, one of the IEEEXtreme participants, is on her way to her university to take part in this year's contest. To get to the university she has to drive on a four lane highway, but as the highway is very long she quickly becomes bored. She decides to practice for the contest by thinking about some problems related to the highway she's driving on. She comes up with the following problem:
+
+Let's say that, in a single unit of time, her car, which is of unit-length, can perform one of the following three actions:
+
+Drive one unit forward, staying in the same lane
+
+If the car is not on the left-most lane, drive one unit forward and switch to the lane on the left
+
+If the car is not on the right-most lane, drive one unit forward and switch to the lane on the right
+
+highway.jpg
+
+If the highway is K units in length, in how many ways is it possible to drive through the highway, provided that she starts on the first unit of the highway at the left-most lane, and ends at the last unit of the highway, also at the left-most lane?
+
+As she's been training very hard for the contest, it doesn't take her long to come up with a solution to this problem. But all of a sudden, out of nowhere, a large cow appears in front of her car, and she just barely manages to avoid crashing into it. She got a bit too distracted thinking about the problem... But this incident gives her an idea: what if the highway had a set of stationary cows that the car must avoid crashing into?
+
+Unfortunately she doesn't have time to think about this version of the problem as she just arrived at the university and the contest is about to start. When the contest starts, she is very surprised to see that the problem she was thinking about is just like one of the problems presented in the contest. What a coincidence! Again her hard practice pays off and she quickly solves the problem. But the real question is, can you?
+
+Input Format
+
+Input begins with two integers, K, the length of the highway, and N, the number of cows standing on the highway, subject to the following constraints:
+
+2 <= K <= 1018
+
+0 <= N <= 100
+
+N <= 4(K - 2)
+
+Then follow N lines. The ith line contains two integers describing the location of the ith cow, xi, the lane on which the cow is standing (1 being the left-most, and 4 being the right-most), and yi, the unit on which the cow is standing, subject to the following constraints:
+
+1 <= xi <= 4
+
+1 < yi < K
+
+Notice that no cows are on the first or last unit of the highway. It is also guaranteed that no two cows share the same position.
+
+Output Format
+
+You are to output the number of ways to drive from the left-most lane at the first unit of the highway to the left-most lane at the Kth unit of the highway subject to the rules described above, and the additional constraint that the car must not drive to a position occupied by a cow.
+
+As the number of ways can be quite large, please output the answer modulo 109 + 7. Note that this is the same as the remainder when dividing the number of ways by 109 + 7.
+
+Sample Input
+
+5 2
+1 2
+2 3 
+Sample Output
+
+3
+Explanation
+
+In this example there are three ways to drive through the highway, and they are shown in the following figures. Notice that the car can drive in between cows (as long as other driving rules are fulfilled), but it must not drive to a unit occupied by a cow.
+
+highway_ex1.jpg
+
+highway_ex2.jpg
+
+highway_ex3.jpg
+
+Note: Two more sample test cases are available if you click on the "Run" button.
+
+This Challenge is sponsored by the IEEE Electron Devices Society.
+
+The Xtreme In Security Corp. has devised a password-based authentication system for their new operating system. They have made some unfortunate design decisions that make their system vulnerable to attack.
+
+The system stores in a file a salted and peppered password hash. All of the passwords use the same salt "IEEE" and the same pepper "Xtreme". When the user is enrolled, they supply a password p. The system checks to make sure that p is less than 20 characters long, and that it contains only lowercase letters and numbers. Then the salt is prepended to the password and the pepper value is appended. The resulting value, using UTF-8 encoding, is then put through the SHA-256 hash algorithm, and then base64 encoded. This base64 encoded value is stored in a password file, along with the user's name.
+
+Note: Even though the password contains only lowercase letters and numbers, the salt and the pepper contain some uppercase letters. The SHA-256 hash algorithm is case sensitive.
+
+When the user is authenticated, a similar process occurs. The user is prompted for a username and a password. Then the salt is prepended to the supplied password and the pepper is appended. The resulting value is hashed with SHA-256, and base64 encoded. If the resulting value matches what is stored in the password file for the specified user, then the authentication is successful.
+
+Your task is to break as many of the hashed passwords as possible to try to convince the system designers to improve their approach. Here is some inspiration from XKCD:
+
+
+
+Credits: XKCD
+
+Input Format
+
+The input will consist of a single salted, peppered password hash. This hash will be derived from a single password.
+
+The hash will be chosen from the following set of values:
+
+/PtjJboZGlsmTovvyOhBOoTVnQKUP/gJXxjLAW9Lppw=
+05HwH93tksb69U1ifesCQuYFP+gKPVH2L6W8JeBdXy0=
+0BkyqI3NHyjh0m20wNt6txW08dglSMP4/qzUEezq4Aw=
+1mT5cdKRz4BbfMdc8LAdnxfjsGO4lV0k0/V1IHtidmY=
+28AdfW0JHmCP4TbieGON8dafRaFpUgpzuX2bHZN6WsM=
+3hoie8omUyvM/9Qfx9dKfoptlwemYe2os8aohTGzoyw=
+3uDaglIdYUn11AadEhELBjE15A0L6hAaWnZmjCGtt+M=
+4D4NstIYSjVN826Q+SXUDDmXglJplpYWiJYf9rt7H8U=
+7FCsEXCDTAxyLh3EPnNx7YrJ44SzehQYv3GmPSA6pWk=
+81X3NN5JgTuGgqq3ErF0eL/l/wZFYkCwur6fZ06L2Us=
+8FzGA/nS7XizLrAVOr/FoeKSq4gaoQRq+kpBKNXHIzc=
+8OtpJ+E1XHv2RDsKIEwJc9KUFwPRzaqeHJ735Er6AVE=
+8cdgZu9dBOrcTBMqElM+y9Vh5FTBRQ7n9EGa/4qVHUk=
+8esDbw8ZVmUuUMEy2Scf5qGiZYiykevrvKpq2bVYHj4=
+9DS4orbhPFbjJcosEqQg+eg0Si5qSOnftfHiqK8sYug=
+9XDFIu4RPH0EL5XR+5VYILJ3UFAyltpfjONJKp/vcLk=
+B2E/K/DywbLEKutOKpS8HxHFrZwucwac4KjzYgsXg3g=
+BJQeqlV+4ejv0je5GpekzGdHHWHL5nnrbtD/170LZCA=
+BjQiH/A2FUNHlUwhBi8NWmj3HmhmAh6Ag0kRyVSaVo8=
+BwbAsOqPsxteVCpAwIjrhYogsUS1bF/bLns2QdcLYUI=
+CYDZabjeyTAwcEDEcvrX83514UmpjzvQUQ68DIZ/PXg=
+CornANxoZ5FJnlhwHmK42CDXf3h6jFr3g73YIRuoymQ=
+DDa2TJX20pPsNftfyJ3s6LBwSMSR3EADZGDxW2wThbs=
+FFXy3vru2D8rTWZRlh9lSMvtEusfWgO17OmJCTQTECs=
+FGkqFC/jLDqDZ10fql1nGw7AQNWioOrZ3ydEaJyXBwo=
+Fz+Y0H/R2rMZlc1C88Yx0A0xluYnVTinlw5qaSx8vWQ=
+GcJMWMDF6+f+onf6oi1FbpnN7dVrFEZnlXtHqmaygs4=
+GsXTQM0w+Clb1c9B7n28mADU2quLeI1n91KTyBboeHI=
+HLnuqQmCYetzrau3frCDEpZ52QCIby108gugsmwAwQ0=
+HWv9gx+GL/6g+0b0eOc+1Z/8BHse91/5T/DdiDwEknU=
+IDB/pOthrWobzapJ/N8HsraNhwfbExAa2uusdiKHFFI=
+IXYqlHbVeONERbxFe8SaEPEEKex45EihiC/l8CR52kk=
+Idvs4Al9YZsqPG8xkSxVqb6MOVhbw5k+qtF8UZKYVE8=
+IxQxcFXR51q8h8FLblPhYfUR30lIAt6hX8TjZWVa/GE=
+JCmqBN0MsW13tEmsQPYWg9Fj25MUrqFYvSK2arxTt0A=
+JOXxLH/i8i+fxDIWP2cts5Si/5En1A8M3s/vy6Aadic=
+KudA8vCEQdGaaCSxotpAcluXnVPS3MAZPkwI/lVupak=
+LGZEfbUr/tMREpJtsao/uuewcJXApmgfHDbh1zzfdhU=
+LZIzmWEqXDPJsnKttFGRaG/jUhHrbTEKt1XCO6XbdME=
+Lq0kV5M0HDSgB4m5KZbbn6BYRNlkKfaaAr3/11ueopY=
+Lqxt1UjT1ecV6ucgYn+yrGSUTxPWkZgdDtbygGwC/BA=
+MHQTB1MSsvhBxMpdRUiaM9Uj1QxU7zYq3FqDlW2HT2s=
+MKewBZryb2l36Y0tDyx+WuVeXUGfiSzcJplm9y1w9m0=
+N5aunKGHeN2WETLXLzfhfCxAfkwtGU/imziiTF3t7oY=
+NmrOUzHxKSfNT8UJ1YXbRL8I+HCAb+glJ0bBXcHfagE=
+NnSS+AuW1Z6zytSfqaiIVp4xxHHe70Av+IdhDlkoItQ=
+O9L1ZWYwuzgaImTjOwuogXfpC+C44zzcDhpt08LjR5c=
+R/ye+L9W+l6hyZ/v1POsWYboEGemIisARL8ohUvfBLI=
+R1v9fEb9VrZuU5xiYTKTqhHF03VtXg7+KtfFHPkQuCQ=
+RVfhsLovxa+/6tWgeSBASIIkzXkVtDPT4yYvjboHhIk=
+Rz38Ng2qI3mPkaRB6uDoCYmmfzbVTCzpt2sG1o+TZqo=
+S98FBzlv2vMVP/q+23m1wrHMJIrcy1rhoQGy338c4Bs=
+SzraQWWasG5ZO1tJq16DqU/7M/o/WRiAWRl1aFFvwr8=
+TInfNYwXvofBA+9QIe3+XEfDpO5ER+R+Jn3BOshhZWU=
+VDkcRd54BhYlK5Wg2PPDa/jzGrSkMepGIv6Tw3I2ksc=
+VjFTqTEY27V8lK2yCvhLhYm2Brh9bN1vWckVaevsiiY=
+Wau4ReopjFKk8SYYNq5lIBL+Rgg8aBR6h9UgTIv2u7I=
+XtEWsXf16y6Bc7vQxDy7hwRdBVWo3dV9C6CDVSf4PLs=
+Y5b6UztMueFYIFMl4a61jlD/ZhFG74/rVn8XaqqU+8c=
+YollqBlewcxE/kF6PKvv0r1CLZkKx82657bB0eQbiK0=
+YzSqlQTtq5j+Kd+hW1ISgBW0mn61vsQsxNeipq0sYCo=
+aJIH+q0YjYZCpierKtbue5JDtZSF8tKxVKuHYUPQ65k=
+bi6rh2HgTbJxR2GOTNWZLlxiiWZVnObptGj0KqOCSYo=
+cX7VyMvSYhuRvEfAUb3uNh8kmjpNFg0tatUPN562iOg=
+eSCTiCrzHPbngPu3F4ivPkLUv7MqLUlmWAhA4UO975Y=
+eUqkcVCbgIx1bGhhmnN5MxJFJhVruINmG65TjT/EQ1k=
+gE7PseB3mspPtYG3JROzT9FeqTfPFYQvBF2SJD9V19Y=
+gMi4hC4o7Fmv6yIrU48BVy8I1khXwkaD36G7bWiZHeo=
+h84yifAWGLj9sakEqxZ3QEjkXL42AoScP3L5Tdevm98=
+hEGKCiTZSA5x560hodRoIBBTE8pv4sP1VXG4D0fXWcI=
+ix+0IJIpLpHeSHEII+Q/IVY+FlRXn3xMA0ey6UITi34=
+j2GTUqtqZpotY8wF16zkvnbdCLTnX3oOZ30SjQUnIUk=
+jtUg00EsmzzFkk8JgKg3OpkmPRpN9xbwsdNXQSPczwo=
+k1J9Dv3EI442CO6A2FGN1H8JgFO2kjNBvkjDR0WIvkA=
+kuRpkIh9kaNz6XvG8U6GO/IARH/SqhRnTiJbZHXC0yQ=
+lFgqRrqTz1WXmO22u+Is1ZmWWUtuYrTJigsSB7I9NHI=
+lUfxHX9xH2aOHheMMqQF+f5BNh97avew2uOwEN3B7HE=
+m0IeuugWDOl9cFUFRYJhouCBT39T0dpp1xBOKPqHP94=
+mgA5kgALstQpGUBp4vZ8oiz0P4jjAGl0wjgls6kQyMA=
+nMAwaDYvEIAwoqtqWMpBAWdhuRgRq/fmwWbRM7cOMIU=
+opBtoC66YDRbLNqZAAu2FIeKfF0HMOGHCOCPYeNHdx4=
+ot/igM+me4e3UTT731qcBkSAcToyADMCddr7i7LCWGo=
+qrkd/8imuRtiDb9N1w2hQRxJAkdx3Wqh1HVXPS7dym8=
+r6BN0tdyAYZD0Nmc7bfV0WRcFBb1A2WIPPKHVRG59k8=
+rdALvOYVhA3hnUTBlaQXigWBSgMYzGTreSKyMoAoKfw=
+rjwtKqkPc7cfQ+zZ+E9c+fzQYhRvhVtaKEFb+srIHcQ=
+rwvmTDiJxIEETbsngvpxYGwZZK+FGo7527odGuQUjtQ=
+socJeO02bT2w+XZUrLoopbZvQ1lRhDfE88GVrJQ8p+g=
+tDdmKQpMiVDFA1YdblkHSFzL4Z9UIQ9FSouf3TybOu0=
+tojYiNtlWmq+7r1dSvxDk3W5at/NMAi1uxCHY61WAKk=
+tqpGCBzhR+0ONFk1sBiHPhz+kRiXmY3CGdUXqnMJwLg=
+uAZthS7b4ySZtWpM9pJ7ulYnhFdpFABpR2iPRQEmff0=
+uCG9dSBejCOrZWsX7+u8G340p74s8lDS/El8MIeOyMo=
+ugcIIpDID0R1uFqBAcN3PNXhwlhen77GdAccFgpbs+A=
+usg8BTtSfewL5M3OVg91TJCTc5vONLqgUCC/Si1Grsg=
+vs2sCU8qG0pDYQfcjlPzDzvcbJnhP1OgFRcXP4i3ffw=
+wEtqAs8JHjicWnXshAWF5Sg6NoswuG9qeJ7USw7YD7c=
+y+zbMpySKY+WF97KkgRQ+tBpM7iTqTj9guWmGJcqfyA=
+y1R6JQiUzUovgtdrvCkbeQAyMhFoupzhI5ZuQVPfCgw=
+zqKPAOt5ziHSeRxc0TgUZF3rJxzBHAKdJeccvt3F7Jg=
+Output Format
+
+The output should consist of a single alphanumeric string, which hashes to the corresponding value given in the input.
+
+Note: You may not be able to break all of the hashed passwords. If you are given a hash that you cannot break, you may output an arbitrary string. You will earn partial credit for this problem for each password that you do crack!
+
+Sample Input
+
+tDdmKQpMiVDFA1YdblkHSFzL4Z9UIQ9FSouf3TybOu0=
+Sample Output
+
+password1
+Explanation
+
+For all passwords, the salt value is "IEEE" and the pepper is "Xtreme". First, we can take the SHA-256 hash of the UTF-8 encoded string IEEEpassword1Xtreme. If we then base64 encode the result, the value equals the desired value: tDdmKQpMiVDFA1YdblkHSFzL4Z9UIQ9FSouf3TybOu0=.
+
+Joe has been hired to make tacos at a series of baseball games. He wants to calculate the maximum number of tacos he can make based on the available ingredients. He always insists on fresh ingredients, so any leftover ingredients on a given day will be thrown away.
+
+His ingredients are:
+
+Taco shells - every taco gets exactly one of these
+
+Meat
+
+Rice
+
+Beans
+
+His recipe is to take one taco shell, then add exactly two of the ingredients: meat, rice, and beans. So, for example, one taco might have meat and rice, while another taco might be made with rice and beans. However, a taco cannot have two of the same ingredient. For example, Joe will never make a taco with two servings of meat.
+
+Your task is to write a program to calculate the maximum number of tacos Joe can make each day, given the amount of ingredients he will have.
+
+Input Format
+
+The first line of input is an integer n, 1 <= n <= 1000, specifying how many days Joe will be making tacos.
+
+The following n lines contain 4 space-separated integers in the format:
+
+s m r b
+
+where s is the number of shells available, m is the amount of meat, r is the amount of rice, and b is the amount of beans, each expressed in terms of the number of tacos they could make.
+
+Note: s, m, r, and b are all non-negative integers less than 109.
+
+Output Format
+
+The output file is exactly n lines long, each line containing an integer specifying the maximum number of tacos Joe can make with that day’s ingredients.
+
+Note: There is a newline character at the end of the last line of the output.
+
+Sample Input
+
+2
+5 3 4 1
+1 9 9 9
+Sample Output
+
+4
+1
+Explanation
+
+On the first day, Joe can make a total of 4 tacos - 3 meat and rice tacos and 1 rice and bean taco.
+
+On the second day, Joe only has one shell, so he can make 1 taco with any two of the ingredients.The TransContinental Ocean-liner Company is celebrating their centennial anniversary. As a part of the celebrations, they launched an exciting contest for a free, around-the-world cruise on one of their ships. As part of the contest entry, passengers select two cabins in which they would like to stay. If they are a winner, they will be given one of the two cabins.
+
+Interest was enormous, and great many people applied to be a part of the voyage. Winners will be decided on a lottery. The company does not have any control over whom all will win the final lottery or obtain the tickets, but only on how many tickets will be distributed.
+
+Jerry, the tour manager, is finding it difficult to find the maximum number of prizes that can be awarded. He must make sure that each potential winner can be accommodated in one of the cabins that they specified when they entered the contest.
+
+Your job is to find the maximum number of prizes that can be awarded subject to this constraint. Help Jerry to find a solution for his problem and earn some real good points for yourselves!
+
+Input Format
+
+The input begins with an integer T, 1 <= T <= 15, indicated the number of test cases.
+
+Each test case consists of the following:
+
+A line containing an integer N, 2 <= N <= 200, where N is the total number of rooms on the ship.
+
+A line containing an integer M, 0 <= M <= 500, where M are the number of people who signed up.
+
+Next come M lines, the ith line containing the pair of cabins selected by the ith entrant in the contest. The cabin choices will be two space-separated integers, each falling between 1 and N (inclusive).
+
+Output Format
+
+For each test case, you should output, on a line by itself, the maximum number of tickets that can be awarded such that every winner can be housed in one of the two cabins that they have selected.
+
+This challenge is sponsored by Morgan Claypool Publishers.
+
+Bob, Hannah, and Otto like to celebrate palindromic dates. A palindromic date is one in which the numbers in the date read the same forwards and backwards. They were very happy with 2015, which has 15 palindromic dates:
+
+5th of January, October, November and December in day/month/year format: 5/1/15, 5/10/15, 5/11/15, 5/12/15
+
+Eleven days in May listed in month/day/year format: 5/1/15 and 5/10/15 through 5/19/15
+
+Note: These dates are palindromic in the sense that, if the forward slash delimiter (/) is disregarded, the numbers in the date read the same forwards and backwards.
+
+While they wait to celebrate the next palindromic date on November 5th, they have decided to they would like to start celebrating palindromic moments. They define a palindromic moment as a palindromic string obtained by formatting a date-time combination using one of the following date prefixes and one of the following time suffixes:
+
+Date prefix:
+
+Combinations of month, day, year: Mdyy, MMdyy, Mddyy, MMddyy, Mdyyyy, MMdyyyy, Mddyyyy, MMddyyyy
+
+Combinations of day, month, year: dMyy, dMMyy, ddMyy, ddMMyy, dMyyyy, dMMyyyy, ddMyyyy, ddMMyyyy
+
+Time suffix:
+
+Combinations of hour, minutes, seconds: hmmss, hhmmss, Hmmss, HHmmss
+
+Where
+
+M is the month of the year as a number, e.g. January = “1” and October = “10”
+
+MM is the month of the year as a number with a leading zero if the month of the year is one digit long, e.g. January = “01” and October = “10”
+
+d is the day of the month as a number, e.g. first = “1” and fifteenth = “15”
+
+dd is the day of the month as a number with a leading zero if the day of the month is one digit long, e.g. first = “01” and fifteenth = “15”
+
+yy is the last two digits of the year, e.g. 2000 = “00”, 12015 = “15”
+
+yyyy is the complete year as a number, e.g. 512 = “512”, 2000 = “2000”, 12015 = “12015”
+
+h is the hour in (AM/PM), e.g. 1 pm = “1”, 12 am = “12”
+
+hh is the hour in (AM/PM) with a leading zero if the hour is one digit long, e.g. 1 pm = “01”, 12 am = “12”
+
+H is the hour in the day, i.e. 0 <= H <= 23, e.g. 1 pm = “13”, 12 am = “0”
+
+HH is the hour in the day with a leading zero if the hour is one digit long, e.g. 1 pm = “13”, 12 am = “00”
+
+mm is the minute in the hour, 5 past the hour = “05”, 30 past the hour = “30”
+
+ss is the second in the minute, 5 past the minute = “05”, 30 past the minute = “30”
+
+For example, during this competition on October 24, 2015, there are four palindromic moments:
+
+1:01:42 AM (using the dMyy prefix and the hmmss suffix): 24101510142
+
+1:42:01 AM (using the Mdyy prefix and the hmmss suffix): 10241514201
+
+1:01:42 PM (using the dMyy prefix and the hmmss suffix): 24101510142
+
+1:42:01 PM (using the Mdyy prefix and the hmmss suffix): 10241514201
+
+Note that for October 24, the MMddyy, Mddyy, and MMdyy prefixes are equivalent to the Mdyy prefix. Similarly for this date, the ddMMyy, ddMyy, and dMMyy prefixes are equivalent to the dMyy prefix.
+
+Input Format
+
+The input begins with an integer t, 1 <= t <= 20, on the first line, which indicates the number of test cases.
+
+Following this, there are t test cases on separate lines, each containing a single integer Year, 10 <= Year <= 106.
+
+Output Format
+
+For each test case, you should output, on a line by itself, the number of palindromic moments that occur during the year given in the test case.
+
+Notes:
+
+We are interested in the total number of unique palindromic moments in a given year. If a moment is palindromic when using two or more different suffix/prefix combinations, this instance counts as a single palindromic moment. It should not be double counted.
+
+For example, November 11, 2010 1:11:11 am is palindromic when combining the MMddyy prefix and Hmmss suffix or the MMddyy prefix with the HHmmss suffix. Even though these combinations form two different palindromes, 11111011111 and 111110011111, this should count as a single palindromic moment.
+
+You must account for the different number of days in each month and for leap years. However, you should ignore leap seconds. Note: this problem assumes that year 12 was the first leap year, and that we have been having leap years regularly since this time.
+
+Sample Input
+
+2
+2015
+2016
+Sample Output
+
+5626
+3761
+Explanation
+
+Test Case 1
+
+There are 5626 palindromic moments during 2015. For example, the following list shows the 36 palindromic moments on January 1, 2015:
+
+12:51:11 AM (using the Mdyy prefix and the Hmmss suffix): 111505111
+
+1:02:11 AM (using the Mdyyyy prefix and the hmmss suffix): 11201510211
+
+1:10:10 AM (using the MMddyy prefix and the hmmss suffix): 01011511010
+
+1:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111515111
+
+2:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111525111
+
+3:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111535111
+
+4:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111545111
+
+5:11:01 AM (using the Mddyy prefix and the hmmss suffix): 1011551101
+
+5:11:10 AM (using the MMdyy prefix and the hmmss suffix): 0111551110
+
+5:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111555111
+
+6:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111565111
+
+7:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111575111
+
+8:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111585111
+
+9:51:11 AM (using the Mdyy prefix and the hmmss suffix): 111595111
+
+10:21:01 AM (using the Mddyyyy prefix and the hmmss suffix): 1012015102101
+
+10:21:10 AM (using the MMdyyyy prefix and the hmmss suffix): 0112015102110
+
+11:51:11 AM (using the Mdyy prefix and the hmmss suffix): 1115115111
+
+1:02:11 PM (using the Mdyyyy prefix and the hmmss suffix): 11201510211
+
+1:10:10 PM (using the MMddyy prefix and the hmmss suffix): 01011511010
+
+1:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111515111
+
+2:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111525111
+
+3:11:01 PM (using the Mddyy prefix and the Hmmss suffix): 10115151101
+
+3:11:10 PM (using the MMdyy prefix and the Hmmss suffix): 01115151110
+
+3:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111535111
+
+4:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111545111
+
+5:11:01 PM (using the Mddyy prefix and the hmmss suffix): 1011551101
+
+5:11:10 PM (using the MMdyy prefix and the hmmss suffix): 0111551110
+
+5:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111555111
+
+6:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111565111
+
+7:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111575111
+
+8:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111585111
+
+9:51:11 PM (using the Mdyy prefix and the hmmss suffix): 111595111
+
+10:21:01 PM (using the Mddyyyy prefix and the hmmss suffix): 1012015102101
+
+10:21:10 PM (using the MMdyyyy prefix and the hmmss suffix): 0112015102110
+
+10:51:11 PM (using the Mdyy prefix and the Hmmss suffix): 1115225111
+
+11:51:11 PM (using the Mdyy prefix and the hmmss suffix): 1115115111
+
+In a similar way we may calculate the remaining palindromic moments for the rest of 2015, resulting in the reported overall sum of 5626 unique palindromic moments for the year.
+
+Test Case 2
+
+There are 3761 palindromic moments during 2016.
+
+Mr. Pippo wants to start a new pizza shop. Everything about his pizzas is unique — the recipe is unique, the taste is unique, and even the shape of pizzas is unique. Instead of having a round shape like every other pizza, Mr. Pippo makes his pizzas in polygon shapes. For example, he can make his pizzas in a triangular shape or in a pentagonal shape.
+
+Before serving a pizza, Mr. Pippo cuts it into triangular pieces. However, there are different ways he can cut the pizza. For example, a pentagonal pizza can be cut in five different ways as shown in the following figure. Each day, Mr. Pippo chooses a particular shape which can only be cut in an odd number of ways. Note that all the five cuts in the figure happen to be rotationally symmetric, but each of them is considered distinct.
+
+Different ways a pentagonal pizza can be cut
+
+Figure: Different ways a pentagonal pizza can be cut
+
+Your task in this problem is to determine the shape of the pizza. Given the number of ways the pizza can be cut, you have to determine how many sides the pizza has.
+
+Further clarification regarding the ways a pizza can be cut is given below:
+
+A pizza can only be cut by connecting two vertices,
+
+Two cuts on the pizza cannot cross each other, and
+
+For an n-polygon there would be exactly (n-3) cuts which divide the pizza into (n-2) pieces.
+
+Input Format
+
+There will be up to 100 lines given where each line represents one test case. For each test case, the number of ways the pizza can be cut will be given. The number will be always odd and can be up to 308 digits long. The input is finished when end-of-file is reached.
+
+Output Format
+
+For each test case, print on a single line the number of sides the pizza has.
+
+Sample Input
+
+1
+5
+Sample Output
+
+3
+5
+Explanation
+
+For the first line of input, there is only one way to "cut" the pizza if the pizza is a triangle. This one way consists of no cuts at all.
+
+For the second line of input, if there are five ways to cut the pizza, the pizza must be a pentagon, as shown in the figure in the problem description.
+
+Some years ago, we had terminals that were capable of supporting only ASCII characters. We would like your help to construct a program, which given an input string and specific printing rules, produces the same text in a bigger layout.
+
+Input Format
+
+On the first line of input is an integer n, 1 <= n <= 100, representing how many columns each character will use when printed "zoomed-in".
+
+The next line contains an integer m, 1 <= m <= 100, representing how many rows each character will use when printed "zoomed-in". Note that n and m are not necessarily equal.
+
+The third line contains an integer k, 3 <= k <= 95, which indicates how many characters may need to be translated.
+
+Following these first lines, are k descriptions of the "zoomed-in" characters, formatted as follows:
+
+On a line by itself, a single character, which has an ASCII value of between 32 and 126, inclusive
+
+m lines, each containing n characters, that give the "zoomed-in" representation of the character on the previous line
+
+Following the descriptions of the zoomed in characters, is an integer number x, 1 <= x <= 500.
+
+Finally there are x lines, each containing a string of up to 2,000 characters, and ending with a new line. The characters in this string will be chosen from the set of k characters previously specified.
+
+Notes:
+
+We don't know if k sets (i.e. the descriptions of the k "zoomed-in" characters) are given in a sorted or random order.
+
+The "zoomed-in" version of an empty string is m blank lines (i.e. lines with only a newline character).
+
+Output Format
+
+For each of the x strings, you should output the “zoomed-in” version. Each string should begin on a newline.
+
+Note: You should perform only the transformation that is specified. You should not add any space between your printed letters that is not in the transformation.
+
+Sample Input
+
+4
+4
+3
+H
+H  H
+H%%H
+H%%H
+H  H
+i
+ () 
+
+ II 
+ II 
+!
+ II 
+ II 
+ II 
+ () 
+1
+Hi!
+Please note that the line after () and before II contains 4 spaces.
+
+Sample Output
+
+H  H ()  II 
+H%%H     II 
+H%%H II  II 
+H  H II  () 
+Explanation
+
+For clarity, we will add dashes where the spaces would appear in the output in this explanation. According to the input, each character will use 4 rows and 4 columns, and there are 3 characters that may be translated.
+
+A capital H ('H') should be translated as
+
+H--H
+H%%H
+H%%H
+H--H    
+A lower-case i ('i') should be translated as
+
+-()-
+----
+-II-
+-II-
+An exclamation mark ('!') should be translated as:
+
+-II-
+-II-
+-II-
+-()-
+We are then asked to print the "zoomed in" version of the string "Hi!". The output would be the following (with spaces where the dashes are located):
+
+H--H-()--II-
+H%%H-----II-
+H%%H-II--II-
+H--H-II--()-

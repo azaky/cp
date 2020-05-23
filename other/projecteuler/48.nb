@@ -1,0 +1,157 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4121,        148]
+NotebookOptionsPosition[      3567,        123]
+NotebookOutlinePosition[      3937,        139]
+CellTagsIndexPosition[      3894,        136]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 48", "Title",
+ CellChangeTimes->{{3.5341350494142647`*^9, 3.5341350570876427`*^9}, {
+  3.5362990036275454`*^9, 3.5362990037475486`*^9}}],
+
+Cell[TextData[{
+ "The series, ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["1", "1"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["2", "2"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["3", "3"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ... + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["10", "10"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " = 10405071317.\nFind the last ten digits of the series, ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["1", "1"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["2", "2"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["3", "3"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " + ... + ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["1000", "1000"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.5341349777990475`*^9, 3.534135042640067*^9}, {
+  3.5362990126565137`*^9, 3.536299077385784*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ans", " ", "=", " ", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"i", " ", "=", " ", "1"}], ",", " ", 
+   RowBox[{"i", "\[LessEqual]", "1000"}], ",", " ", 
+   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ans", "+=", 
+     RowBox[{"Mod", "[", 
+      RowBox[{
+       SuperscriptBox["i", "i"], ",", 
+       SuperscriptBox["10", "10"]}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"ans", "=", 
+     RowBox[{"Mod", "[", 
+      RowBox[{"ans", ",", 
+       SuperscriptBox["10", "10"]}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "ans", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5362989993175297`*^9, 3.536299000018566*^9}, {
+  3.536299080421751*^9, 3.5362992138722773`*^9}, {3.536308823262492*^9, 
+  3.5363088282291555`*^9}, {3.536323506026678*^9, 3.536323507952185*^9}}],
+
+Cell[BoxData["9110846700"], "Print",
+ CellChangeTimes->{{3.536299165219257*^9, 3.5362992158361855`*^9}, 
+   3.53630882954223*^9, {3.5363235094462705`*^9, 3.536323529396205*^9}, {
+   3.536397263764265*^9, 3.536397271158678*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Mod", "[", 
+  RowBox[{
+   RowBox[{"Sum", "[", 
+    RowBox[{
+     SuperscriptBox["i", "i"], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1000"}], "}"}]}], "]"}], ",", 
+   SuperscriptBox["10", "10"]}], "]"}]], "Input",
+ CellChangeTimes->{{3.536397287086306*^9, 3.536397313777953*^9}}],
+
+Cell[BoxData["9110846700"], "Output",
+ CellChangeTimes->{3.536397315649956*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{22, Automatic}, {Automatic, 16}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 163, 2, 83, "Title"],
+Cell[745, 26, 1162, 44, 47, "Text"],
+Cell[CellGroupData[{
+Cell[1932, 74, 947, 23, 141, "Input"],
+Cell[2882, 99, 227, 3, 23, "Print"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3146, 107, 311, 9, 33, "Input"],
+Cell[3460, 118, 79, 1, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

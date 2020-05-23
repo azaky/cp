@@ -1,0 +1,86 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 46: American Heritage</title> </head><body 
+background="heritage_files/bg3.jpg">
+<img src="heritage_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">American Heritage</font></b><br>
+</center>
+
+<p> Farmer John takes the heritage of his cows very seriously. He
+is not, however, a truly fine bookkeeper. He keeps his cow genealogies
+as binary trees and, instead of writing them in graphic form, he
+records them in the more linear `tree in-order' and `tree pre-order'
+notations.
+
+</p><p>Your job is to create the `tree post-order' notation of a cow's
+heritage after being given the in-order and pre-order notations.
+Each cow name is encoded as a unique letter. (You may already know
+that you can frequently reconstruct a tree from any two of the
+ordered traversals.) Obviously, the trees will have no more than
+26 nodes.
+
+</p><p> Here is a graphical representation of the tree used in the 
+sample
+input and output:
+</p><pre>                  C
+                /   \
+               /     \
+              B       G
+             / \     /
+            A   D   H
+               / \
+              E   F
+</pre>
+
+<p>The in-order traversal of this tree prints the left sub-tree, the
+root, and the right sub-tree.
+
+</p><p> The pre-order traversal of this tree prints the root, the left
+sub-tree, and the right sub-tree.
+
+</p><p> The post-order traversal of this tree print the left sub-tree,
+the right sub-tree, and the root.
+
+</p><h3>PROGRAM NAME: heritage</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td>The in-order representation of a 
+tree.
+</td> </tr>
+<tr> <td> Line 2: </td> <td> The pre-order representation of that same
+tree.</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file heritage.in) </h3>
+
+<pre>ABEDFCHG
+CBADEFGH
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line with the post-order representation of the tree.
+
+
+<h3>SAMPLE OUTPUT (file heritage.out)</h3>
+
+<pre>AEFDBHGC 
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="heritage" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

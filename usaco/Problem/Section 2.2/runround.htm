@@ -1,0 +1,73 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 57: Runaround Numbers</title> </head><body 
+background="runround_files/bg3.jpg">
+<img src="runround_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Runaround Numbers</font></b><br>
+</center>
+
+<p> Runaround numbers are integers with unique digits, none of which is
+zero (e.g., 81362) that also have an interesting property, exemplified
+by this demonstration:
+</p><ul>
+<li>If you start at the left digit (8 in our number) and count that
+number of digits to the right (wrapping back to the first digit when no
+digits on the right are available), you'll end up at a new digit (a
+number which does not end up at a new digit is not a Runaround Number).
+Consider:  8 1 3 6 2 which cycles through eight digits: 1 3 6 2 8 1 3
+6 so the next digit is 6.</li>
+
+<li>Repeat this cycle (this time for the six counts designed by the `6')
+and you should end on a new digit:  2 8 1 3 6 2, namely 2.
+
+</li><li>Repeat again (two digits this time): 8 1 
+
+</li><li>Continue again (one digit this time): 3 
+
+</li><li>One more time: 6 2 8 and you have ended up back where you 
+started,
+after touching each digit once.  If you don't end up back where you
+started after touching each digit once, your number is not a Runaround
+number.
+</li></ul>
+
+<p> Given a number M (that has anywhere from 1 through 9 digits), find
+and print the next runaround number higher than M, which will always
+fit into an unsigned long integer for the given test data.
+
+</p><h3>PROGRAM NAME: runround</h3>
+
+<h3>INPUT FORMAT</h3>
+
+A single line with a single integer, M
+
+<h3>SAMPLE INPUT (file runround.in) </h3>
+
+<pre>81361
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing the next runaround number higher than
+the input value, M.
+
+<h3>SAMPLE OUTPUT (file runround.out)</h3>
+
+<pre>81362
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="7hbC2bLFLrV" type="hidden">
+<input name="S" value="runround" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=7hbC2bLFLrV"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

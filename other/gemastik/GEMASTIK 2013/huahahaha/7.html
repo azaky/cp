@@ -1,0 +1,22 @@
+ <html>
+ <body>
+ <script type="text/javascript">
+ function fib(n) {
+ if (n==0) {
+ return 0;
+ } else if (n==1) {
+ return 1;
+ } else {
+ return (fib(n-1) + fib(n-2));
+ }
+ }
+ var b = 0;
+ document.write("<br/>");
+ while (b<=10) {
+ document.writeln(fib(b));
+ document.write("<br/>");
+ b+=1;
+ }
+ </script>
+ </body>
+ </html>

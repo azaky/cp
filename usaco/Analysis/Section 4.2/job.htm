@@ -1,0 +1,156 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Analysis 49: Job Processing</title> </head><body background="job_files/bg3.jpg">
+<img src="job_files/cow1.jpg" height="118" width="742">
+<center>
+<b><font size="7">Job Processing</font></b><br>
+Hal Burch
+</center>
+
+<p>You can greedily determine the earliest time the kth job can be
+finished by an "A" machine.  For each machine, keep track when it will
+complete its current job.  The time for it to complete the next job is
+this time plus the time is takes the machine to process a job.  To
+determine the time for the kth job, pick the machine which would finish
+it first and assign that job to it, updating the time that the machine
+will complete its job.
+
+</p><p>Similarly, determine how early the kth job from the end can be put
+into a B machine, where earliness is measured from the end of all jobs.
+This is akin to flipping the process around, where each finish job must
+be `undone' by a B machine.
+
+</p><p>Once these two calculations have been done and the arrays have been
+sorted, you end up with a picture like this:  </p><center><img src="job_files/prob49.gif"></center><br> Each line represents the
+activity of one job.  Green and blue are "A" machines, and yellow, cyan,
+and purple are type "B" machines.  A red line means that the job is in
+a container instead of a machine.  The left portion corresponds to "A"
+jobs, where the end of each line is the time at which the kth job is
+completed.  The right portion corresponds to "B" jobs, where the
+beginning of the line is the earliest that the kth job can be started
+with respect to the ending time of the all the "B" jobs.  The white
+space in the middle represents the `slack' time, the time that the job
+sits in an intermediate container.
+
+<p>The best option is to match up the earliest completed "A" job with
+the "B" job that starts earliest, the second earliest completed "A" job
+with the second earliest started "B" job, etc.  Take the maximum of
+these times.  This corresponds to moving the the two representations
+together until they touch (one job has no 'slack' time).
+
+
+</p><pre>#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* when machine A is done with current job/B starts current job */
+int finA[30];
+int finB[30];
+
+/* amount of time each machine takes to process a job */
+int timA[30];
+int timB[30];
+
+/* number of A and B machines */
+int na, nb;
+/* number of tasks to do */
+int ntask;
+
+/* how long before the kth task is through the "A" machine */
+int taskdone[1000];
+
+/* the last time that a job can be put into a "B" machine and still
+   be done */
+/* the value is with respect to the total end time */
+/* e.g., a value of 17 means 17 time steps before all task are completed */
+int taskst[1000]; 
+
+void make_times(void)
+ {
+  int lv, lv2;
+  int min, mloc;
+
+  for (lv = 0; lv &lt; ntask; lv++)
+   { /* for each time */
+    min = 80000; /* = infinity */
+    mloc = -1;
+
+    for (lv2 = 0; lv2 &lt; na; lv2++)
+     { /* find best A machine */
+      if (finA[lv2] + timA[lv2] &lt; min)
+       {
+        mloc = lv2;
+	min = finA[lv2] + timA[lv2];
+       }
+     }
+    assert(mloc != -1); /* sanity check */
+
+    /* put this job in the mloc "A" machine */
+    finA[mloc] = min; 
+    taskdone[lv] = min;
+
+    min = 80000;
+    mloc = -1;
+    for (lv2 = 0; lv2 &lt; nb; lv2++)
+     { /* find best B machine */
+      if (finB[lv2] + timB[lv2] &lt; min)
+       {
+        mloc = lv2;
+	min = finB[lv2] + timB[lv2];
+       }
+     }
+    assert(mloc != -1); /* sanity */
+
+    /* put this job through the mloc "B" machine */
+    finB[mloc] = min;
+    taskst[lv] = min;
+   }
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv, lv2;
+  int max, min;
+
+  if ((fin = fopen("job.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("job.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  /* read in data */
+  fscanf (fin, "%d %d %d", &amp;ntask, &amp;na, &amp;nb);
+  for (lv = 0; lv &lt; na; lv++)
+    fscanf (fin, "%d", &amp;timA[lv]);
+  for (lv = 0; lv &lt; nb; lv++)
+    fscanf (fin, "%d", &amp;timB[lv]);
+
+  /* create taskdone &amp; taskst */
+  make_times();
+
+  /* determine time that we are done with the "A" machines */
+  min = 0;
+  for (lv = 0; lv &lt; na; lv++)
+    if (finA[lv] &gt; min) min = finA[lv];
+  fprintf (fout, "%i", min); 
+
+  /* match "A" completed jobs to "B" started jobs greedily */
+  max = 0;
+  for (lv = 0; lv &lt; ntask; lv++)
+    if (taskdone[lv] + taskst[ntask-lv-1] &gt; max)
+      max = taskdone[lv] + taskst[ntask-lv-1];
+
+  fprintf (fout, " %i\n", max);
+  return 0;
+ }
+</pre>
+<center>
+<a href="http://ace.delos.com/usacogate?a=GnbbCDg7Obr">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

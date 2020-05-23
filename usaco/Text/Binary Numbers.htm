@@ -1,0 +1,200 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Binary Numbers
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Binary%20Numbers_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Binary Numbers
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Representing Binary Numbers</font></h4>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Computers operate on 1's and 0's; these are called 'bits'.  A byte
+is a group of 8 bits, like this:  00110101.  A computer word on my
+computer ('int') is 4 bytes, 32 bits: 10011010110101011010001010101011.
+Other computers have different word sizes.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">As you can see 32 ones and zeroes is a bit cumbersome to write down
+(or even to read).  Thus, conventionally people break the number
+down into groups of 3 or 4 bits:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">  1001.1010.1101.0101.1010.0010.1010.1011
+  10.011.010.110.101.011.010.001.010.101.011 &lt;-- note that the count of 3 starts on the right
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">These grouped sets of bits are then mapped onto digits, either four
+bits per hexadecimal (base 16) digit or three bits per octal (base
+8) digit. Obviously, hexadecimal needs some new digits (since decimal
+digits only go 0..9 and we need 6 more). These days, the letters
+'A'..'F' are used for the 'digits' that represent 10..15.  Here's
+the map; the correspondence is obvious:
+   
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">    OCTAL:                   HEXADECIMAL:
+  000 -&gt; 0  100 -&gt; 4       0000 -&gt; 0  0100 -&gt; 4  1000 -&gt; 8  1100 -&gt; C
+  001 -&gt; 1  101 -&gt; 5       0001 -&gt; 1  0101 -&gt; 5  1001 -&gt; 9  1101 -&gt; D
+  010 -&gt; 2  110 -&gt; 6       0010 -&gt; 2  0110 -&gt; 6  1010 -&gt; A  1110 -&gt; E
+  011 -&gt; 3  111 -&gt; 7       0011 -&gt; 3  0111 -&gt; 7  1011 -&gt; B  1111 -&gt; f
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">So now we can write the hex and octal representations of those
+integers above quite quickly along with their notations for C and
+other languages:
+
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	1001.1010.1101.0101.1010.0010.1010.1011
+    -&gt;     9    A    D    5    A    2    A    B  --&gt; 0x9AD5A2AB
+				(that's 0x in front of the hex number)
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">and
+</font><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	10.011.010.110.101.011.010.001.010.101.011 
+         2   3   2   6   5   3   2   1   2   5   3 -&gt; 023265321253
+				(that's a numeric '0' in front)
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Octal is easier to write down quickly, but hexadecimal has the nice
+properties of breaking easily into bytes (which are pairs of digits).
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Operating on Binary Numbers in Programs</font></h4>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sometimes it is handy to work with the bits stored in numbers rather
+than just treating them as integers.  Examples of such times include
+remembering choices (each bit slot can be a 'yes'/'no' indicator),
+keeping track of option flags (same idea, really, each bit slot is
+a 'yes'/'no' indicator for a flag's presence), or keeping track of
+a number of small integers (e.g., successive pairs of bit slots can
+remember numbers from 0..3).  Of course, occasionally problems
+actually contain 'bit strings'.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">In C/C++ and others, assigning a binary number is easy if you know
+its octal or hexadecimal representation:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	i = 0x9AD5A2AB;
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">or
+</font><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	i = 023265321253;
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">More often, a set of single-bit values is combined to create an
+integer of interest.  One might think the statement below would do
+that:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	i = 0x10000 + 0x100;
+</font></pre>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">and it will -- until the sign bit enters the picture or the same
+bit is combined twice:
+</font><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	i = 0x100 + 0x100;
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">In that case, a 'carry' occurs and then i contains 0x200 instead
+of 0x100 as probably desired.  The 'or' operation -- denoted
+as '|' in C/C++ and others -- does the right thing.  It combines
+successive bits using these four rules:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	0|0 -&gt; 0
+        0|1 -&gt; 1
+        1|0 -&gt; 1
+        1|1 -&gt; 1
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The '|' operation is called 'bitwise or' in C so as not to be
+confused with it's cousin '||' called 'logical or' or 'orif'.  The
+'||' operator evaluates the arithmetic value its left side and, if
+false (exactly 0), evaluates its right side.  If either evaluation
+is nonzero, then '||' evaluates to true (exactly 1 in C).
+
+</font><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">It is the final rule that distinguishes the '|' operator from '+'.
+Sometimes operators like this are displayed as a 'truth table':
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">         | | 0  1
+        ---+------
+         0 | 0  1
+         1 | 1  1
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">It's easy to see that the 'bitwise or' operation is a way to set
+bits inside an integer. A '1' results with either or both of the
+input bits are '1'.
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The easy way to query bits is using the 'logical and' (also known
+as 'andif') operator, denoted as '&amp;' that has this truth table:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">         &amp; | 0  1
+        ---+------
+         0 | 0  0
+         1 | 0  1
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">A '1' results only when *both* input bits are '1'. So, if one wants
+to know if the 0x100 bit is '1' in an integer, the if statement is
+simple:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	if (a &amp; 0x100) { printf("yes, 0x100 is on\n"); }
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">C/C++ (and others) contain additional operators, including 'exclusive
+or' (denoted '^') with this truth table:
+</font><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">         ^ | 0  1
+        ---+------
+         0 | 0  1
+         1 | 1  0
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The 'exclusive or' operator is sometimes called 'xor', for easy of
+typing.  Xor yields a '1' either exactly *one* of its inputs is
+one: either one or the other, but not both.  This operator is very
+hand for 'toggling' (flipping) bits, changing them from '1' to '0'
+or vice-versa.  Consider this statement:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	a = a ^ 0x100;   /* same as a ^= 0x100; */
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The 0x100 bit will be changed from 0-&gt;1 or 1-&gt;0, depending on its
+current value.
+</font><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Switching off a bit requires two operators. The new one is the unary
+operator that toggles every bit in a word, creating what is called
+the 'bitwise complement' or just 'complement' of a word. Sometimes
+this is called 'bit inversion' or just 'inversion' and is denoted
+by the tilde: '~'.  Here's a quick example:
+
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	char a, b;	/* eight bits, not 32 */
+	a = 0x4A;	/* 0100.1010 */
+	b = ~a;		/* flip every bit: 1011.0101 */
+	printf("b is 0x%X\n", b);
+</font></pre>
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">which yields something like:
+
+</font><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	b is 0xB5
+</font></pre>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Thus, if we have a single bit switched on (e.g., 0x100) then ~0x100
+has all but one bit switched on: 0xFFFFFEFF (note the 'E' as the
+third 'digit' from the right).
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">These two operators combine to create a scheme for switching off
+bits:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">	a = a &amp; (~0x100);	/* swtch off the 0x100 bit */
+				/* same as a &amp;= ~0x100;
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">since all but one bit in ~0x100 is on, all the bits except the 0x100
+bits appear in the result.  Since the 0x100 bit is 'off' in ~0x100,
+that bit is guaranteed to be '0' in the result. This operation is
+universally called 'masking' as in 'mask off the 0x100 bit'.
+</font><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Summary</font></h4>
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">In summary, these operators enable setting, clearing, toggling, and
+testing any bit or combination of bits in an integer:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">		a |= 0x20;		/* turn on bit 0x20 */
+		a &amp;= ~0x20;		/* turn off bit 0x20 */
+		a ^= 0x20;		/* toggle bit 0x20 */
+		if (a &amp; 0x20) {
+			/* then the 0x20 bit is on */
+		}
+</font></pre>
+</div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

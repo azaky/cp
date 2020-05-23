@@ -1,0 +1,316 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Closed Fences</title> </head><body background="fence4_files/bg3.jpg">
+<img src="fence4_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Closed Fences</font></b><br>
+Hal Burch
+</center>
+
+<p>Determining if the fence is simple is, um, simple.  For each
+pair of segments which don't share a vertex, determine if they
+intersect.  If they do, the fence isn't simple.  Otherwise, it is.
+
+</p><p>Let <i>p</i> be the point given.  Given another point <i>q</i>
+and a segment <i>e</i>, using the techniques described in the
+computation geometry module, we can determine the following:
+</p><ol>
+<li>Whether the ray <i>pq</i> intersects <i>e</i>
+</li><li>If it does, how far along that ray the intersection takes place
+</li></ol>
+
+<p>Thus, we can determine the first segment intersected by the ray,
+which must be visible to the point.  By checking all points <i>q</i> in
+the plane, we could determine all the visible faces.  The problem
+with this is, of course, that checking all points <i>q</i> is
+impossible.
+
+</p><p>Instead, check for all endpoints of segments and all midpoints
+of segments.  If an edge <i>e</i> is visible, then either its
+midpoint is visible, or some set of edges obscure it.  If some set
+of edges obscure <i>e</i>, then there is some edge where <i>e</i>
+is visible 'just beyond' one of its endpoints.  In this case, if
+we do our intersection test such that 'brushing' an endpoint of a
+segment does not count as intersecting it, then the ray from the
+observer to that endpoint will intersect the edge <i>e</i> first.
+
+</p><p>Thus, for each endpoint and midpoints, we determine the
+first edge intersected, and mark it as visible.
+
+</p><pre>/*
+PROB: fence4
+ID: hburch002
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define SQR(A) ((A)*(A))
+
+/* maximum number of points */
+#define MAXN 201
+
+/* number of points */
+int npos;
+
+/* the points, where pos[npos] == pos[0] */
+double pos[MAXN][2];
+
+/* observer's location */
+double obsx, obsy;
+
+/* cansee[x] = can we see the segment (x,x+1)? */
+int cansee[MAXN];
+
+int side(double sx, double sy, double ex, double ey, int p)
+ { /* determine the side that the points lie on */
+  double dx, dy;
+  double px, py;
+  double t;
+
+  dx = ex - sx;
+  dy = ey - sy;
+
+  px = pos[p][0] - sx;
+  py = pos[p][1] - sy;
+
+  /* take cross-product */
+  t = dx * py - dy * px;
+
+  if (t &gt; 0.00001) return 0; /* "left" side */
+  if (t &lt; -0.00001) return 1; /* "right" side */
+  return 2; /* on the line */
+ }
+
+int first_inter(double sx, double sy, double ex, double ey)
+ { /* what is the first segment intersected by the ray s-&gt;e */
+  int lv; /* loop variable */
+  int t1, t2;
+  int s1, s2;
+  double ax, ay, bx, by;
+  double t;
+  double coeff, cnst;
+  double i, j;
+  double x, y;
+  double mlbrush, mrbrush; /* when is the earliest brush on a side? */
+
+  /* min = distance to nearest intersection point */
+  /* mloc = edge where this occurs */
+  double min = 1e10; /* ~= infinity */
+  int mloc = npos; /* unused location */
+
+  mlbrush = mrbrush = 1e10; /* infinity */
+
+  for (lv = 0; lv &lt; npos; lv++)
+   { /* for each segment, determine length along */
+    ax = pos[lv][0];
+    ay = pos[lv][1];
+    bx = pos[lv+1][0];
+    by = pos[lv+1][1];
+
+    /* take cross product */
+    t = (ex - sx) * (ay - by) - (ey - sy) * (ax - bx);
+    if (t &gt; -0.00001 &amp;&amp; t &lt; 0.00001) /* parallel */
+      continue; /* not considered visible */
+
+    /* not parallel */
+    /* we are now solving the following equations:
+     (ex - sx) j + sx = (bx - ax) i + ax
+     (ey - sy) j + sy = (by - ay) i + ay
+    */
+
+    /* solves for alpha by multiple first by (by - ay) and
+       the second by (bx - ax) and subtracting equations */
+    cnst = (ax - sx)*(by - ay) - (ay - sy)*(bx - ax);
+    coeff = (ex - sx) * (by - ay) - (ey - sy) * (bx - ax);
+    if (coeff &gt; -0.00001 &amp;&amp; coeff &lt; .00001)
+     { /* degenerate, one of bx - ax and by - ay is about zero */
+      if (bx - ax &gt; -.00001 &amp;&amp; bx - ax &lt; 0.00001)
+       { /* bx - ax == 0, can solve first eqn directly */
+        cnst = ax - sx;
+        coeff = ex - sx;
+       } else { /* by - ay == 0, can solve second eqn directly */
+        cnst = ay - sy;
+        coeff = ey - sy;
+       }
+     }
+    j = cnst / coeff;
+
+    /* if intersection occurs before starting point, no intersection */
+    if (j &lt; -.00001) continue;
+
+    /* determine beta */
+    cnst = sx + (ex - sx) * j - ax;
+    coeff = bx - ax;
+    if (coeff &gt; -0.00001 &amp;&amp; coeff &lt; .00001)
+     { /* handle degeneracy */
+      cnst = sy + (ey - sy) * j - ay;
+      coeff = by - ay;
+     }
+    i = cnst / coeff;
+
+    /* if the interesection occurs with i &lt; 0 | i &gt; 1, the
+       intersection is not within the confines of the segment */
+    if (i &lt; -.00001 || i &gt; 1.00001) continue;
+
+    /* calculate intersection point */
+    x = ax + (bx - ax) * i;
+    y = ay + (by - ay) * i;
+
+    /* determine distance along line that intersection occurs */
+    t = (x - sx) * (ex - sx) + (y - sy) * (ey - sy);
+
+    /* make sure it's in bounds, and better than what we have */
+    if (t &lt; -0.00001 || t &gt; min) continue;
+    
+    /* if it occurs at an end point */
+    if (i &lt; .00001 || i &gt; 0.99999) 
+     {
+      /* find the endpoints that are incident to the intersected endpoint */
+      if (i &lt; .00001)
+       {
+        t1 = lv-1;
+        if (t1 &lt; 0) t1 += npos;
+        t2 = lv+1;
+       } else {
+        t1 = lv;
+        t2 = lv+2;
+        if (t2 &gt;= npos) t2 -= npos;
+       }
+
+      /* if they lie on the same side of the line, then ray 'brushes'
+         endpoint, which is not considered to an intersection */
+
+      s1 = side(sx,sy,ex,ey,t1);
+      s2 = side(sx,sy,ex,ey,t2);
+      if (s1 == s2) {
+	if (s1 == 0 &amp;&amp; t &lt; mlbrush) mlbrush = t;
+	if (s1 == 1 &amp;&amp; t &lt; mrbrush) mrbrush = t;
+        continue;
+      }
+     }
+    /* found a better edge! */
+    min = t;
+    mloc = lv;
+   }
+/* if it brushes on both sides, it cannot be seen */
+  if (min &gt; mlbrush &amp;&amp; min &gt; mrbrush) return npos;
+  return mloc;
+ }
+
+int check_intersect(int f1, int f2) 
+ { /* do (f1,f1+1) and (f2,f2+1) intersect? */
+  double sx, sy;
+  double ex, ey;
+  
+  sx = pos[f1][0];
+  sy = pos[f1][1];
+  ex = pos[f1+1][0];
+  ey = pos[f1+1][1];
+
+  if (side(sx, sy, ex, ey, f2) == side(sx, sy, ex, ey, f2+1))
+  /* are the f2 and f2+1 on the same side of (f1,f1+1)? */
+    return 0; /* if so, the segments don't intersect */
+
+  sx = pos[f2][0];
+  sy = pos[f2][1];
+  ex = pos[f2+1][0];
+  ey = pos[f2+1][1];
+
+  if (side(sx, sy, ex, ey, f1) == side(sx, sy, ex, ey, f1+1))
+  /* are f1 &amp; f1+1 on the same side of (f2,f2+1) */
+    return 0; /* if so, the segments don't intersect */
+
+  /* the endpoints of each segment are on opposite sides of
+     the other segment.  Therefore, they intersect */
+  return 1; 
+ }
+
+int main(int argc, char **argv)
+ {
+  FILE *fout, *fin;
+  int lv, lv2;
+  int cnt;
+  int t;
+  double dx, dy;
+
+  if ((fin = fopen("fence4.in", "r")) == NULL)
+   {
+    perror ("fopen fin");
+    exit(1);
+   }
+  if ((fout = fopen("fence4.out", "w")) == NULL)
+   {
+    perror ("fopen fout");
+    exit(1);
+   }
+
+  fscanf (fin, "%d", &amp;npos);
+  fscanf (fin, "%lf %lf", &amp;obsx, &amp;obsy);
+  for (lv = 0; lv &lt; npos; lv++)
+    fscanf (fin, "%lf %lf", &amp;pos[lv][0], &amp;pos[lv][1]);
+  pos[npos][0] = pos[0][0];
+  pos[npos][1] = pos[0][1];
+
+/* for each pair of segments that don't share a vertex */
+  for (lv = 0; lv &lt; npos; lv++)
+    for (lv2 = lv+2; lv2 &lt; npos; lv2++)
+      if (check_intersect(lv, lv2))
+       { /* if they intersect */
+
+        /* and don't share a vertex */
+        if (lv == 0 &amp;&amp; lv2 == npos-1) continue; 
+
+        /* then the fence is invalid */
+        fprintf (fout, "NOFENCE\n"); 
+        return 0;
+       }
+
+  for (lv = 0; lv &lt; npos; lv++)
+   {
+    /* check endpoint */
+    cansee[first_inter(obsx, obsy, pos[lv][0], pos[lv][1])] = 1;
+
+    /* check midpoint of segment (lv, lv+1) */
+    cansee[first_inter(obsx, obsy, 
+               (pos[lv][0] + pos[lv+1][0])*0.5, 
+               (pos[lv][1] + pos[lv+1][1])*0.5)] = 1;
+   }
+
+  /* count number of visible segments */
+  cnt = 0;
+  for (lv = 0; lv &lt; npos; lv++)
+    if (cansee[lv]) cnt++;
+
+  fprintf (fout, "%i\n", cnt);
+
+  /* list visible segments */
+  for (lv = 0; lv &lt; npos-2; lv++)
+    if (cansee[lv])
+     {
+      fprintf (fout, "%.0f %.0f %.0f %.0f\n", pos[lv][0], pos[lv][1], 
+            pos[lv+1][0], pos[lv+1][1]);
+     }
+  /* because of the way the ordering is defined, these two must be
+     checked separately */
+  if (cansee[npos-1])
+   {
+    fprintf (fout, "%.0f %.0f %.0f %.0f\n", pos[0][0], pos[0][1], 
+          pos[npos-1][0], pos[npos-1][1]);
+   }
+  if (cansee[npos-2])
+   {
+      fprintf (fout, "%.0f %.0f %.0f %.0f\n", pos[npos-2][0], pos[npos-2][1], 
+            pos[npos-2+1][0], pos[npos-2+1][1]);
+   }
+   
+  return 0;
+ }
+
+</pre>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=IbZM9hoLG9M">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</center>
+</body></html>

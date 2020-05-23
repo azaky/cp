@@ -1,0 +1,219 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Analysis: Character Recognition</title>
+</head><body background="charrec_files/bg3.jpg">
+<img src="charrec_files/cow1.jpg" width="742" height="118">
+
+<center>
+<h1>Analysis: Character Recognition</h1>
+by Alexandru Nechifor
+</center>
+<p>
+I solved this task by dynamic programming. I counted the minimum
+number of corruptions in the first i lines in "charrec.in" using x[i].
+One can see that x[i]'s value only depends on x[i-19], x[i-20] and
+x[i-21].
+</p><p>
+I used the bottom-up way to compute the minimum number of corruptions
+in all the N lines. By computing x[], I also computed car[] and
+pred[], which helped me construct the sequence of characters, whose
+images are corrupted in "charrec.in".
+</p><p>
+Also, to find the number of corruptions in a character's image, I
+had to compare lines from "font.in" and "charrec.in". Each time I
+compared two of these kinds of lines, I kept track of that in
+dist[][][].  Next time I would need the number of differences between
+those two lines, I will find it out doing just an operation, not
+twenty comparisons. This drastically reduces execution time, making
+it work for the large tests. For more details, view the source
+below.
+</p><pre>#include &lt;stdio.h&gt;
+
+FILE *e = fopen ("font.in", "r");
+FILE *f = fopen ("charrec.in", "r");
+FILE *g = fopen ("charrec.out", "w");
+long const limax = 30;//max for no. of characters in a row and no. of ideal images in font.in
+long const nmax = 1210;//max for no. of lines in charrec.in
+long nlit, nlin, nsol;
+char lit[limax][limax][limax], lin[nmax][limax];
+/*
+  lit[i] stores the (i-1)-th ideal character image from "font.in"
+  lin[i] stores the (i+2)-th line from "charrec.in"
+*/
+
+char sol[nmax];
+long x[nmax], pred[nmax], car[nmax];
+/*
+  x[i] stores the minimum number of total corruptions so far ( that is the minimum number of
+  characaters changed from lines lin[0], lin[1], ...lin[i-1], to obtain a sequence (s)
+  of ideal character images )
+  lit[ car[i] ] is the last ideal image in (s)
+  (i-pred[i]) can be 19, 20 or 21 == the number of lines of the corrupted image of car[i]
+*/
+
+long dist[limax][limax][nmax];
+/*
+  dist[i][j][k] remembers the number of differences (corruptions) between lit[i][j] and lin[k]
+  so we won't waste precious time recalculating it again and again using difv()
+*/
+
+void citeste ();	//reads data and intializes variables
+long difv (char a[limax], char b[limax]);	//counts the differences between a and b
+void ident();//computes x[], pred[] and car[]
+void recon(long k);	//constructs sol[], based on the three above
+void scrie();//writes sol[]
+
+int main () {
+    citeste ();
+    ident ();
+    recon (nlin);
+    scrie ();
+    fclose (e);
+    fclose (f);
+    fclose (g);
+    return 0;
+}
+
+void citeste () {
+    long i, j, k;
+    char aux;
+    fscanf (e, "%d", &amp;nlit);
+    fscanf (e, "%c", &amp;aux);
+    nlit = nlit / 20;
+    for(i = 0; i &lt; nlit; i++) {
+        for (j = 0; j &lt; 20; j++) {
+            for (k = 0; k &lt; 20; k++)
+		fscanf (e, "%c", &amp;lit[i][j][k]);
+            fscanf (e, "%c", &amp;aux);
+        }
+    }
+    
+    fscanf (f, "%d", &amp;nlin);
+    fscanf (f, "%c", &amp;aux);
+    for(i = 0; i &lt; nlin; i++) {
+        for (j = 0; j &lt; 20; j++)
+	    fscanf (f, "%c", &amp;lin[i][j]);
+        fscanf (f, "%c", &amp;aux);
+    }
+    for (i = 0; i &lt;= nlin; i++)
+        x[i] = pred[i] = car[i] = -1;
+    x[0] = 0;
+    for (i = 0; i &lt; nlit; i++)
+        for (j = 0; j &lt; 20; j++)
+            for (k = 0; k &lt; nlin; k++)
+                dist[i][j][k] = -1;
+}
+
+long difv (char a[limax], char b[limax]) {
+    long i, ndif=0;
+    for (i = 0; i &lt; 20; i++)
+	if (a[i] != b[i])
+	    ndif++;
+    return ndif;
+}
+
+void ident() {
+    long i, j, k, t, pret;
+    for(i=0; i&lt;=nlin; i++) {
+	if(x[i]!=-1) {
+            for(j=0; j&lt;nlit; j++) {
+		//a line is misssing
+        	if(nlin &gt;= i+19) {
+          	    pret = 0;
+          	    for (t = 0; t &lt; 19; t++) {
+            		if(dist[j][t+1][i+t]==-1)
+			    dist[j][t+1][i+t] = difv(lit[j][t+1], lin[i+t]);
+            		pret+=dist[j][t+1][i+t];
+          	    }
+          	    if ((x[i+19]==-1 || pret+x[i] &lt; x[i+19]) &amp;&amp; pret&lt;=114) {
+            		x[i+19] = x[i]+pret;
+            		pred[i+19] = i;
+            		car[i+19] = j;
+          	    }
+          	    for (k = 1; k &lt; 20; k++) {
+            		if (dist[j][k-1][i+k-1] == -1)
+			    dist[j][k-1][i+k-1] = difv(lit[j][k-1], lin[i+k-1]);
+			if (dist[j][k][i+k-1] == -1)
+			    dist[j][k][i+k-1] = difv(lit[j][k], lin[i+k-1]);
+            		pret += dist[j][k-1][i+k-1]-dist[j][k][i+k-1];
+            		if((x[i+19]==-1 || pret+x[i] &lt; x[i+19]) &amp;&amp; pret&lt;=114) {
+              		    x[i+19] = x[i]+pret;
+              		    pred[i+19] = i;
+              		    car[i+19] = j;
+            		}
+          	    }
+        	}
+        	// no line missing or duplicated
+        	if(nlin &gt;= i+20) {
+          	    pret=0;
+          	    for (k = 0; k &lt; 20; k++) {
+            		if (dist[j][k][i+k]==-1)
+			    dist[j][k][i+k] = difv(lit[j][k], lin[i+k]);
+            		pret += dist[j][k][i+k];
+          	    }
+          	    if ((x[i+20]==-1 || pret+x[i] &lt; x[i+20]) &amp;&amp; pret&lt;=120) {
+            		x[i+20] = x[i]+pret;
+            		pred[i+20] = i;
+            		car[i+20] = j;
+          	    }
+        	}
+        	//a line is duplicated
+        	if (nlin &gt;= i+21) {
+          	    pret = 0;
+          	    for (t = 0; t &lt; 20; t++) {
+            		if(dist[j][t][i+t+1]==-1)
+			    dist[j][t][i+t+1] = difv(lit[j][t], lin[i+t+1]);
+            		pret += dist[j][t][i+t+1];
+          	    }
+          	    if ((x[i+21]==-1 || pret+x[i] &lt; x[i+21]) &amp;&amp; pret&lt;=120) {
+            		x[i+21] = x[i]+pret;
+            		pred[i+21] = i;
+            		car[i+21] = j;
+          	    }
+          	    for (k = 1; k &lt; 21; k++) {
+            		if (dist[j][k-1][i+k-1]==-1)
+			    dist[j][k-1][i+k-1] = difv(lit[j][k-1], lin[i+k-1]);
+            		if(dist[j][k-1][i+k]==-1)
+			    dist[j][k-1][i+k] = difv(lit[j][k-1], lin[i+k]);
+            		pret += dist[j][k-1][i+k-1]-dist[j][k-1][i+k];
+            		if((x[i+21]==-1 || pret+x[i] &lt; x[i+21]) &amp;&amp; pret&lt;=120) {
+              		    x[i+21] = x[i]+pret;
+              		    pred[i+21] = i;
+              		    car[i+21] = j;
+            		}
+          	    }
+        	}
+    	    }
+        }
+    }
+}
+
+void recon(long k) {
+    long t;
+    if (pred[k] != -1) {
+        recon (pred[k]);
+        t = car[k];
+        if (t==0)
+  	    t = -64;
+        t += 96;
+        nsol++;
+        sol[nsol] = char(t);
+    }
+}
+
+void scrie() {
+    long i;
+    for (i = 1; i &lt;= nsol; i++)
+	fprintf (g, "%c", sol[i]);
+    fprintf (g, "\n");
+}
+
+</pre>
+<br><br>
+<center>
+<a href="http://ace.delos.com/usacogate?a=j1jzR880RS4"> USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+</body></html>

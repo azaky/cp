@@ -1,0 +1,152 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 rotsym Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="rotsym_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'rotsym' Analysis</h2>
+<h4>by Lewin Gan</h4>
+<p>
+First, we notice that four points will satisfy the conditions if and 
+only if 
+they form a parallelogram. Let's label the points in clockwise order 
+ABCD. 
+Below is a graphical representation of the parallelogram.
+</p>
+
+<pre>|
+|         A*----------*B
+|         /          /
+|        /          / 
+|       /          /
+|      /          /
+|     /          /
+|   D*----------*C
+|
++-------------------
+</pre>
+
+<p>
+To prove one side, we see that if we make a parallelogram, and take the 
+center, 
+we can rotate the points 180 degrees to get the opposite point (A -&gt; 
+C, B -&gt; D, 
+C -&gt; A, D -&gt; B). To prove the other side, we see the point X we 
+rotate about 
+needs to be the midpoint of AC and BD at the same time in order for the 
+180 
+degree reflection make the correct transformation. It is not too 
+difficult to 
+see that this forms a parallelogram if we can do that. 
+</p>
+
+<p>
+The first solution that we could come up with is an O(N^4) solution 
+where for 
+each set of four points, we check whether or not it is a parallelogram. 
+To do 
+this, let A = (x_1, y_1), B = (x_2, y_2), C = (x_3, y_3), D = (x_4, 
+y_4).
+</p>
+
+<p>
+A key observation to check if ABCD is a parallelogram is to look at the 
+opposite points. If we add the x components of A and C, it should equal 
+the sum 
+of the x components of B and D. Similarly for the y components (to see 
+why 
+this is true, shift D so it's at the origin, then find the coordinates 
+of the 
+other points).
+</p>
+
+<p>
+But this still doesn't give us an efficient solution. However, we have 
+made a 
+very important discovery. Instead of considering individual points, let 
+us 
+consider the addition of two points and call them "big points" (giving 
+us a 
+total of N^2 points). If two of those big points are equal, then we know
+ the 
+combination of the four points that make those two big points will form a
+ 
+parallelogram. If more n big points are equal to each other, we can 
+choose two 
+of them to give us n nCr 2 ways to form parallelograms. So, an outline 
+of an 
+algorithm would be to generate all the big points first, and then find 
+out how 
+many all the ones that are equal to each other. In addition, since all 
+the 
+points are guaranteed to be unique, we won't have any degenerate 
+parallelograms. 
+</p>
+
+<p>
+Below is a sample solution by Andre, which finds all the big points, 
+sorts 
+them, and then counts the number of pairs. The run time should be O(N^2 
+log N)
+</p>
+
+<pre>#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+#include &lt;complex&gt;
+#define X real
+#define Y imag
+using namespace std;
+
+FILE *fin = fopen ("rotsym.in", "r"), *fout = fopen ("rotsym.out", "w");
+
+typedef complex &lt;int&gt; point;
+
+const int MAXN = 1005;
+const double EPS = 1e-7;
+
+int N, K, total;
+point points [MAXN], rot [MAXN * MAXN];
+
+inline bool xcmp (point a, point b)
+{
+    return X (a) == X (b) ? Y (a) &lt; Y (b) : X (a) &lt; X (b);
+}
+
+int main ()
+{
+    fscanf (fin, "%d", &amp;N);
+
+    for (int i = 0; i &lt; N; i++)
+        fscanf (fin, "%d %d", &amp;points [i].X (), &amp;points [i].Y ());
+    
+    for (int i = 0; i &lt; N - 1; i++)
+        for (int j = i + 1; j &lt; N; j++)
+            rot [K].X () = X (points [i] + points [j]),
+            rot [K++].Y () = Y (points [i] + points [j]);
+
+    sort (rot, rot + K, xcmp);
+
+    int i = 0, j = 0;
+
+    while (i &lt; K)
+    {
+        while (j &lt; K &amp;&amp; rot [i] == rot [j]) ++j;
+        total += (j - i) * (j - i - 1) / 2; i = j;
+    }
+
+    fprintf (fout, "%d\n", total);
+    return 0;
+}
+</pre>
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,216 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Submitting Solutions
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Submitting%20Solutions_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Submitting Solutions
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The USACO Training Program features an automatic grading system
+for your homework problems. You submit your programs from the problem
+page itself; they are compiled and graded; the results are conveyed
+back to you -- all within a few seconds.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">C/C++, PASCAL, and Java are available.  This system uses the GNU
+GCC compilation suite for C/C++ programs and the Free Pascal system
+for Pascal programs. The Java compiler is gjc as this is written
+and is soon to be upgraded.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The grading system compilers are those often used at the IOI
+(though Java is not used at the international championships).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">These newer compilers uses 32 bit int's; the Borland compilers
+use 16 bit int's.  DO NOT GET IN TROUBLE BECAUSE OF THIS!
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Submit solutions via the web by typing the name
+of the file containing the source code into the 'Submit a file:' box
+at the bottom of problem description pages..
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Program submissions require simple <b>Header comments</b>: your
+ID (i.e., your USACO login name), the name of the program (which
+will be given in each programming assignment, and the language used.
+See the examples below to get the idea.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Every training page problem has input and output. Currently, the
+input appears in a file named 'probname.in' (e.g., if the problem
+name is 'ride', then the input filename is 'ride.in'). Output must
+be written to a file named 'probname.out' (i.e., 'ride.out' for the
+'ride' problem).
+
+</font></p><hr>
+<h2><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The First Challenge</font></h2>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The simplest programming challenge is named 'test' and requires
+you to read a pair of small integers from a single input line in
+the file 'test.in' and print their sum to the file 'test.out'.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Below is a simple solution in the 'C' programming language. Note
+the use of 'exit (0);', which is usually required to exit properly.
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">/*
+ID: your_id_here
+LANG: C
+TASK: test
+*/
+#include &lt;stdio.h&gt;
+main () {
+    FILE *fin  = fopen ("test.in", "r");
+    FILE *fout = fopen ("test.out", "w");
+    int a, b;
+    fscanf (fin, "%d %d", &amp;a, &amp;b);	/* the two input integers */
+    fprintf (fout, "%d\n", a+b);
+    exit (0);
+}
+</font></pre>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Below is a simple solution in the C++ programming language. Note
+the use of 'return (0);', which is usually required to exit properly.
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">/*
+ID: your_id_here
+PROG: test
+LANG: C++
+*/
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    ofstream fout ("test.out");
+    ifstream fin ("test.in");
+    int a, b;
+    fin &gt;&gt; a &gt;&gt; b;
+    fout &lt;&lt; a+b &lt;&lt; endl;
+    return 0;
+}
+</font></pre>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Below is a simple solution in the PASCAL programming language:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">{
+ID: your_id_here
+PROG: test
+LANG: PASCAL
+}
+Program Test;
+Var fin, fout: text;
+    a, b: word;
+Begin
+    Assign(fin, 'test.in'); Reset(fin);
+    Assign(fout, 'test.out'); Rewrite(fout);
+    Readln(fin, a, b);
+    Writeln(fout, a+b);
+    Close(fout);
+End.
+</font></pre>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">And here is the same program, this time in JAVA. Note that the
+program presumes the file opens will succeed, which they will:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">/*
+ID: your_id_here
+LANG: JAVA
+TASK: test
+*/
+import java.io.*;
+import java.util.*;
+
+class test {
+  public static void main (String [] args) throws IOException {
+    // Use BufferedReader rather than RandomAccessFile; it's much faster
+    BufferedReader f = new BufferedReader(new FileReader("test.in"));
+                                                  // input file name goes above
+    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("test.out")));
+    // Use StringTokenizer vs. readLine/split -- lots faster
+    StringTokenizer st = new StringTokenizer(f.readLine());
+						  // Get line, break into tokens
+    int i1 = Integer.parseInt(st.nextToken());    // first integer
+    int i2 = Integer.parseInt(st.nextToken());    // second integer
+    out.println(i1+i2);                           // output result
+    out.close();                                  // close the output file
+    System.exit(0);                               // don't omit this!
+  }
+}
+</font></pre>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><b>Important: BufferedReader and StringTokenizer are far more
+efficient than many other schemes for reading input. They can
+make a huge difference in the efficiency of your program! Use
+them!</b>
+
+</font><hr>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">You can try as many different things (subject to the caveats
+below) as you like to see how the grading system  works. Theoretically,
+you can't break it or crash it. If you see a problem, please let
+me know.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The restrictions are few:
+</font></p><ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>One second runtime limit unless other specified (700 MHz Pentium III)</li>
+<li>About 16MB datasize limit</li>
+<li>About 1MB stacksize limit</li>
+<li>Be sure your program exits with status 0</li>
+<li>Be sure you print complete lines (with terminating newline), not just a few words or numbers</li>
+<li>Don't use files other than the specified input, output, and auxiliary files</li>
+<li>Other common sense rules that need not be listed</li>
+</font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The rules are simple:
+</font></p><ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Don't try to cheat.</li>
+<li><b>Don't just print the answers</b>, you must calculate them
+in your program.  If you just print answers, your login ID might be
+removed.</li>
+<li>Don't try to look at other files on the system or use other
+schemes to break security</li>
+<li>Don't try to break common sense rules of privacy</li>
+<li>Please report anomalous behavior to me right away
+    (<a href="mailto:kolstad@ace.delos.com">&lt;kolstad@delos.com&gt;</a>) </li>
+<li>Have as much fun as possible</li>
+<li>Earn a trip to the IOI and other exotic contests!</li>
+</font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Some hints:
+</font></p><ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>Both stderr and stdout are returned to you when errors occur</li>
+<li>Feel free to ask questions and send in comments</li>
+<li>Your reported output has `_'s substituted for spaces</li>
+<li>Include this comment if you use try/catch/throw in C++: <tt>/*pragma&nbsp;handle-exceptions*/</tt>
+</li></font></ul>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Compiler comments (please send in new compiler comments as you find them):
+</font></p><ul>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><li>We're using g++ (a.k.a. djgpp on PCs), Free Pascal, and gjc
+</li><li>In C/C++, ints are 32 bits (char is 8; short is 16; long is 32; long
+long is 64)
+</li><li>some libraries have new names; some have different or missing
+functions
+</li><li>stricmp doesn't exist; use strcmp for string compares
+</li><li>strrev does not exist
+</li><li>neither itoa nor ltoa exists (use sprintf instead)
+</li><li>No need for <i>huge</i> declarations - pointers already go everywhere
+</li><li>Pascal users: be sure to "close" your output file or the
+output might not appear</li>
+</font></ul>
+
+
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Give it a try! Submit one of the programs above, <font color="#ff0000">using your own ID</font>. Mouse it off into a file
+then type in the name of the text file that contains the source:
+</font></p><form action="/upload3" enctype="multipart/form-data" method="POST">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><b>Submit a file:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+</font></form>
+</div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

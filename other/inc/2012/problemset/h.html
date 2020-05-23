@@ -1,0 +1,75 @@
+
+<!-- saved from url=(0122)http://competition.binus.ac.id/inc2012/problemset/4818673338d0af177d0ede79c6b15bce/5848979f46f86cdbec346f7c90e0ca72/h.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>
+body {
+	font-family: "Arial";
+	font-size: 10pt;
+}
+</style>
+
+</head><body><com:tcontent id="body">
+<center>
+<h3>ACM-ICPC Indonesia National Contest 2012</h3>
+<h2>Problem H</h2>
+<h1>Good Team Work</h1>
+Time Limit: 2s
+</center>
+<br>
+
+<p>ICPC 2012 is drawing near and UCA (University of Cool and Awesomness) is going to send some of their teams to compete in this prestigious programming contest event. As you might alread know, each team consists of 3 students.</p>
+<p>There are 3N students and Mr. Rhino -the team's coach- wants to form exactly N teams such that all students get their own team. From the past year experience, Rhino realized that team work is an important factor to consider when forming a team, that's why Rhino assesses the compability for each pair of student. The team-compability value is defined as the total compability between each pair of student in the team. This year, instead of trying to win ICPC (by forming one best team, and let the rest do their own), Rhino wants to create teams with good team work. So, all of his N teams, he wants the teams are arranged such that the lowest team-compability value is as high as possible.</p>
+<p>Given a matrix of 3N x 3N, help Rhino to find the highest possible value for the lowest team-compability of his teams.</p>
+
+
+<br>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &#8804; T &#8804; 100) the number of cases. Each case begins with an integer N (1 &#8804; N &#8804; 5). The next 3N lines each contains 3N integers a<sub>ij</sub> (0 &#8804; a<sub>ij</sub> &#8804; 1,000) denoting the compability value of i<sup>th</sup> and j<sup>th</sup> student. a<sub>ij</sub> will be equal to a<sub>ji</sub>.
+
+
+</p>
+
+<h3>Output</h3>
+<p>For each test case, output in a line the "Case #X: Y" where X is the case number starts from 1, and Y is the highest possible value for the lowest team-compability of Rhino's teams in each case.</p>
+<br>
+
+<br><table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tbody><tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tbody><tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
+1
+0 3 4
+3 0 4
+4 4 0
+2
+0 3 7 6 5 10
+3 0 5 9 5 4
+7 5 0 2 1 2
+6 9 2 0 4 1
+5 5 1 4 0 3
+10 4 2 1 3 0
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>Case #1: 11
+Case #2: 18
+</pre>
+</td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+
+<br>
+<p><i>Explanation for the 1<sup>st</sup> sample input.</i></p>
+<p>There is only one team and its team-compability is 3 + 4 + 4 = 11.</p>
+<p><i>Explanation for the 2<sup>nd</sup> sample input.</i></p>
+<p>The best arrangement is:
+</p><ul>
+<li>team #1: student 1, 3 and 6; with team-compability = 7 + 10 + 2 = 19.</li>
+<li>team #2: student 2, 4 and 5; with team-compability = 9 + 5 + 4 = 18.</li>
+</ul>
+<p></p>
+
+
+
+<br><br>
+</com:tcontent></body></html>

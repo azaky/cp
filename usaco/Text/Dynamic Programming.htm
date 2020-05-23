@@ -1,0 +1,649 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Dynamic Programming
+</title>
+</head><body bgcolor="#f0f0f0">
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+</font><div style="width: 45em; background-color: white; border-style: solid; border-width: 1px; padding: 1em;">
+<table cellspacing="8">
+   <tbody><tr><td><img src="Dynamic%20Programming_files/cowhead2.gif"></td>
+       <td>&nbsp;&nbsp;&nbsp;</td>
+       <td><b><font size="5">
+	<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Dynamic Programming
+</font></font></b></td>
+   </tr>
+</tbody></table>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Introduction </font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Dynamic programming is a confusing name for a programming technique that
+dramatically reduces the runtime of algorithms: from exponential to
+polynomial. The basic idea is to try to avoid solving the same problem
+or subproblem twice.  Here is a problem to demonstrate its power:
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given a sequence of as many as 10,000 integers (0 &lt; integer &lt; 100,000),
+what is the maximum decreasing subsequence? Note that the subsequence
+does not have to be consecutive.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Recursive Descent Solution</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The obvious approach to solving the problem is recursive descent.  One
+need only find the recurrence and a terminal condition.  Consider the
+following solution:
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;#include&nbsp;&lt;stdio.h&gt;<br>
+<br><br>
+&nbsp;2&nbsp;&nbsp;long&nbsp;n,&nbsp;sequence[10000];<br>
+&nbsp;3&nbsp;&nbsp;main&nbsp;()&nbsp;{<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*in,&nbsp;*out;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;=&nbsp;fopen&nbsp;("input.txt",&nbsp;"r");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out&nbsp;=&nbsp;fopen&nbsp;("output.txt",&nbsp;"w");&nbsp;&nbsp;&nbsp;<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;n;&nbsp;i++)&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;sequence[i]);<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;(out,&nbsp;"%d\n",&nbsp;check&nbsp;(0,&nbsp;0,&nbsp;99999));<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit&nbsp;(0);<br>
+12&nbsp;&nbsp;}<br>
+<br><br>
+13&nbsp;&nbsp;check&nbsp;(start,&nbsp;nmatches,&nbsp;smallest)&nbsp;{<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;better,&nbsp;i,&nbsp;best=nmatches;<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;start;&nbsp;i&nbsp;&lt;&nbsp;n;&nbsp;i++)&nbsp;{<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(sequence[i]&nbsp;&lt;&nbsp;smallest)&nbsp;{<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;better&nbsp;=&nbsp;check&nbsp;(i,&nbsp;nmatches+1,&nbsp;sequence[i]);<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(better&nbsp;&gt;&nbsp;best)&nbsp;best&nbsp;=&nbsp;better;<br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;best;<br>
+22&nbsp;&nbsp;}<br>
+</font></tt>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Lines 1-9 and and 11-12 are arguably boilerplate.  They set up some
+standard variables and grab the input.  The magic is in line 10 and the
+recursive routine `check'.  The `check' routine knows where it should
+start searching for smaller integers, the length of the longest sequence
+so far, and the smallest integer so far.  At the cost of an extra call,
+it terminates `automatically' when `start' is no longer within proper
+range.  The `check' routine is simplicity itself.  It traverses along
+the list looking for a smaller integer than the `smallest' so far.  If
+found, `check' calls itself recursively to find more.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The problem with the recursive solution is the runtime:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;N&nbsp;&nbsp;&nbsp;Seconds<br>
+&nbsp;&nbsp;60&nbsp;&nbsp;&nbsp;0.130<br>
+&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;0.360<br>
+&nbsp;&nbsp;80&nbsp;&nbsp;&nbsp;2.390<br>
+&nbsp;&nbsp;90&nbsp;&nbsp;13.190<br>
+</font></tt>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Since the particular problem of interest suggests that the maximum length
+of the sequence might approach six digits, this solution is of limited
+interest.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Starting At The End</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">When solutions don't work by approaching them `forwards' or `from the
+front', it is often fruitful to approach the problem backward.  In this
+case, that means looking at the end of the sequence first.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Additionally, it is often fruitful to trade a bit of storage for
+execution efficiency.  Another program might work from the end of the
+sequence, keeping track of the longest descending (sub-)sequence so far
+in an auxiliary variable.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Consider the sequence starting at the end, of length 1.  Any sequence
+of length 1 meets all the criteria for a longest sequence.  Notate the
+`bestsofar' array as `1' for this case.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Consider the last two elements of the sequence.  If the
+penultimate number is larger than the last one, then the `bestsofar' is
+2 (which is 1 + `bestsofar' for the last number).  Otherwise, it's `1'.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Consider any element prior to the last two.  Any time it's larger
+than an element closer to the end, its `bestsofar' element becomes at
+least one larger than that of the smaller element that was found.  Upon
+termination, the largest of the `bestsofar's is the length of the longest
+descending subsequence.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> This is fairly clearly an O(<i>N</i> <sup> 2</sup>) algorithm.
+Check out its code:
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;&nbsp;#include&nbsp;&lt;stdio.h&gt;<br>
+&nbsp;2&nbsp;&nbsp;#define&nbsp;MAXN&nbsp;10000<br>
+&nbsp;3&nbsp;&nbsp;main&nbsp;()&nbsp;{<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;num[MAXN],&nbsp;bestsofar[MAXN];<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*in,&nbsp;*out;<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;n,&nbsp;i,&nbsp;j,&nbsp;longest&nbsp;=&nbsp;0;<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;=&nbsp;fopen&nbsp;("input.txt",&nbsp;"r");<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out&nbsp;=&nbsp;fopen&nbsp;("output.txt",&nbsp;"w");<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;n);<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;n;&nbsp;i++)&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;num[i]);<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestsofar[n-1]&nbsp;=&nbsp;1;<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;n-1-1;&nbsp;i&nbsp;&gt;=&nbsp;0;&nbsp;i--)&nbsp;{<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestsofar[i]&nbsp;=&nbsp;1;<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(j&nbsp;=&nbsp;i+1;&nbsp;j&nbsp;&lt;&nbsp;n;&nbsp;j++)&nbsp;{<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(num[j]&nbsp;&lt;&nbsp;num[i]&nbsp;&amp;&amp;&nbsp;bestsofar[j]&nbsp;&gt;=&nbsp;bestsofar[i])&nbsp;&nbsp;{<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestsofar[i]&nbsp;=&nbsp;bestsofar[j]&nbsp;+&nbsp;1;<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(bestsofar[i]&nbsp;&gt;&nbsp;longest)&nbsp;longest&nbsp;=&nbsp;bestsofar[i];<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(out,&nbsp;"bestsofar&nbsp;is&nbsp;%d\n",&nbsp;longest);<br>
+22&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(0);<br>
+23&nbsp;&nbsp;}<br>
+</font></tt>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Again, lines 1-10 are boilerplate.  Line 11 sets up the end condition.
+Lines 12-20 run the O(<i>N</i> <sup>2</sup>) algorithm in a fairly
+straightforward way with the `i' loop counting backwards and the `j'
+loop counting forwards.  One line longer then before, the runtime figures
+show better performance:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;N&nbsp;&nbsp;&nbsp;&nbsp;Secs<br>
+&nbsp;1000&nbsp;&nbsp;0.080<br>
+&nbsp;2000&nbsp;&nbsp;0.240<br>
+&nbsp;3000&nbsp;&nbsp;0.550<br>
+&nbsp;4000&nbsp;&nbsp;0.950<br>
+&nbsp;5000&nbsp;&nbsp;1.450<br>
+&nbsp;6000&nbsp;&nbsp;2.080<br>
+&nbsp;7000&nbsp;&nbsp;2.990<br>
+&nbsp;8000&nbsp;&nbsp;3.700<br>
+&nbsp;9000&nbsp;&nbsp;4.700<br>
+10000&nbsp;&nbsp;6.330<br>
+11000&nbsp;&nbsp;7.350<br>
+</font></tt>
+
+The algorithm still runs too slow (for competitions) at N=9000.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> That inner loop (``search for any smaller number'') begs to have
+some storage traded for it.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> A different set of values might best be stored in the auxiliary
+array.  Implement an array `bestrun' whose index is the length of a long
+subsequence and whose value is the first (and, as it turns out, `best')
+integer that heads that subsequence.  Encountering an integer larger
+than one of the values in this array means that a new, longer sequence
+can potentially be created.  The new integer might be a new `best head
+of sequence', or it might not.  Consider this sequence:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;10&nbsp;8&nbsp;9&nbsp;4&nbsp;6&nbsp;3<br>
+</font></tt>
+
+Scanning from right to left (backward to front), the `bestrun' array
+has but a single element after encountering the 3:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+</font></tt>
+
+Continuing the scan, the `6' is larger than the `3', to the `bestrun'
+array grows:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:6<br>
+</font></tt>
+
+The `4' is not larger than the `6', though it is larger than the `3',
+so the `bestrun' array changes:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:4<br>
+</font></tt>
+
+The `9' extends the array:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2:9<br>
+</font></tt>
+
+The `8' changes the array similar to the earlier case with the `4':
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2:8<br>
+</font></tt>
+
+The `10' extends the array again:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2:8<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3:10<br>
+</font></tt>
+
+and yields the answer: 4 (four elements in the array).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Because the `bestrun' array probably grows much less quickly than
+the length of the processed sequence, this algorithm probabalistically
+runs much faster than the previous one.  In practice, the speedup is
+large.  Here's a coding of this algorithm:
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;&nbsp;#include&nbsp;&lt;stdio.h&gt;<br>
+&nbsp;2&nbsp;&nbsp;#define&nbsp;MAXN&nbsp;200000<br>
+&nbsp;3&nbsp;&nbsp;main&nbsp;()&nbsp;{<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*in,&nbsp;*out;<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;num[MAXN],&nbsp;bestrun[MAXN];<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;n,&nbsp;i,&nbsp;j,&nbsp;highestrun&nbsp;=&nbsp;0;<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;=&nbsp;fopen&nbsp;("input.txt",&nbsp;"r");<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out&nbsp;=&nbsp;fopen&nbsp;("output.txt",&nbsp;"w");<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;n);<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;n;&nbsp;i++)&nbsp;fscanf(in,&nbsp;"%ld",&nbsp;&amp;num[i]);<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestrun[0]&nbsp;=&nbsp;num[n-1];<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;highestrun&nbsp;=&nbsp;1;<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i&nbsp;=&nbsp;n-1-1;&nbsp;i&nbsp;&gt;=&nbsp;0;&nbsp;i--)&nbsp;{<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(num[i]&nbsp;&lt;&nbsp;bestrun[0])&nbsp;{<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestrun[0]&nbsp;=&nbsp;num[i];<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;<br>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(j&nbsp;=&nbsp;highestrun&nbsp;-&nbsp;1;&nbsp;j&nbsp;&gt;=&nbsp;0;&nbsp;j--)&nbsp;{<br>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(num[i]&nbsp;&gt;&nbsp;bestrun[j])&nbsp;{<br>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(j&nbsp;==&nbsp;highestrun&nbsp;-&nbsp;1&nbsp;||&nbsp;num[i]&nbsp;&lt;&nbsp;bestrun[j+1]){<br>
+21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestrun[++j]&nbsp;=&nbsp;num[i];<br>
+22&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(j&nbsp;==&nbsp;highestrun)&nbsp;highestrun++;<br>
+23&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("best&nbsp;is&nbsp;%d\n",&nbsp;highestrun);<br>
+29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(0);<br>
+30&nbsp;&nbsp;}<br>
+</font></tt>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Again, lines 1-10 are boilerplate.  Lines 11-12 are initialization.
+Lines 14-17 are an optimization for a new `smallest' element.  They
+could have been moved after line 26.  Mostly, these lines only effect
+the `worst' case of the algorithm when the input is sorted `badly'.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Lines 18-26 are the meat that searches the bestrun list and contain
+all the exceptions and tricky cases (bigger than first element? insert
+in middle? extend the array?).  You should try to code this right now
+- without memorizing it.
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The speeds are impressive.  The table below compares this algorithm with
+the previous one, showing this algorithm worked for N well
+into five digits:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;N&nbsp;&nbsp;&nbsp;&nbsp;orig&nbsp;&nbsp;&nbsp;&nbsp;Improved<br>
+&nbsp;1000&nbsp;&nbsp;0.080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.030<br>
+&nbsp;2000&nbsp;&nbsp;0.240&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.030<br>
+&nbsp;3000&nbsp;&nbsp;0.550&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.050<br>
+&nbsp;4000&nbsp;&nbsp;0.950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.060<br>
+&nbsp;5000&nbsp;&nbsp;1.450&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.080<br>
+&nbsp;6000&nbsp;&nbsp;2.080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.090<br>
+&nbsp;7000&nbsp;&nbsp;2.990&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.110<br>
+&nbsp;8000&nbsp;&nbsp;3.700&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.130<br>
+&nbsp;9000&nbsp;&nbsp;4.700&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.140<br>
+10000&nbsp;&nbsp;6.330&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.160<br>
+11000&nbsp;&nbsp;7.350&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.170<br>
+20000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.290<br>
+40000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.570<br>
+60000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.910<br>
+80000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.290<br>
+100000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.220<br>
+</font></tt>
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Marcin Mika points out that you can simplify this algorithm to this
+tiny little solution:
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">#include &lt;stdio.h&gt;
+#define SIZE 200000
+#define MAX(x,y) ((x)&gt;(y)?(x):(y))
+
+int     best[SIZE];        // best[] holds values of the optimal sub-sequence
+
+int 
+main (void) {
+    FILE *in  = fopen ("input.txt", "r");
+    FILE *out = fopen ("output.txt", "w");
+    int     i, n, k, x, sol = -1;
+
+    fscanf (in, "%d", &amp;n);	// N = how many integers to read in
+    for (i = 0; i &lt; n; i++) {
+	best[i] = -1;
+	fscanf (in, "%d", &amp;x);
+	for (k = 0; best[k] &gt; x; k++)
+	    ;
+	best[k] = x;
+	sol = MAX (sol, k + 1);
+    }
+    printf ("best is %d\n", sol);
+    return 0;
+}
+</font></pre>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><i>Not to be outdone, Tyler Lu points out the program below.</i>
+	The solutions above use a linear search to
+	find the appropriate location in the 'bestrun' array to
+	insert an integer. However, because the auxiliary array is
+	sorted, using binary search will make it run even faster,
+	decreasing the runtime to O(N log N).
+
+</font></p><pre><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">#include &lt;stdio.h&gt;
+#define SIZE 200000
+#define MAX(x,y) ((x)&gt;(y)?(x):(y))
+
+int     best[SIZE];        // best[] holds values of the optimal sub-sequence
+
+int
+main (void) {
+    FILE *in  = fopen ("input.txt", "r");
+    int i, n, k, x, sol;
+    int low, high;
+
+    fscanf (in, "%d", &amp;n);	// N = how many integers to read in
+    // read in the first integer
+    fscanf (in, "%d", &amp;best[0]);
+    sol = 1;
+    for (i = 1; i &lt; n; i++) {
+        best[i] = -1;
+    	  fscanf (in, "%d", &amp;x);
+
+        if(x &gt;= best[0]) {
+          k = 0;
+          best[0] = x;
+        }
+        else {
+          // use binary search instead
+          low = 0;
+          high = sol-1;
+          for(;;) {
+            k = (int) (low + high) / 2;
+            // go lower in the array
+            if(x &gt; best[k] &amp;&amp; x &gt; best[k-1]) {
+              high = k - 1;
+              continue;
+            }
+            // go higher in the array
+            if(x &lt; best[k] &amp;&amp; x &lt; best[k+1]) {
+              low = k + 1;
+              continue;
+            }
+            // check if right spot
+            if(x &gt; best[k] &amp;&amp; x &lt; best[k-1])
+              best[k] = x;
+            if(x &lt; best[k] &amp;&amp; x &gt; best[k+1])
+              best[++k] = x;
+            break;
+          }
+        }
+	      sol = MAX (sol, k + 1);
+    }
+    printf ("best is %d\n", sol);
+    fclose(in);
+    return 0;
+}
+</font></pre>
+
+<h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Summary</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">These programs demonstrate the main concept behind dynamic programming:
+build larger solutions based on previously found solutions.  This
+building-up of solutions often yields programs that run very quickly.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> For the previous programming challenge, the main subproblem was:
+Find the largest decreasing subsequence (and its first value) for numbers
+to the `right' of a given element.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Note that this sort of approach solves a class of problems that
+might be denoted ``one-dimensional''.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Two Dimensional DP</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">It is possible to create higher dimension problems such as:
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given two sequences of integers, what is the longest sequence which is
+a subsequence of both sequences?
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Here, the subproblems are the longest common subsequence of smaller
+sequences (where the sequences are the tails of the original
+subsequences). First, if one of the sequences contains only one element,
+the solution is trivial (either the element is in the other sequence or
+it isn't).
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Look at the problem of finding the longest common subsequence of the
+last i elements of the first sequence and the last j elements of the
+second sequences. There are only two possibilities. The first element
+of the first tail might be in the longest common subsequence or it might
+not. The longest common sequence not containing the first element of
+the first tail is merely the longest common subsequence of the last i-1
+elements of the first sequence and the last j elements of the second
+subsequence. The other possibility results from some element in the tail
+of the second sequence matching the first element in tail of the first,
+and finding the longest common subsequence of the elements after those
+matched elements.
+
+<br><img src="Dynamic%20Programming_files/dp1.gif"><br>
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Pseudocode</font></h5>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Here's the pseudocode for this algorithm:
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;the&nbsp;tail&nbsp;of&nbsp;the&nbsp;second&nbsp;sequence&nbsp;is&nbsp;empty<br>
+&nbsp;1&nbsp;&nbsp;&nbsp;for&nbsp;element&nbsp;=&nbsp;1&nbsp;to&nbsp;length1<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length[element,&nbsp;length2+1]&nbsp;=&nbsp;0<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;the&nbsp;tail&nbsp;of&nbsp;the&nbsp;first&nbsp;sequence&nbsp;has&nbsp;one&nbsp;element<br>
+&nbsp;3&nbsp;&nbsp;&nbsp;matchelem&nbsp;=&nbsp;0<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;for&nbsp;element&nbsp;=&nbsp;length2&nbsp;to&nbsp;1<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;list1[length1]&nbsp;=&nbsp;list2[element]<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matchelem&nbsp;=&nbsp;1<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length[length1,element] = nmatchlen
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;loop&nbsp;over&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;tail&nbsp;of&nbsp;the&nbsp;first&nbsp;sequence<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;for&nbsp;loc&nbsp;=&nbsp;length1-1&nbsp;to&nbsp;1<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxlen&nbsp;=&nbsp;0<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;element&nbsp;=&nbsp;length2&nbsp;to&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;longest&nbsp;common&nbsp;subsequence&nbsp;doesn't&nbsp;include&nbsp;first&nbsp;element<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;length[loc+1,element]&nbsp;&gt;&nbsp;maxlen<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxlen&nbsp;=&nbsp;length[loc+1,element]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;longest&nbsp;common&nbsp;subsequence&nbsp;includes&nbsp;first&nbsp;element<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;list1[loc]&nbsp;=&nbsp;list2[element]&nbsp;&amp;&amp;<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length[loc+1,element+1]+1&nbsp;&gt;&nbsp;maxlen<br>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxlen&nbsp;=&nbsp;length[loc,element+1]&nbsp;+&nbsp;1<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length[loc,element]&nbsp;=&nbsp;maxlen<br>
+</font></tt>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This program runs in O(<i>N</i>  x   <i>M</i>) time, where <i>N</i> and
+<i>M</i> are the respectively lengths of the sequences.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Note that this algorithm does not directly calculate the longest
+common subsequence. However, given the length matrix, you can determine
+the subsequence fairly quickly:
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;location1&nbsp;=&nbsp;1<br>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;location2&nbsp;=&nbsp;1<br>
+<br><br>
+&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(length[location1,location2]&nbsp;!=&nbsp;0)<br>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&nbsp;=&nbsp;False<br>
+&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;element&nbsp;=&nbsp;location2&nbsp;to&nbsp;length2<br>
+&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(list1[location1]&nbsp;=&nbsp;list2[element]&nbsp;AND<br>
+&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;length[location1+1,element+1]+1&nbsp;=&nbsp;length[location1,location2]<br>
+&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;output&nbsp;(list1[location1],list2[element])<br>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;location2&nbsp;=&nbsp;element&nbsp;+&nbsp;1<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&nbsp;=&nbsp;True<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break&nbsp;for<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;location1&nbsp;=&nbsp;location1&nbsp;+&nbsp;1<br>
+</font></tt>
+
+</font></p><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">The trick to dynamic programming is finding the subproblems to solve.
+Sometimes it involves multiple parameters:
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> A bitonic sequence is a sequence which increases for the first part
+and decreases for the second part. Find the longest bitonic sequence of
+a sequence of integers (technically, a bitonic can either
+increase-then-decrease or decrease-then-increase, but for this problem,
+only increase and then decrease will be considered).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> In this case, the subproblems are the longest bitonic sequence and
+the longest decreasing sequence of prefixes of the sequence (basically,
+what's longest sequence assuming the turn has not occurred yet, and
+what's longest sequence starting here assuming the turn has already
+occurred).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Sometimes the subproblems are well hidden:
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> You have just won a contest where the prize is a free vacation in
+Canada.  You must travel via air, and the cities are ordered from east
+to west.  In addition, according to the rules, you must start at the
+further city west, travel only east until you reach the furthest city
+east, and then fly only west until you reach your starting location. In
+addition, you may visit no city more than once (except the starting
+city, of course).
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given the order of the cities, with the flights that can be done
+(you can only fly between certain cities, and just because you can fly
+from city A to city B does not mean you can fly the other direction),
+calculate the maximum number of cities you can visit.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> The obvious item to try to do dynamic programming on is your location
+and your direction, but it's important what path you've taken (since
+you can't revisit cities on the return trip), and the number of paths
+is too large to be able to solve (and store) the result of doing all of
+those subproblems.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">However, if, instead of trying to find the path as described, it is
+found a different manner, then the number of states greatly decreases.
+Imagine having two travelers who start in the western most city.  The
+travelers take turns traveling east, where the next traveler to move is
+always the western-most, but the travelers may never be at the same
+city, unless it is either the first or the last city.  However, one of
+the traveler is only allowed to make "reverse flights," where he can
+travel from city A to city B if and only if there is a flight from city
+<b>B</b> to city <b>A</b>.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> It's not too difficult to see that the paths of the two travelers
+can be combined to create a round-trip, by taking the normal traveler's
+path to the eastern-most city, and then taking the reverse of the other
+traveler's path back to the western-most city.  Also, when traveler x
+is moved, you know that the traveler y has not yet visited any city east
+of traveler x except the city traveler y is current at, as otherwise
+traveler y must have moved once while x was west of y.  Thus, the two
+traveler's paths are disjoint.  Why this algorithm might yield the
+maximum number of cities is left as an exercise.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Recognizing Problems solvable by dynamic programming</font></h4>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Generally, dynamic programming solutions are applied to those solutions
+which would otherwise be exponential in time, so if the bounds of the
+problem are too large to be able to be done in exponential time for any
+but a very small set of the input cases, look for a dynamic programming
+solution. Basically, any program you were thinking about doing recursive
+descent on, you should check to see if a dynamic programming solution
+exists if the inputs limits are over 30.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Finding the Subproblems</font></h4>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> As mentioned before, finding the subproblems to do dynamic programming
+over is the key. Your goal is to completely describe the state of a
+solution in a small amount of data, such as an integer, a pair of
+integers, a boolean and an integer, etc.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Almost without fail, the subproblem will be the `tail-end' of a
+problem.  That is, there is a way to do the recursive descent such that
+at each step, you only pass a small amount of data. For example, in the
+air travel one, you could do recursive descent to find the complete
+path, but that means you'd have to pass not only your location, but the
+cities you've visited already (either as a list or as a boolean array).
+That's too much state for dynamic programming to work on. However,
+recursing on the pair of cities as you travel east subject to the constant
+given is a very small amount of data to recurse on.
+
+</font></p><p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> If the path is important, you will not be able to do dynamic
+programming unless the paths are <b>very</b> short. However, as in the
+air travel problem, depending on how you look at it, the path may not
+be important.
+
+</font></p><h4><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Sample Problems</font></h4>
+
+
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Polygon Game [1998 IOI]
+
+</font><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Imagine a regular N-gon.  Put numbers on nodes, either and the operators
+`+' or `*' on the edges.  The first move is to remove an edge.  After
+that, combine (e.g., evaluate the simple term) across edges, replacing
+the edge and end points with node with value equal to value of end point
+combined by operations, for example:
+
+<br>
+<tt><font size="2"> <br>
+&nbsp;&nbsp;...--&nbsp;3&nbsp;--+--&nbsp;5&nbsp;--*--&nbsp;7&nbsp;--...<br>
+&nbsp;&nbsp;...-----&nbsp;8&nbsp;----*-----&nbsp;7&nbsp;--...<br>
+&nbsp;&nbsp;...--------&nbsp;56&nbsp;-----------...<br>
+</font></tt>
+
+Given a labelled N-gon, maximize the final value computed.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Subset Sums [Spring 98 USACO]</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">For many sets of consecutive integers from 1 through N (1 &lt;= N &lt;= 39),
+one can partition the set into two sets whose sums are identical.  For
+example, if N=3, one can partition the set {1, 2, 3} in one way so that
+the sums of both subsets are identical:
+</font></p><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">        {3} and {1,2}
+</font></center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">This counts as a single partitioning (i.e., reversing the order counts
+as the same partitioning and thus does not increase the count of
+partitions).
+
+</font><p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">If N=7, there are 4 ways to partition the set {1, 2, 3, ... 7} so that
+each partition has the same sum:
+</font></p><center><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> {1,6,7} and {2,3,4,5} </font></center>
+<center><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> {2,5,7} and {1,3,4,6} </font></center>
+<center><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> {3,4,7} and {1,2,5,6} </font></center>
+<center><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> {1,2,4,7} and {3,5,6} </font></center>
+
+<p><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"> Given N,  your program should print the number of ways a set
+containing the integers from 1 through N can be partitioned into two
+sets whose sums are identical.  Print 0 if there are no such ways.
+
+</font></p><h5><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Number Game [IOI 96, maybe]</font></h5>
+
+<p>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">Given a sequence of no more than 100 integers (-32000..32000), two
+opponents alternate turns removing the leftmost or rightmost number from
+a sequence.  Each player's score at the end of the game is the sum of
+those numbers he or she removed. Given a sequence, determine the maximum
+winning score for the first player, assuming the second player plays
+optimally.
+</font></p></div><font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><br>
+</font><center>
+<font face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans"><a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l">USACO Gateway</a> | <a href="mailto:kolstad@ace.delos.com">Comment or Question</a>
+</font></center>
+</body></html>

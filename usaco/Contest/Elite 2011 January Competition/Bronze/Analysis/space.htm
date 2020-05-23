@@ -1,0 +1,194 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO JAN11 space Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="space_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO JAN11 Problem 'space' Analysis</h2>
+<h4>by Rob Kolstad</h4>
+<p>This is a 'flood fill' problem were the filling is fundamental
+to counting the number of meteors in the sector. We look for a
+meteor, count it, and then 'flood' its components so we don't count
+them again.
+    
+</p><p>The solution program has several not complex components:
+    
+</p><ul>
+<li><tt>sector[rows][columns]</tt> is the input data with a twist:
+the data is surrounded on all four sides by 0's. This makes it easy
+to test if a row,col location is outside the 'field of interest'.
+
+</li><li><tt>checked[rows][columns]</tt> is really a boolean that tells
+whether a given square has already been 'checked' or 'removed' since
+it was part of a previously detected meteor. One could combine its
+purpose with the <tt>sector</tt>array by just recording '.'s (or
+non-'*'s) where elements had already been checked.
+
+</li><li>Function <tt>removeneighbors (row,col)</tt> marks all elements
+of a meteor as 'checked'. It does, in fact, implement both the
+boolean functionality and the 'sector' mark functionality. It works
+by marking the specified row column then calling itself to mark
+each of four neighbors. The neighboring locatoins are generated
+with the <tt>dx</tt> and <tt>dy</tt> arrays that add the proper
+combination of -1, 0, and 1 to a center element in order to generate
+the four neighbors. An if statement guards the recursive call so
+that it is not executed for squares that are not part of the sector
+(i.e., off the grid).
+
+</li><li>The <tt>main</tt> program reads in the data, cycles through the
+entire square grid of space/meteors, counting and marking each
+meteor it encounters, and recording the answer.
+
+</li></ul>
+<div><div id="highlighter_779339" class="syntaxhighlighter  cpp"><div 
+class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table
+ border="0" cellpadding="0" cellspacing="0"><tbody><tr><td 
+class="gutter"><div class="line number1 index0 alt2">1</div><div 
+class="line number2 index1 alt1">2</div><div class="line number3 index2 
+alt2">3</div><div class="line number4 index3 alt1">4</div><div 
+class="line number5 index4 alt2">5</div><div class="line number6 index5 
+alt1">6</div><div class="line number7 index6 alt2">7</div><div 
+class="line number8 index7 alt1">8</div><div class="line number9 index8 
+alt2">9</div><div class="line number10 index9 alt1">10</div><div 
+class="line number11 index10 alt2">11</div><div class="line number12 
+index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div
+ class="line number14 index13 alt1">14</div><div class="line number15 
+index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div
+ class="line number17 index16 alt2">17</div><div class="line number18 
+index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div
+ class="line number20 index19 alt1">20</div><div class="line number21 
+index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div
+ class="line number23 index22 alt2">23</div><div class="line number24 
+index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div
+ class="line number26 index25 alt1">26</div><div class="line number27 
+index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div
+ class="line number29 index28 alt2">29</div><div class="line number30 
+index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div
+ class="line number32 index31 alt1">32</div><div class="line number33 
+index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div
+ class="line number35 index34 alt2">35</div><div class="line number36 
+index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div
+ class="line number38 index37 alt1">38</div><div class="line number39 
+index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div
+ class="line number41 index40 alt2">41</div><div class="line number42 
+index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div
+ class="line number44 index43 alt1">44</div><div class="line number45 
+index44 alt2">45</div><div class="line number46 index45 alt1">46</div></td><td
+ class="code"><div class="container"><div class="line number1 index0 
+alt2"><code class="cpp preprocessor">#include &lt;stdio.h&gt;</code></div><div
+ class="line number2 index1 alt1"><code class="cpp preprocessor">#include
+ &lt;stdlib.h&gt;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div
+ class="line number4 index3 alt1"><code class="cpp preprocessor">#define
+ MAXN 1000</code></div><div class="line number5 index4 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number6 index5 alt1"><code class="cpp color1 bold">FILE</code>
+ <code class="cpp plain">*fin, *fout;</code></div><div class="line 
+number7 index6 alt2"><code class="cpp color1 bold">char</code> <code 
+class="cpp plain">sector[1+MAXN+1][1+MAXN+2+1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ </code><code class="cpp comments">/* extras form border of \0's */</code></div><div
+ class="line number8 index7 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">checked[1+MAXN+1][1+MAXN+2+1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ </code><code class="cpp comments">/* marks those squares we have 
+checked */</code></div><div class="line number9 index8 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code>&nbsp;</div><div 
+class="line number10 index9 alt1"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">dx[] = {-1, 1, 0, 0};</code></div><div 
+class="line number11 index10 alt2"><code class="cpp color1 bold">int</code>
+ <code class="cpp plain">dy[] = {0, 0, -1, 1};</code></div><div 
+class="line number12 index11 alt1">&nbsp;</div><div class="line number13
+ index12 alt2"><code class="cpp color1 bold">int</code> <code class="cpp
+ plain">nmeteors;</code></div><div class="line number14 index13 alt1">&nbsp;</div><div
+ class="line number15 index14 alt2"><code class="cpp plain">removeneighbors
+ (i, j) {</code></div><div class="line number16 index15 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+color1 bold">int</code> <code class="cpp plain">k, i1, j1;</code></div><div
+ class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">checked[i][j] = nmeteors;</code></div><div 
+class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">sector[i][j] = </code><code class="cpp string">'!'</code><code
+ class="cpp plain">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code
+ class="cpp comments">/* seen this one! */</code></div><div class="line 
+number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(k = 0; k 
+&lt; 4; k++) {</code></div><div class="line number20 index19 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">i1 = i + dx[k];</code></div><div class="line number21
+ index20 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">j1 = j + dy[k];</code></div><div class="line number22
+ index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(checked[i1][j1]
+ || sector[i1][j1] != </code><code class="cpp string">'*'</code><code 
+class="cpp plain">) </code><code class="cpp keyword bold">continue</code><code
+ class="cpp plain">;</code></div><div class="line number23 index22 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">removeneighbors (i1, j1);</code></div><div 
+class="line number24 index23 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number25 index24 alt2"><code
+ class="cpp plain">}</code></div><div class="line number26 index25 alt1">&nbsp;</div><div
+ class="line number27 index26 alt2"><code class="cpp plain">main() {</code></div><div
+ class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp color1 bold">int</code> <code class="cpp plain">i, j, n;</code></div><div
+ class="line number29 index28 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">fin = </code><code class="cpp functions bold">fopen</code>
+ <code class="cpp plain">(</code><code class="cpp string">"space.in"</code><code
+ class="cpp plain">, </code><code class="cpp string">"r"</code><code 
+class="cpp plain">);</code></div><div class="line number30 index29 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">fout = </code><code class="cpp functions bold">fopen</code> <code
+ class="cpp plain">(</code><code class="cpp string">"space.out"</code><code
+ class="cpp plain">, </code><code class="cpp string">"w"</code><code 
+class="cpp plain">);</code></div><div class="line number31 index30 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%d"</code><code class="cpp plain">, &amp;n);</code></div><div
+ class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(i = 1; i 
+&lt;= n; i++)</code></div><div class="line number33 index32 alt2"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">fscanf</code> <code class="cpp plain">(fin, </code><code
+ class="cpp string">"%s"</code><code class="cpp plain">, 
+&amp;sector[i][1]); </code></div><div class="line number34 index33 alt1">&nbsp;</div><div
+ class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp comments">/* count the meteors */</code></div><div 
+class="line number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">nmeteors = 0;</code></div><div class="line number37 
+index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(i = 1; i 
+&lt;= n; i++) {</code></div><div class="line number38 index37 alt1"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">for</code> <code class="cpp plain">(j = 1; j 
+&lt;= n;&nbsp; j++) {</code></div><div class="line number39 index38 
+alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp keyword bold">if</code> <code class="cpp plain">(sector[i][j]
+ != </code><code class="cpp string">'*'</code><code class="cpp plain">) </code><code
+ class="cpp keyword bold">continue</code><code class="cpp plain">;</code></div><div
+ class="line number40 index39 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">nmeteors++;</code></div><div class="line number41 
+index40 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">removeneighbors(i, j);</code></div><div class="line 
+number42 index41 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp plain">}</code></div><div class="line number43 index42 alt2"><code
+ class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+plain">}</code></div><div class="line number44 index43 alt1"><code 
+class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp 
+functions bold">fprintf</code> <code class="cpp plain">(fout, </code><code
+ class="cpp string">"%d\n"</code><code class="cpp plain">, nmeteors);</code></div><div
+ class="line number45 index44 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+ class="cpp functions bold">exit</code> <code class="cpp plain">(0);</code></div><div
+ class="line number46 index45 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+<script type="text/javascript" src="space_files/shCore.js"></script>
+<script type="text/javascript" src="space_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="space_files/shBrushJava.js"></script>
+<link href="space_files/shCore.css" rel="stylesheet" type="text/css">
+<link href="space_files/shThemeDefault.css" rel="stylesheet" 
+type="text/css">
+<script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
+
+</body></html>

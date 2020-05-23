@@ -1,0 +1,62 @@
+Problem 3: Crazy Fences [Brian Dean, 2012]
+
+Setelah mengunjungi sebuah museum seni modern, Farmer John memutuskan untuk
+mendesain ulang peternakannya dengan cara memindahkan semua N (1 <= N <= 500)
+pagar-pagar di sana! Tiap pagar berupa segmen garis horisontal atau vertikal
+di bidang 2 dimensi. Jika dua pagar berpotongan, perpotongannya pasti ada di
+titik ujung pagar-pagar tersebut.
+
+FJ mempunyai C sapi (1 <= C <= 500) di peternakannya. Tiap sapi tinggal di
+sebuah titik di bidang 2 dimensi itu, yang bukan merupakan titik pada pagar
+manapun. Tidak ada dua sapi yang tinggal di titik yang sama. Dua sapi
+dikatakan masuk ke dalam komunitas yang sama apabila terdapat jalur dari satu
+tempat tinggal sapi ke tempat tinggal sapi yang lain, tanpa menyentuh pagar
+manapun. Tolong FJ menentukan ukuran (banyaknya sapi) dari komunitas yang
+paling besar.
+
+PROBLEM NAME: crazy
+
+INPUT FORMAT:
+
+* Baris 1: Dua buah bilangan bulat, N dan C, dipisahkan oleh sebuah spasi.
+
+* Baris 2..1+N: Tiap baris berisi 4 buah bilangan bulat: x1, y1, x2, y2.
+        Angka-angka tersebut mendeskripsikan sebuah pagar dengan titik ujung
+        (x1,y1) dan (x2,y2). Tiap pagar pasti vertikal (x1=x2) atau
+        horisontal (y1=y2). Setiap koordinat ada di rentang 0..1,000,000.
+
+* Baris 2+N..1+N+C: Tiap baris berisi dua buah bilangan bulat x dan y, yang
+        berarti ada seekor sapi di (x,y). Tiap koordinat ada di rentang 
+        0..1,000,000.
+
+SAMPLE INPUT (file crazy.in):
+
+7 3
+0 0 10 0
+10 0 10 5
+12 5 10 5
+10 5 1 5
+12 5 12 7
+0 7 12 7
+0 7 0 0
+3 4
+6 6
+17 3
+
+INPUT DETAILS:
+
+Ada 7 pagar dan 3 sapi.
+
+OUTPUT FORMAT:
+
+* Baris 1: Banyaknya sapi di komunitas terbesar.
+
+SAMPLE OUTPUT (file crazy.out):
+
+2
+
+OUTPUT DETAILS:
+
+Sapi #1 dan #2 tergolong pada komunitas yang sama, karena mereka dapat pergi
+ke tempat yang lain tanpa menyentuh pagar manapun. Sapi #3 tidak bisa pergi
+ke tempat sapi #1 atau #2 tanpa melewati sebuah pagar.

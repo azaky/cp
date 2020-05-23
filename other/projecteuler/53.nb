@@ -1,0 +1,111 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3086,        101]
+NotebookOptionsPosition[      2641,         80]
+NotebookOutlinePosition[      3011,         96]
+CellTagsIndexPosition[      2968,         93]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 53", "Title",
+ CellChangeTimes->{{3.5364010786654353`*^9, 3.53640108708945*^9}}],
+
+Cell[TextData[{
+ "There are exactly ten ways of selecting three from five, 12345:\n\n123, \
+124, 125, 134, 135, 145, 234, 235, 245, and 345\n\nIn combinatorics, we use \
+the notation, 5C3 = 10.\n\nIn general,\n\nnCr ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"=", 
+    FractionBox[
+     RowBox[{"n", "!"}], 
+     RowBox[{
+      RowBox[{"r", "!"}], 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"n", "-", "r"}], ")"}], "!"}]}]]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "\t\n,where r  n, n! = n(n-1)...321, and 0! = 1.\nIt is not until n = 23, \
+that a value exceeds one-million: 23C10 = 1144066.\n\nHow many, not \
+necessarily distinct, values of  nCr, for 1 \[LessEqual] n \[LessEqual] 100, \
+are greater than one-million?"
+}], "Text",
+ CellChangeTimes->{{3.536401091129857*^9, 3.5364011314145937`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Length", "[", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       FractionBox[
+        RowBox[{"n", "!"}], 
+        RowBox[{
+         RowBox[{"r", "!"}], 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"n", "-", "r"}], ")"}], "!"}]}]], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "1", ",", "100"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"r", ",", "0", ",", "n"}], "}"}]}], "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"#", ">", "1000000"}], "&"}]}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.5364011348777914`*^9, 3.5364012182271104`*^9}, {
+   3.5364012707789593`*^9, 3.5364012975954065`*^9}, 3.5364013816679544`*^9, {
+   3.5364014329140444`*^9, 3.5364014850181355`*^9}, {3.5364015169271903`*^9, 
+   3.536401587753315*^9}, {3.5364016781554737`*^9, 3.53640177949236*^9}}],
+
+Cell[BoxData["4075"], "Output",
+ CellChangeTimes->{{3.536401570889685*^9, 3.5364015919497223`*^9}, 
+   3.536401687031889*^9, {3.5364017187623453`*^9, 3.536401780022391*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{72, Automatic}, {38, Automatic}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 107, 1, 83, "Title"],
+Cell[689, 25, 823, 20, 256, "Text"],
+Cell[CellGroupData[{
+Cell[1537, 49, 900, 23, 49, "Input"],
+Cell[2440, 74, 173, 2, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

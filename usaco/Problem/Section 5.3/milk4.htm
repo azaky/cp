@@ -1,0 +1,100 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 86: Milk Measuring</title> </head><body 
+background="milk4_files/bg3.jpg">
+<img src="milk4_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Milk Measuring</font></b><br>
+<b>Hal Burch</b>
+</center>
+
+<p>Farmer John must measure Q (1 &lt;= Q &lt;= 20,000) quarts of his 
+finest milk
+and deliver it in one big bottle to a customer. He fills that bottle 
+with
+exactly the number of quarts that the customer orders.
+
+</p><p>Farmer John has always been frugal. He is at the cow hardware 
+store where 
+he must purchase a set of pails with which to measure out Q quarts of 
+milk 
+from his giant milk tank. Since the pails each cost the same amount, 
+your 
+task is to figure out a minimal set of pails Farmer John can purchase in
+ 
+order to fill a bottle with exactly Q quarts of milk.  Additionally, 
+since 
+Farmer John has to carry the pails home, given two minimal sets of pails
+ 
+he should choose the "smaller" one as follows: Sort the sets in 
+ascending 
+order.  Compare the first pail in each set and choose the set with the 
+smallest pail.  If the first pails match, compare the second pails and 
+choose from among those, else continue until the two sets differ.  Thus 
+the set {3, 5, 7, 100} should be chosen over {3, 6, 7, 8}.
+
+</p><p>To measure out milk, FJ may completely fill a pail from the tank 
+and pour 
+it into the bottle. He can never remove milk from the bottle or pour 
+milk 
+anywhere except into the bottle. With a one-quart pail, FJ would need 
+only 
+one pail to create any number of quarts in a bottle. Other pail 
+combinations are not so convenient.
+
+</p><p>Determine the optimally small number of pails to purchase, given 
+the 
+guarantee that at least one solution is possible for all contest input 
+data.
+
+</p><h3>PROGRAM NAME: milk4</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table>
+<tbody>
+<tr><td>Line 1:</td><td>The single integer Q
+</td></tr><tr><td>Line 2:</td><td>A single integer P (1 &lt;= P &lt;= 
+100)
+which is the number of pails in the store
+</td></tr><tr><td>Lines 3..P+2:</td><td>Each line contains a single 
+integer pail_value (1
+&lt;= pail_value &lt;= 10000), the number of quarts a pail holds
+</td></tr></tbody></table>
+
+<h3>SAMPLE INPUT (file milk4.in)</h3>
+<pre>16
+3
+3
+5
+7
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+<p>The output is a single line of space separated integers that 
+contains: 
+</p><ul>
+<li>the minimum number of pails required to measure out the desired 
+number of 
+quarts, followed by: 
+</li><li>a sorted list (from smallest to largest) of the capacity of 
+each of the 
+required pails </li></ul>
+<h3>SAMPLE OUTPUT (file milk4.out)</h3>
+<pre>2 3 5
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="milk4" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

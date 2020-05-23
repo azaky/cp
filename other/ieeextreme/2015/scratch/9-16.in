@@ -1,0 +1,721 @@
+This challenge is sponsored by the IEEE Women in Engineering.
+
+Find an input which will make the provided Java program give the highest output. An equivalent Python v.3 program is also provided. The programs are accessible via the "Programs" tab in the ribbon above with options: "Problem", "Submissions", "Leaderboard", "Discussions", and "Programs"
+
+The best solution will get a full score, while others will receive an exponentially decaying score: losing 1% of the score for each unit decrease in the output.
+
+Input Format
+
+None.
+
+Output Format
+
+Your program should produce a legal input for the Java (or Python equivalent) program listed in the "Programs" tab.
+
+The first line of of your solution's output should be a non-negative integer N representing the number of lines to follow.
+
+The following N lines should each contain exactly 10 non-whitespace characters.
+
+Sample Output
+
+2
+Abcde_-!@#
+0#T234<>?,
+Explanation
+
+No input will be provided to your program. Your program should produce a fixed output according to the instructions provided above which will be then automatically provided as input to the given Java (or Python equivalent) program. For example, in this case, we may assume that you have written a program that outputs the 3 lines provided above as the Sample Output. This program outputs a value of 2 for N, and then two lines follow with 10 characters each.
+
+When this output is provided as input to the Java program, it outputs a value equal to 998. As it turns out, this is not a very good input. The score for our solution would be:
+
+0.99 MaxScore - 998
+
+where MaxScore is the maximum possible score for this challenge.
+
+MaxScore is large enough that this rounds to zero.
+
+Note: The scores will be rounded to two decimal places.
+Help IBM puzzlemaster to test answers to May’s 2015 challenge:
+
+Three people are playing the following betting game.  
+
+Every five minutes, a turn takes place in which a random player rests and the other two bet against one another with all of their money. The player with the smaller amount of money always wins, doubling his money by taking it from the loser.  
+
+For example, if the initial amounts of money are 1, 4, and 6, then the result of the first turn can be either 2,3,6 (1 wins against 4); 1,8,2 (4 wins against 6); or 2,4,5 (1 wins against 6). If two players with the same amount of money play against one another, one of the two players would win, and the game will immediately end for all three players after that turn.
+
+The task for the challenge is to find initial amounts of money for the three players, where none of the three has more than 255, and in such a way that the game cannot end in less than one hour.
+
+In the example above (1,4,6), there is no way to end the game in less than 15 minutes.  One possible sequence of moves is:
+
+(1,4,6)
+(1,8,2), after player 2 plays player 3 in turn 1
+(2,7,2), after player 1 plays player 2 in turn 2
+(4,7,0), after player 1 plays player 2 in turn 3, and we arbitrarily choose player 2 as the winner
+
+Note:  The first turn is played after five minutes, so the game above, with its 3 turns, takes 15 minutes.  Furthermore, the maximum number of turns that can be completed in one hour is 11.
+Input Format
+
+Three space-separated, positive integers representing a potential solution to the challenge.
+
+Output Format
+
+The program should output either the word "Ok" if the answer is correct (i.e. the game needs an hour or longer to end), or in case there exists a series of turns in which a player wins the game in less than an hour, then the program should output at most 12 lines showing the amounts of money that each player has. In particular, in the latter scenario, the first line of the output should be identical to the given input, and then each subsequent line should represent a possible state of the game after a turn is played, with the previous line considered as a starting state. Since by definition in this scenario there will be a winner, one of the amounts in the last line of the output should be zero.
+
+If there are several ways for the game to end in less than an hour, find the shortest one, i.e. the one with the fewest turns. If there are several shortest ones, choose the one in which the winning player and losing player in each round is first in lexicographical order. Please refer to the explanation of the sample input and output for more information about this tie breaking procedure.
+
+Sample Input
+
+3 27 8
+Sample Output
+
+3 27 8
+6 24 8
+6 16 16
+6 32 0
+Explanation
+
+The first line of the output is identical to the given input. Then, in the first turn of the game (second line of the output), player 1 beats player 2. In the second turn (third line of the output), player 3 beats player 2. In the final round (final line of the output) player 2 beats player 3.
+
+This game-play can be summarized in a single line comprised of space separated pairs that describe the winner and the loser of each turn in the format: ([winner],[loser]). For the example above, this string summary would be: "(1,2) (3,2) (2,3)" since at first player 1 beat player 2, then player 3 beat player 2 and finally the game ended with player 2 winning over player 3.
+
+Of course, other game-plays could also result in the same result (i.e. have a player winning the game in less than an hour), some with more turns than the one described above, but some as equally as short (in term of number of turns). For example, such another equally short series of turns is the following:
+
+3 27 8  
+3 19 16
+6 16 16
+6 0 32
+However, this game-play would be summarized by the following string: "(3,2) (1,2) (3,2)" since at first player 3 beats player 2, then player 1 beats player 2 and finally the game ended with player 3 winning over player 2.
+
+Note though that the last solution has a string representation that comes later in lexicographical order compared to our first solution (i.e. solution "(1,2) (3,2) (2,3)" comes before "(3,2) (1,2) (3,2)" in lexicographical order).
+
+Similarly, another possible series of turns would be:
+
+3 27 8  
+3 19 16
+6 16 16
+6 0 32
+This series would be represented by the string: "(3,2) (1,2) (2,3)", which also comes after "(1,2) (3,2) (2,3)" in lexicographical order.
+
+Indeed if you listed all possible games that end in three turns, "(1,2) (3,2) (2,3)" would be lexicographically smaller than all other string representations of games. Thus the expected output should be:
+
+3 27 8
+6 24 8
+6 16 16
+6 32 0
+Note: There are two additional sample test cases. You can view these cases after clicking on the "Run" button.
+
+A group of engineers are playing the Snakes and Bunnies board game. In this game, each player has one game piece, which moves according to dice rolls. The game-board is composed by a grid of N x N numbered squares, which are ordered row-wise from the bottom-left to the top-right (N is always odd). Some “bunnies” and “snakes” are depicted on the board, each connecting two squares. An example of a 5x5 board is shown in the following figure.
+
+fig1.png
+
+Each player starts off the board, next to the starting square. The gameplay is divided in rounds and players play in sequence, which is the same every round. Rules are simple:
+
+Two standard 6-faced die are rolled by the player and his/her game piece moves forward on the board, following the square's numbers. The piece is advanced by a number of squares equal to the sum of the die.
+
+If the dice roll is a double, then the player has an additional turn just after the current one. Note that the additional turn begins after applying the additional rules below. The additional turn follows the same rules of standard turns, except that only one die can be rolled.
+
+If a square is already taken by another player’s token, then the current player’s token moves forward to the next square not occupied by a token.
+
+If the final position of a player’s token is a square with the head of a snake, then it must be moved backwards to the square corresponding to the snake’s tail. Similarly, if the token ends on a square with bunny’s feet, it goes to the top of the bunny’s ears (both ears of the rabbit will always point to the same cell). No square has two or more snake's heads/tails or bunny's ears/feet on it; there is at most one special drawing for each cell. Moreover, the last square is always free of drawings.
+
+Game ends when a player arrives at the last square or when a player can move over the last square (for example if the player is on the second-to-last square and rolls 3+4). In this latter case, the player stops on the last square and wins.
+
+Note that infinite loops can happen while a player moves: this is the EVIL CYCLE case! When it happens, the game ends and the player in the evil cycle wins the game.
+
+For example, consider a board in which squares 10 and 11 are already occupied, and there is a slide from square 12 back to square 10. If a player lands on square 10, they would advance to square 11, since square 10 is already occupied. Square 11 is also occupied, so they would advance to square 12. Here they take the slide back to square 10, and then repeat the moves. They would continue to move between squares 10, 11, and 12 forever!
+
+Your task is to find the final position of every player's token, given as input the number of players, the game-board configuration, and the sequence of dice rolls.
+
+Notes:
+
+The given sequence of dice rolls may not always lead a game to an end. There will be no extra dice rolls after a game has ended. There will always be sufficient dice roles for a player to complete their turn.
+
+If a player lands on the tail of snake or the ears of a bunny, the player does not make any special moves.
+
+Input Format
+
+The first line of the input contains the integer N (1 < N < 100 and N is odd), which is the dimension of the game-board.
+
+The following N lines contain the game-board configuration: each line contains N characters, and each character represents a square of the board. The character '-' represents a normal square, i.e. one with no snake heads/tails nor bunny feet/ears depicted on it; digits (0-9) represent bunnies and letters (a-z) represent snakes. There can be at most 10 bunnies and 26 snakes, and each represented by an appropriate pair of digits or letters. Given a pair of identical letters representing a snake in two numbered squares, the head of the snake are located in the square with the higher number, and the tail is located in the square with the lower number. Given a pair of identical digits representing a bunny in two numbered squares, the feet of the bunny is located in the square with the lower number, and the ears are located in the square with the higher number.
+
+So, for example, the game-board of the figure above could be represented as follows:
+
+---a-
+-a---
+–---1
+--b--
+b-1--
+After the game board representation, the following line contains an integer M (2 <= M <= 10), which is the number of players.
+
+Then, the sequence of dice throws follow, each dice result is represented by a single line containing one integer between 1 and 6, inclusive.
+
+Output Format
+
+The output is a single line containing M integers separated by a blank space. The first integer is the final position on the game-board of the first player (i.e. the one who rolled the dice first), the second integer is the final position of the second player, etc.
+
+In case of evil cycle, the output is a single line containing the string “PLAYER x WINS BY EVIL CYCLE!”, where x is the player number (1 to M).
+
+Sample Input
+
+5
+---a-
+-a---
+----1
+--b--
+b-1--
+2
+6
+2   
+2
+1
+3
+2
+1
+2
+3
+4
+1
+1
+5
+Sample Output
+
+13 25
+Explanation
+
+The board in this test case is the board in the figure below.
+
+Screenshot from 2015-08-02 09-50-19.jpg
+
+Note that in the board above there is one bunny, represented by the number '1'. It's feet are at square 3 and its ears are at square 15. There are two snakes. The snake indicated by the letter 'b' has a head at square 8 and a tail at square 1. The snake indicated by the letter 'a' has a head at square 24 and a tail at square 19.
+
+Next we are told that there are 2 players.
+
+First, player 1 rolls a 6 and a 2, advancing to square 8, at the head of the snake. Here, he moves back to the snake's tail, ending at square 1.
+
+Next, player 2 rolls a 2 and a 1, advancing to square 3. Since 3 is at the feet of a bunny, she advances to square 15.
+
+Next, player 1 rolls a 3 and a 2, advancing to square 6.
+
+Next, player 2 rolls a 1 and a 2, advancing to square 18.
+
+Next, player 1 rolls a 3 and a 4, advancing to square 13.
+
+Next, player 2 rolls double 1's, advancing to square 20. Since the player rolled doubles, player 2 rolls a single die and gets a 5. She then advances to square 25.
+
+Since player 2 has reached the final square, the game is over.
+
+Note: If you click on the "Run Code" button, you will be able to see an additional sample test case with an example of an EVIL CYCLE.
+
+Finite State Machines (FSMs) can be used to model systems whose output depends on the current state and its inputs. The states can represent many different systems like the on/off state of traffic lights at an intersection, the valve state of thrusters on a spacecraft, the click/key combinations entered by a user for a keyboard shortcut, or the send/receive steps in a communication protocol.
+
+An FSM is defined by a set of states, inputs, and outputs. The states represent a known configuration of the system at a specific time. Transitioning to a new state depends on the current state and the inputs provided. This will in turn also produce an associated output for the system.
+
+One of the uses of FSMs is to design and analyze logic circuits with memories like flip-flops. Your task is to write a program to visualize the timing diagram relating the inputs and outputs while printing the current state number to help analyze the circuit.
+
+For the purpose of the program, you can assume that there are N states with M inputs. States are labeled with numbered subscripts in the range S0 to SN-1. The inputs are each labeled with a single uppercase character in the range 'A' to 'J', inclusive. You may assume that no letter or state number is skipped. Each state has P uniquely defined transitions to other states (the transitions are unique in the sense that no set of inputs will trigger more than 1 transition). A transition is only taken when the input conditions are satisfied. Transitions are evaluated at the beginning of each of the T discrete time steps.
+
+Input Format
+
+Input begins with a line containing N and M, where 1 ≤ N < 100 and 1 < M < 10.
+
+Then there are N lines, each describing the output of the system and the transitions from this state. The first line contains a description of state S0, the second line describes S1, etc. These lines all have the following format:
+
+StateOutput P VariableExpression1/Dest1 VariableExpression2/Dest2 ... VariableExpressionP/DestP
+
+where
+
+StateOutput is either a 0 or 1, representing the value that is output when the system is in this state
+
+P is the number of transitions from this state
+
+VariableExpressioni is a comma-delimited list of Variable=Value tokens. For a transition i to be activated, all of the input variables given in the VariableExpressioni must have the values listed in this expression
+
+Desti, 1 <= i <= P, is a destination state number, in the range [0..N), for transition i
+
+Following the description of the states, is a line containing two integers, T and I, where T gives the number of timesteps (1 <= T < 1000), and I gives the number of the initial state (0 <= I < N).
+
+The input ends with M * T lines that provide the inputs for all M variables in each of the T timesteps. The first M values provide inputs for the M variables during the first timestep, the second M values provide inputs for the M variables during the second timestep, and so on.
+
+The transitions should be interpreted as follows. Assume that we are in a state Sj. Assume further that there are four inputs, and the current input provided for the current timestep is (1,0,1,0). We map these inputs to the variables, starting with letter 'A', so A = 1, B = 0, C = 1, and D = 0. We would then look for transitions defined on the line corresponding to state Sj. Since transitions must be unique, only one of the following VariableExpressions could appear in the list of expressions: A=1, B=0, C=1, D=0, A=1,B=0, A=1,C=1, A=1,D=0, A=1,B=0,C=1, etc. If such a transition is the ith transition specified, the new state would be Desti. If there are no matches, the system remains in the current state.
+
+Output Format
+
+The output consists of a waveform. The waveform is represented by underscores, ‘_’, for the number 0, and asterisks, ‘*’, for the number 1.
+
+A maximum of 16 ticks are printed together, where each time tick is 3 characters wide. The line numbers are labeled with the signal names as shown in the example.
+
+As shown in the example below, on the first line of the grouping is the text Tick #X where X is replaced by the number of the first tick in the grouping.
+
+Next come waveforms for each of the variables, in alphabetical order, one per line. On these lines the variable name is output, followed by five spaces, and then the waveform.
+
+Then the waveform of the system output is displayed. This line begins with the word OUT, followed by 3 spaces, and then the waveform.
+
+Finally, on the last line the numeric value of the system output is displayed. This line begins with the word STATE. The numeric values of system output should always be aligned with the third column of the respective tick.
+
+If not all ticks have been displayed, then a blank line should be output, followed by the next group of ticks in the same format.
+
+Sample Input
+
+2 3 
+1 2 A=1,B=1,C=1/1 A=1,B=0/0
+0 1 A=0/0
+20 0
+0 0 0
+0 0 1
+0 1 0
+0 1 1
+1 0 0
+1 0 1
+1 1 0
+1 1 1
+0 0 0
+0 0 1
+0 1 0
+0 1 1
+1 0 0
+1 0 1
+1 1 0
+1 1 1
+0 0 0
+0 0 1
+0 1 0
+0 1 1
+Sample Output
+
+Tick #1
+A     ____________************____________************
+B     ______******______******______******______******
+C     ___***___***___***___***___***___***___***___***
+OUT   *********************___*********************___
+STATE   0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  1
+
+Tick #17
+A     ____________
+B     ______******
+C     ___***___***
+OUT   ************
+STATE   0  0  0  0
+Explanation
+
+The sample input executes a parity check FSM. There are N=2 states with M=3 inputs. Since there are 3 inputs, these inputs are labeled A, B, and C.
+
+State 0, S0, outputs the value 1 (logic high). There are two transitions originating from this state. The first transition goes to S1 when input A=1, B=1, and C=1. The second transition goes to S0 when input A=1 and B=0 (that’s a self-loop to the same state). C can take any value in the second transition.
+
+S1 outputs the value 0 (logic low). There is only one transition originating from this state defined in the input. This transition goes to S0 when A=0.
+
+Note that although not defined, there are implicit transitions to satisfy the other cases that are not explicitly described in the input. The implicit transitions are all self-loops to the same state.
+
+Prior to tick t=1, we are in the initial state, S0. The input is set to A=0, B=0, and C=0, therefore we take the implicit self-loop transition and stay in S0 and output the value associated with the state, i.e. 1.
+
+When we start ticks t=2 through t=7, we are still in S0. In each of these cases, we take the implicit loop to the same state and nothing changes in the output.
+
+In tick t=8, the inputs, A=1, B=1, and C=1, trigger the transition to state S1. This changes the output of our logic circuit to a 0.
+
+In tick t=9, the input, A=0, trigger the transition to state S0. This changes the output of our logic circuit to a 1.
+
+The same pattern of inputs is repeated a few more times. Tick 17 begins on a new line because we limit the output to 16 ticks per line.
+
+John is a computer programmer and is highly known for his achievements in his field. In addition to being a passionate software professional, he is also passionate about motorcars and motorbikes.
+
+So, after ending his successful and lengthy software career, he decides to take up his passion. He starts an organization by the name "Car Spark" (CS). CS is an organization from which you can rent luxury cars of your choice on an hourly rental basis.
+
+CS would like to accept bookings for the weekend in advance, and then decide which bookings to process based on the profits that would be earned. When placing an order, customers quote the amount that they are willing to pay for that vehicle during that particular timespan. Since a car can only be given to one customer during a particular time period, CS must be careful about which bookings to process.
+
+Initially CS has only one vehicle available for rent. To be the first hire for CS, you must develop a program to maximize revenue on bookings for this vehicle.
+
+Input Format
+
+Input begins with a single integer T, 1 <= T <= 100, which denotes number of test cases.
+
+Each test case begins with a single integer N, 1 <= N <= 2000, which is the number of bookings John received.
+
+The remainder of the test case consists of N lines containing three integers Bs, Be, and Ai each separated by a space, where Bs is the booking start time, Be is the booking end time, and Ai is the amount that the customer is willing to spend for the entire booking. Note that 0 <= Bs < Be <= 48 and 1 <= Ai <= 100000.
+
+Note: The car may only be rented during the weekend, meaning from 12:00 AM on Saturday to 12:00 AM on Monday. Since the two days in the weekend have 48 hours, 12 noon on a Sunday would be the (24+12) 36th hour. Similarly, if the booking start time is 10:00 PM on Saturday and the booking end time is 12:00 AM on Sunday, then Bs would be 22 and Be would be 24.
+
+Output Format
+
+You are to output a single line for each test case, giving the maximum revenue John can make from the orders he received.
+
+Sample Input
+
+2
+4
+1 2 100
+2 3 200
+3 4 1600
+1 3 2100
+3
+1 10 2000
+2 5 100
+6 9 400
+Sample Output
+
+3700
+2000
+Explanation
+
+For the first test case, for the time slot 1-3 maximum revenue John can make is 2100 (Max(100+200, 2100)) and for slot 3-4 he can make 1600. The maximum total revenue is 3700 (2100+1600).
+
+Similarly for second test case, the maximum revenue he can generate is 2000.
+
+Gopal is preparing for a competitive exam and he has to prepare many topics for it. To remember the concepts better he identified a set of words from each topic. He prepared dictionaries for each of these topics with the set of identified words so that he can refer to them easily.
+
+While recollecting the topics Gopal sometimes could not remember to which dictionary a certain word belongs. After all the hard work, Gopal didn’t want to lose marks due to this confusion. So he requested his friend, Govind, to help him identify a way to check if a word belongs to a dictionary.
+
+Govind, being a very good friend of Gopal, wants to help him do better in the exam. So, after some thought, he finally came up with a solution.
+
+For each dictionary, a string is chosen from which all the words can be made by selecting a subset of the characters from the string and rearranging them. (It is not necessary that the characters are consecutive and/or in the same order as in the string). They called this string a Dictionary String. When confused about to which dictionary a word belongs, Gopal can check if the word can be extracted from the Dictionary String for that dictionary.
+
+To qualify as a Dictionary String, all the letters needed to explicitly form each word of the dictionary must be present in the string. You cannot reuse letters. Thus, the string aab is not a Dictionary String for a dictionary containing the word aaa since this word needs 3 a's whereas the candidate Dictionary String has only two a's.
+
+To help Gopal memorize the Dictionary Strings better, Govind inserted extra characters in some of the Dictionary Strings that appeared harder to memorize. To distinguish those strings from others he calls a string without any extra characters, a Perfect Dictionary String.
+
+Govind would like your help in verifying his program. For a set of words in a dictionary, you should indicate whether a string is a perfect dictionary string and/or a dictionary string. If a word is not a dictionary string, he would like you to tell him the minimum number of characters needed to convert the string to a dictionary string.
+
+Notes:
+
+Some of the test cases are very large, and may require you to speed up input handling in some languages.
+
+In C++, for example, you can include the following line as the first line in your main function to speed up the reading from input:
+
+std::ios_base::sync_with_stdio (false);
+And in Java, you can use a BufferedReader to greatly speed up reading from input, e.g.:
+
+BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+// Read next line of input which contains an integer:
+int T = Integer.valueOf(reader.readLine());
+Input Format
+
+Input begins with a single integer T, 1 <= T <= 100, which denotes number of test cases.
+
+Each test case begins with a line, which contains 2 space-separated integers D and S. D represents the number of words in a dictionary, and S represents the number of potential dictionary strings to be checked. Note that 1 <= D, S <= 100.
+
+Next follows D lines, each containing a word in the dictionary.
+
+The remaining S lines in the test case each contain a potential dictionary string.
+
+Notes: The words in the dictionary and the potential dictionary strings will consist of only lower-case letters. The lengths of these strings are greater than or equal to one character and less than or equal to 40,000 characters.
+
+Output Format
+
+For each of the S potential dictionary strings, you should output a line with two values separated by a space in the following format:
+
+A1 A2
+
+Where
+
+A1 is either Yes or No denoting if a string is a Dictionary String or not.
+
+If A1 is No, then A2 is the minimum number of characters needed to make the string a Dictionary String. If A1 is Yes, then A2 is Yes if the string is a Perfect Dictionary String, and No otherwise.
+
+Sample Input
+
+1
+5 3
+ant
+top
+open
+apple
+lean
+anteplop
+antelope
+penleantopan
+Sample Output
+
+Yes Yes
+No 1
+Yes No
+Explanation
+
+For the sample input, there is only one test case with 5 words in it and 3 strings to be checked.
+
+anteplop: contains all the words from the dictionary and no extra characters. So it is both a Dictionary String and a Perfect Dictionary String. Hence, the output is Yes Yes.
+
+antelope: the words “apple” cannot be made from this string. So it is not a Dictionary String and is missing 1 character (‘p’) to become a dictionary string. Hence the output No 1.
+
+penleantopan: all the words of the dictionary can be made from this string but it also contains extra characters that are not required to build the words of the dictionary. So it is a Dictionary String but not a Perfect Dictionary String.
+
+This challenge is sponsored by Eta Kappa Nu.
+
+There are a group of gremlins that live in a long hallway in which there are a series of light switches. At the beginning of each night, all of the light switches are off. Then, one at a time, each gremlin does the following:
+
+The gremlin chooses a prime number p, that has not been chosen by any previous gremlin that night.
+
+The gremlin runs down the hallway flipping every pth switch.
+
+The owner of the hallway, who is very concerned about his electricity bill, has asked you to determine how many switches are on at the end of the night.
+
+Note: no two gremlins will choose the same prime number.
+
+Consider the following example where the hallway has 21 switches and there are three gremlins. At the beginning of the night, all switches are off, as shown in the figure below.
+
+state1.png
+
+The first gremlin chooses the prime number 7, and flips the 7th, 14th, and 21st switch. Now the configuration is:
+
+state2.png
+
+The second gremlin chooses the prime number 13, and flips just the 13th switch, because there is no 26th switch. Now the configuration is:
+
+state3.png
+
+The last gremlin chooses the prime number 3. It flips the 3rd, 6th, 9th, 12th, 15th, 18th, and 21st switch. Note that when he flips the 21st switch, it is turned back off. The final configuration is:
+
+state4.png
+
+For this example, you would report that there are 9 lights on at the end of the night.
+
+Input Format
+
+The input begins with an integer t, 1 <= t <= 20, on a line by itself.
+
+Then follow t lines, each describing a test case that you must evaluate. The test cases have the following format:
+
+[switch] [n] [prime_1] [prime_2] ... [prime_n]
+Where
+
+[switch] is the number of switches in the hallway, 1 <= [switch] <= 1018
+
+[n] is the number of gremlins who live in the hallway, 1 <= [n] <= 24
+
+The prime number chosen by the ith gremlin is given by [prime_i]. All primes are greater than or equal to 2 and less than 104.
+
+Output Format
+
+For each test case, you should output a single integer that indicates how many switches are on at the end of the night.
+
+Sample Input
+
+3
+21 3 7 13 3
+20 1 31
+30 3 2 3 5
+Sample Output
+
+9
+0
+15
+Explanation
+
+The first test case corresponds to the example given in the Problem Definition, which as described above results in 9 "on" switches at the end of the night.
+
+In the second test case, there is a single gremlin, who chooses the prime 31. The hallway consists of only 20 switches, so there is no 31st switch. Thus, no switches are turned on.
+
+The last test case consists of a hallway of length 30, and three gremlins. The action of the gremlins is as follows:
+
+The first gremlin flips switches {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30}. All of these switches were previously off, so they are now on.
+
+The second gremlin flips switches {3, 6, 9, 12, 15, 18, 21, 24, 27, 30}. Of these, {6, 12, 18, 24, 30} were previously on, so they are now off. This results in the following switches being on: {2, 3, 4, 8, 9, 10, 14, 15, 16, 20, 21, 22, 26, 27, 28}.
+
+The third gremlin flips switches {5, 10, 15, 20, 25, 30}. Of these, {10, 15, 20} were previously on, so they are now off. This results in the following switches being on: {2, 3, 4, 5, 8, 9, 14, 16, 21, 22, 25, 26, 27, 28, 30}.
+
+Thus, there are 15 switches on at the end of the night.
+
+his challenge is sponsored by the IEEE University Partnership Program.
+
+Let us consider a rectangular bar of chocolate containing n times d chunks of chocolate. Each chunk can be uniquely identified by a pair of integers (i1, i2), where each coordinate i1 indentifies the row of the chunk and i2 identifies the column. i1 can take values between 1 and n, inclusive, and i2 can take values between 1 and d, inclusive. The chunk at the top left corner of the bar is identified by (1,1).
+
+One wants to eat the whole bar using a very elaborate method. The principle is that when the chunk with coordinates (i1,i2) is selected to be eaten, all remaining chunks with coordinates (j1, j2) such that j1 >= i1 and j2 >= i2 are eaten at the same time. The question we ask is:
+
+Given n and d, how many different ways of eating the whole bar are there?
+
+Note: The timeouts have been increased by approximately 50% for this problem.
+
+Input Format
+
+The first line of input contains the integer n. The second line of input contains the integer d. Note that 1 <= n, d <= 100. Furthermore, n and d are chosen such that the maximum number of ways of eating the whole bar will never exceed 10138.
+
+Output Format
+
+The output contains the answer followed by a newline character.
+
+Sample Input
+
+2
+2
+Sample Output
+
+10
+Explanation
+
+Suppose that we label the chocolate bar chunks as follows:
+
+|A|B|
+|C|D|
+In this bar, chunk A identified as (1,1), chunk B is identified as (1,2), chunk C is identified as (2,1), and chunk D is identified as (2,2).
+
+There are ten ways this bar could be eaten:
+
+1) A (with B, C, and D at the same time)
+
+2) B (with D), and then A (with C)
+
+3) B (with D), then C, then A
+
+4) C (with D), then A (with B)
+
+5) C (with D), then B, then A
+
+6) D, then A (with B and C)
+
+7) D, then C, and then A (with B)
+
+8) D, then B, and then A (with C)
+
+9) D, then C, then B, then A
+
+10) D, then B, then C, then A
+
+Note: Two other test cases are available if you click on the "Run Code" button.
+
+Subterranean Antisocial Demons (SADs) live and roam in a network of connected caves. They move from cave to cave following very strict rules:
+
+Only one SAD may move at a time.
+
+Every time a SAD moves, it must move from one cave to an adjacent cave.
+
+No two SADs can occupy the same cave at the same time. Thus, if a cave is already occupied by a SAD, another SAD cannot move into it.
+
+A SAD may move out of its home cave to allow another SAD to pass through.
+
+Every SAD must be in its home cave at the end of the day.
+
+The SADs have been busy roaming all day. Your task is to make the SADs happy. Help them find the fastest way for each one to return to its home.
+
+Input Format
+
+The first line of input will contain an integer t, 1 <= t <= 10 that indicates how many test cases are present.
+
+Next follow t test cases with the following format:
+
+The first line of the test case is an integer n, 1 <= n <= 15.
+
+Next come n lines that give the current position of each SAD in the form:
+
+Di Cj
+
+where Di and Cj are integers between 1 and 16 inclusive. This indicates that the SAD with ID Di is currently in cave with ID Cj. Note that the home cave for a SAD is the cave with an ID equal to the SAD’s ID. Since a SAD can only move into an empty cave, there will always be more caves than SADs, and therefore the number of cave ID's will always be larger than the number of SAD ID's.
+
+On the next line is an integer l, n <= l <= 120.
+
+Next come l lines that give connection between caves in the form:
+
+Ci Cj
+
+where both of these IDs are integers between 1 and 20, inclusive. This line indicates that it is possible to get from the cave with ID Ci to the cave with ID Cj, and from the cave with ID Cj to the cave with ID Ci.
+
+Output Format
+
+For each test case, you should output, on a line by itself, a single integer equal to the minimum number of moves needed to get every SAD from its current location to its home cave.
+
+Note: it will always be possible for every SAD to reach its home, and the minimum number of moves needed is never greater than 30.
+
+Sample Input
+
+1
+3 
+1 5
+2 1
+3 2
+5
+1 2
+2 3
+3 4
+4 5
+5 1
+Sample Output
+
+3
+Explanation
+
+As shown in the next figure, at the beginning of the first test case, SAD 1 is in cave 5, SAD 2 is in cave 1, and SAD 3 is in cave 2. There are two legal moves in this scenario: SAD 1 could move to cave 4 or SAD 3 could move to cave 3.
+
+fig1.png
+
+In the first move, then, SAD 3 moves to cave 3. As shown in the next figure, it is home. Now, for the second move, there are four legal moves: SAD 1 could move to cave 4, SAD 2 could move to cave 2, SAD 3 could move to cave 2, or SAD 3 could move to cave 4.
+
+fig2.png
+
+In the second move, then, SAD 2 moves to cave 2. As shown in the next figure, it is also home. For the third move, there are four legal moves: SAD 1 could move to cave 4, SAD 1 could move to cave 1, SAD 2 could move to cave 1, or SAD 3 could move to cave 4.
+
+fig3.png
+
+In the third and final move, SAD 1 moves to cave 1. As shown below, now all of the SADs are home, and it only took three moves!
+
+fig4.png
+
+Images generated from clipart from www.clker.com.
+
+You are part of a large gaming firm which is looking forward to offer online gaming competitions through live streaming. This means a lot of users will be looking to share their channels links through multiple social media networks (e.g: twitter, facebook, etc.)
+
+Your company wants to implement URL redirection, where you will provide a URL on your website that when requested will redirect browsers to the links provided by users. Due to the burst of popularity of e-sport sites, your company did not plan for the large demand for URLs. The encoded URLs given by the system are very long and difficult to handle by regular users, reducing the usability of your system and service.
+
+Your boss comes to you in a panic, hoping that you will be capable of solving this simple but critical task and help the company help users to handle URLs in an easy and comfortable manner. As a good software engineer with some basic understanding of Computer Science, you devise a way to encode the original encoded URL into a shorter form through a hash function. As you know, there is always the risk that your hash function will have a collision, but it is a good start.
+
+The hash function takes as input the base URL of your company and the target URL you wish to encode. (For an example of this process, see the Explanation portion of the sample input, below). As shown in the figure below, the algorithm proceeds in the following steps.
+
+1) An xor cipher is applied to the target URL, using the base URL of your company as a repeating key. Here we perform a bitwise exclusive-or between each byte of the target URL and the base URL. If the target URL is shorter than the base URL of your company, you would truncate the base URL so that the lengths are equal. If the base URL of your company is shorter than the target URL, you would repeat the base URL as many times as needed to make the lengths equal.
+
+2) Take the last 8 bytes of the output from step 1, and convert this to the corresponding unsigned integer. (See the example below for more details.)
+
+3) Encode this unsigned integer using Base62 encoding. In this encoding, you convert the integer to a base 62 number, where the digits 0-9 represent values 0-9, lowercase letters a-z represent values 10-35, and capital letters A-Z represent values 36-61.
+
+4) The encoded url consists of the base URL, a backslash, and the base 62 encoded value produced in the previous step.
+
+fig1.png
+
+Notes:
+
+You should process the URLs using UTF-8 encoding.
+
+The URL to be encoded will always be at least 8 characters long.
+
+The base 62 number should not be padded with extra zeros. For example, the number "62" should be represented as "10", not as "010" or "0010" or "00010". The number "0" would be represented as "0".
+
+The base URL will never end with a backslash.
+
+Input Format
+
+The first line of input will contain the base URL of your company.
+
+The second line will contain a number n (1 <= n <= 1000) which will indicate the number of URLs you will need to encode.
+
+The following n lines will contain target URLs to encode.
+
+Output Format
+
+The output should be n lines, where each line will correspond to an encoded URL.
+
+Sample Input
+
+http://www.ieee.com
+2
+http://www.ieee.org/xtreme
+http://www.ieee.org/membership_services/membership/young_professionals/index.html
+Sample Output
+
+http://www.ieee.com/SHPQ4gzW1Y
+http://www.ieee.com/Btazwa9mke
+Explanation
+
+Consider the first target URL to be encoded: http://www.ieee.org/xtreme.
+
+We start by finding the UTF-8 encoding of the base URL http://www.ieee.com and the target URL.
+
+target URL = [0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f, 0x77, 0x77, 0x77, 0x2e, 0x69, 0x65, 0x65, 0x65, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x74, 0x72, 0x65, 0x6d, 0x65]
+base URL   = [0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f, 0x77, 0x77, 0x77, 0x2e, 0x69, 0x65, 0x65, 0x65, 0x2e, 0x63, 0x6f, 0x6d]
+Now we apply the exclusive-or cipher, repeating the bytes in the base URL so that the two strings are the same length:
+
+    [0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f, 0x77, 0x77, 0x77, 0x2e, 0x69, 0x65, 0x65, 0x65, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x74, 0x72, 0x65, 0x6d, 0x65]
+xor
+    [0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f, 0x77, 0x77, 0x77, 0x2e, 0x69, 0x65, 0x65, 0x65, 0x2e, 0x63, 0x6f, 0x6d, 0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f]
+=    
+    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc, 0x1d, 0x0a, 0x47, 0x0c, 0x00, 0x02, 0x5f, 0x42, 0x4a]
+Next we take the last 8 bytes of this number and convert it to an unsigned integer:
+
+0x0a470c00025f424a = 740,573,857,905,066,570
+
+Next we convert this number from base 10 to base 62 to get: SHPQ4gzW1Y
+
+We then append this number to the base URL to produce the output: http://www.ieee.com/SHPQ4gzW1Y
+

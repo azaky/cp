@@ -1,0 +1,113 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Problem 37: Camelot</title> </head><body background="camelot_files/bg3.jpg">
+<img src="camelot_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Camelot</font></b><br>
+<b>IOI 98</b>
+</center>
+
+<p>Centuries ago, King Arthur and the Knights of the Round Table
+used to meet every year on New Year's Day to celebrate their
+fellowship. In remembrance of these events, we consider a board
+game for one player, on which one chesspiece king and several knight
+pieces are placed on squares, no two knights on the same square.
+
+</p><p>This example board is the standard 8x8 array of squares:<br>
+
+</p><center>
+<img src="camelot_files/camelot-1.gif">
+</center>
+
+<p>The King can move to any adjacent square from <img src="camelot_files/camelot-b.gif"> to <img src="camelot_files/camelot-w.gif"> as long as it does not fall off
+the board:<br>
+
+</p><center>
+<img src="camelot_files/camelot-2.gif">
+</center>
+
+<p>A Knight can jump from <img src="camelot_files/camelot-b.gif">
+to <img src="camelot_files/camelot-w.gif">, as long as it does not
+fall off the board:
+
+</p><center>
+<img src="camelot_files/camelot-3.gif">
+</center>
+
+<p>During the play, the player can place more than one piece in the
+same square. The board squares are assumed big enough so that a
+piece is never an obstacle for any other piece to move freely.
+
+</p><p> The player's goal is to move the pieces so as to gather them
+all in the same square - in the minimal number of moves.  To achieve
+this, he must move the pieces as prescribed above. Additionally,
+whenever the king and one or more knights are placed in the same
+square, the player may choose to move the king and one of the knights
+together from that point on, as a single knight, up to the final gathering
+point. Moving the knight together with the king counts as a single
+move.
+
+</p><p>Write a program to compute the minimum number of moves the player
+must perform to produce the gathering.  The pieces can gather on any
+square, of course.
+
+</p><h3>PROGRAM NAME: camelot</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> Two space-separated integers: R,C, the
+number of rows and columns on the board.  There will be no more
+than 26 columns and no more than 30 rows.</td> </tr>
+<tr> <td> Line 2..end: </td> <td>
+The input file contains a sequence of space-separated letter/digit pairs,
+1 or more per line.  The first pair represents the board position of
+the king; subsequent pairs represent positions of knights.  There might
+be 0 knights or the knights might fill the board. Rows are numbered
+starting at 1; columns are specified as upper case characters
+starting with `A'.
+</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file camelot.in) </h3>
+
+<pre>8 8
+D 4
+A 3 A 8
+H 1 H 8
+</pre>
+
+<p>The king is positioned at D4. There are four knights, positioned at A3,
+A8, H1, and H8.
+
+</p><h3>OUTPUT FORMAT</h3>
+
+A single line with the number of moves to aggregate the pieces.
+
+<h3>SAMPLE OUTPUT (file camelot.out)</h3>
+
+<pre>10
+</pre>
+
+<h3> SAMPLE OUTPUT ELABORATION </h3>
+<p> They gather at B5.
+<br> Knight 1: A3 - B5 (1 move)
+<br> Knight 2: A8 - C7 - B5 (2 moves)
+<br> Knight 3: H1 - G3 - F5 - D4 (picking up king) - B5 (4 moves)
+<br> Knight 4: H8 - F7 - D6 - B5 (3 moves)
+<br>1 + 2 + 4 + 3 = 10 moves.
+
+<br>
+</p><hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="bVwW9mmCuyS" type="hidden">
+<input name="S" value="camelot" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=bVwW9mmCuyS"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

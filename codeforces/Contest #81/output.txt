@@ -1,0 +1,10 @@
+5
+axe 262
+heal 0
+magicboost 165
+megafire 0
+shield 0
+845.00000000000000000
+844
+845
+845

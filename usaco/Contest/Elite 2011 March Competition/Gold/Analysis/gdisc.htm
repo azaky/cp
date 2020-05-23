@@ -1,0 +1,207 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>USACO MAR11 gdisc Analysis</title> 
+<style type="text/css">
+body       {
+	     font-family:Verdana,Helvetica,Tahoma,sans-serif,Arial,Lucida;
+	   }
+</style>
+</head><body bgcolor="#ffffff">
+<center><img src="gdisc_files/cow1.jpg" width="742" height="118"></center>
+<h2>USACO MAR11 Problem 'gdisc' Analysis</h2>
+<h4>by Paul Christiano</h4>
+<p>
+Note that 780 queries are required to solve the problem, because there 
+are more
+than 2^779 connected graphs on 40 vertices. Many approaches can be 
+applied to
+this problem; the following one, due to Jacob Steinhardt, uses 860 
+queries in
+the worst case. 
+</p>
+
+<p>
+Start from vertex 1, and remove all edges incident to it. Add the edges 
+(1, 2),
+(1, 3), ... one at a time, checking for connectivity after each 
+addition. After
+adding some edge (1, k) the graph will become connected (it must be 
+connected
+after adding all of the edges). This implies that 
+</p>
+
+<p>
+1. (1, k) is an edge of the graph
+</p>
+<p>
+2. After removing edges (1, k+1), (1, k+2), ... (1, n), the edge (1, k) 
+is a
+bridge in the resulting graph. 
+</p>
+
+<p>
+Now we remove edge (1, k) and add in edge (1, k+1). If the resulting 
+graph is
+connected, then (1, k+1) is an edge of the graph. We then add in edge 
+(1, k+1)
+and remove (1, k+2), from which we can determine whether or not (1, k+2)
+ is an
+edge of the graph. Repeating in this way, we can determine whether each 
+edge
+(1, i) for i &gt;= k is in the graph. 
+</p>
+
+<p>
+For all future queries we remove each edge (1, i) with i &gt; k, and we 
+never
+again remove the edge (1, k). 
+For each of these edges,
+we know whether or not it belongs to the graph.
+For any future graph query the edge (1, k) will be a bridge. 
+</p>
+
+<p>
+We repeat this process with a new arbitrarily chosen vertex i.
+We remove all edges incident to i which have not yet been identified as
+bridges. If the resulting graph is connected, then we can prove that 
+none of
+these edges were present in the graph. In this case we remove all of 
+these
+edges for all future queries. Otherwise, we continue as we did with 
+vertex 1
+and find another bridge.
+</p>
+
+<p>
+We continue until the entire graph has been determined.
+Each time we repeat this process we either remove all remaining 
+non-bridge
+edges incident to a vertex, or we have found a new edge which is a 
+bridge in
+all future query graphs. 
+Therefore this process can only be repeated 40 times, 
+and each time we make at most 39 queries. 
+</p>
+
+<p>
+By being slightly more careful, 
+we can reduce the number of queries to 41*40/2 + 40. 
+To do this, we guarantee that at each point the set of bridges we have 
+found
+forms a tree, and we always choose a vertex of the tree for the next 
+execution
+of the inner loop. 
+We do not have to inspect any of the edges between this vertex and any 
+other
+vertex of the tree.
+Because each query either enlarges the tree of bridges or removes a 
+vertex from
+consideration, the Kth invocation of the inner loop needs to make at 
+most (42 -
+K) queries. 
+The total number of queries is at most 41*40/2 + 40. 
+</p>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+using namespace std;
+
+#define MAX (50)
+
+int tree_queue[MAX];
+int qs=0,qe=0,N;
+
+bool active[MAX];
+int set[MAX][MAX];
+int A[MAX][MAX];
+bool intree[MAX];
+bool done[MAX];
+char line[1000];
+
+void add(int v,int w){
+//	fprintf(stderr,"R %d %d\n",v,w);
+	printf("R %d %d\n",v,w);
+	active[w]=1;
+}
+void remove(int v,int w){
+//	fprintf(stderr,"U %d %d\n",v,w);
+	printf("U %d %d\n",v,w);
+}
+bool query(){
+//	fprintf(stderr,"Q\n");
+	printf("Q\n");
+	fgets(line, 1000, stdin);
+	int ans; sscanf(line,"%d",&amp;ans);
+//	fprintf(stderr,"%d\n",ans);
+	return ans==1;
+}
+void setedge(int v,int w){
+	set[v][w]=set[w][v]=1;
+	A[v][w]=A[w][v]=1;
+}
+void noedge(int v,int w){
+	set[v][w]=set[w][v]=1;
+}
+void addtotree(int v){
+	intree[v]=1;
+	tree_queue[qe++]=v;
+}
+
+int main(){
+    setlinebuf (stdout);
+	
+    fgets (line, 1000, stdin);
+    sscanf (line, "%d", &amp;N);
+	addtotree(1);
+	while(qe-qs&gt;0){
+		int v=tree_queue[qs];
+		memset(active,0,sizeof(active));
+		bool changed = 0;
+		for(int w=1;w&lt;=N;w++)
+			if(w != v &amp;&amp; !intree[w] &amp;&amp; !set[v][w]){
+				add(v,w);
+				changed = 1;
+			}
+		if(!changed || query()){
+			done[v]=1;
+			qs++;
+			continue;
+		}
+		int w=N;
+		while(w&gt;0){
+			if(active[w]){
+				remove(v,w);
+				if(query()) break; // (v,w) will be our next cut edge
+			}
+			w--;
+		}
+		setedge(v,w);
+		addtotree(w);
+		add(v,w);
+		for(int u=w-1;u&gt;0;u--){
+			if(active[u]){
+				remove(v,u);
+				if(query()){
+					setedge(v,u);
+					add(v,u);
+				}
+			}
+		}
+		remove(v,w);
+	}
+	printf("A\n");
+	for(int v=1;v&lt;=N;v++){
+		for(int w=1;w&lt;=N;w++)
+			printf("%d",A[v][w]);
+		printf("\n");
+	}
+	return 0;
+}
+</pre>
+
+
+
+
+</body></html>

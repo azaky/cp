@@ -1,0 +1,149 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4790,        140]
+NotebookOptionsPosition[      4343,        119]
+NotebookOutlinePosition[      4713,        135]
+CellTagsIndexPosition[      4670,        132]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProjectEuler Problem 19", "Title",
+ CellChangeTimes->{{3.536307860091487*^9, 3.5363078717555914`*^9}, {
+  3.536311497177764*^9, 3.536311497232767*^9}, {3.53631405189618*^9, 
+  3.5363140524692135`*^9}}],
+
+Cell[TextData[{
+ "You are given the following information, but you may prefer to do some \
+research for yourself.\n\n",
+ StyleBox["1 Jan 1900 was a Monday.", "Item"],
+ "\nThirty days has September,\nApril, June and November.\nAll the rest have \
+thirty-one,\nSaving February alone,\nWhich has twenty-eight, rain or shine.\n\
+And on leap years, twenty-nine.\nA leap year occurs on any year evenly \
+divisible by 4, but not on a century unless it is divisible by 400.\nHow many \
+Sundays fell on the first of the month during the twentieth century (1 Jan \
+1901 to 31 Dec 2000)?"
+}], "Text",
+ CellChangeTimes->{
+  3.536307883326804*^9, {3.536311499721703*^9, 3.5363115398727455`*^9}, 
+   3.536314055157422*^9, {3.53631409290352*^9, 3.536314094305932*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"leap", "[", "x_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Mod", "[", 
+      RowBox[{"x", ",", "4"}], "]"}], "\[Equal]", "0"}], "&&", 
+    RowBox[{"!", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Mod", "[", 
+         RowBox[{"x", ",", "100"}], "]"}], "\[Equal]", "0"}], "&&", 
+       RowBox[{
+        RowBox[{"Mod", "[", 
+         RowBox[{"x", ",", "400"}], "]"}], "\[NotEqual]", "0"}]}], 
+      ")"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"month", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "3", ",", "0", ",", "3", ",", "2", ",", "3", ",", "2", ",", "3", ",", "3",
+      ",", "2", ",", "3", ",", "2", ",", "3"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"day", "=", "2"}], ";", " ", 
+  RowBox[{"ans", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"year", "=", "1901"}], ",", 
+   RowBox[{"year", "\[LessEqual]", "2000"}], ",", 
+   RowBox[{"year", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"m", "=", "1"}], ",", 
+     RowBox[{"m", "\[LessEqual]", "12"}], ",", 
+     RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"day", "\[Equal]", "0"}], ",", 
+        RowBox[{"ans", "++"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"leap", "[", "year", "]"}], "&&", 
+         RowBox[{"m", "==", "2"}]}], ",", 
+        RowBox[{"day", "=", 
+         RowBox[{"Mod", "[", 
+          RowBox[{
+           RowBox[{"day", "+", "1"}], ",", "7"}], "]"}]}], ",", 
+        RowBox[{"day", "=", 
+         RowBox[{"Mod", "[", 
+          RowBox[{
+           RowBox[{"day", "+", 
+            RowBox[{"month", "[", 
+             RowBox[{"[", "m", "]"}], "]"}]}], ",", "7"}], "]"}]}]}], "]"}], 
+      ";"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "ans", "]"}]}], "Input",
+ CellChangeTimes->{{3.5363141104479785`*^9, 3.5363144652551517`*^9}, {
+  3.5363145225179634`*^9, 3.53631460166551*^9}, {3.536314637401634*^9, 
+  3.5363146893307276`*^9}, {3.5363147212637386`*^9, 3.5363147572109594`*^9}, {
+  3.5364007304248743`*^9, 3.5364007681406155`*^9}}],
+
+Cell[BoxData["171"], "Print",
+ CellChangeTimes->{{3.5363144531125064`*^9, 3.5363144703361144`*^9}, {
+   3.5363145196755037`*^9, 3.5363145584664636`*^9}, {3.5363145929461336`*^9, 
+   3.536314601979123*^9}, {3.536314654846332*^9, 3.5363146715889864`*^9}, 
+   3.53631472187214*^9, {3.536314753425045*^9, 3.5363147576359625`*^9}, 
+   3.5363247515357933`*^9, {3.5364007260724664`*^9, 3.536400768483816*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{707, 505},
+WindowMargins->{{216, Automatic}, {8, Automatic}},
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 207, 3, 83, "Title"],
+Cell[789, 27, 753, 13, 209, "Text"],
+Cell[CellGroupData[{
+Cell[1567, 44, 2343, 64, 212, "Input"],
+Cell[3913, 110, 402, 5, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

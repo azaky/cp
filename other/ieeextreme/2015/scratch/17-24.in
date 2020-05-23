@@ -1,0 +1,655 @@
+Social media networks and the amount of information they aggregate is astonishing. With so much information, new patterns and interactions of human society can be identified.
+
+In our social network, the relationships model the flow of information, and they are directed. Alice may subscribe to Bob's newsfeed, while Bob does not subscribe to Alice's. Moreover, the flow of information in our network is such that a person can see the newsfeeds of all people who could reach the person following along a path in the network. Suppose, then, that Alice subscribes to Bob's newsfeed, Bob subscribes to Chuck's newsfeed, and Chuck subscribes to Dave's newsfeed. This would correspond to a simple linear graph:
+
+Alice <- Bob <- Chuck <- Dave
+
+Then Dave would be able to read his own news items only; Chuck would be able to read news items posted by either Dave or himself; Bob would be able to read news items posted by either Chuck, Dave or himself; and Alice would be able to read everyone's news items. Note that everyone can read their own newsfeed.
+
+We are interested in the defining a community metric for our social network. We define a community as a group of people who are able to see all news items posted by any member of the group. As an example, in the figure below, there are two communities, each shown in a different color.
+
+communities.jpg
+
+Note that in the community shown in green above, Jose, Willy, and Elena can all read each other's posts. While Jose, Willy, and Elena can also read Javier's news items. However, Javier cannot read news items from Jose, Willy, or Elena, and is therefore not included in their community.
+
+Your task is to identify the sizes of these communities from biggest to smallest.
+
+Input Format
+
+The first line of input will contain two space separated integers: the total number of people that devise the social network, n (1 <= n <= 10000) and m, the number of communities for which you should print the size. The following lines will contain a directed relationship between 2 people. If the line reads "Jon Peter", then Peter subscribes to Jon's news feed, and the relation is Jon -> Peter.
+
+The word "END" will appear on a line by itself after the list of relationships.
+
+All of the names are strings containing fewer than 50 characters.
+
+Output Format
+
+The output consists of m lines, where each line will correspond to the size of a community from biggest to smallest. If there are fewer than m communities, after outputting the size of all existing communities, output lines containing “Does not apply!” for the missing values.
+
+Sample Input
+
+6 2
+Jose Willy
+Willy Elena
+Elena Jose
+Diego Javier
+Javier Gregorio
+Gregorio Diego
+Javier Jose
+END
+Sample Output
+
+3
+3
+Explanation
+
+This input corresponds to the graph described in the problem statement above.
+
+Note that two additional sample inputs are available if you click on the "Run Code" button.
+
+Vangelis the bear received a digital signal pattern generator that his brother Mitsos built. The generator produces a signal that is encoded using the Latin alphabet. Vangelis starts the generator for some time and records the signal generated. He wants to study the sample he received and try to identify the smallest pattern that the generator could be using to generate the sample.
+
+Your task is to help Vangelis by writing a program that will calculate the length of the smallest valid pattern.
+
+Input Format
+
+The input is made up of multiple test cases.
+
+The first line contains an integer T (1 <= T <= 10), the number of test cases in this file.
+
+Each line contains an encoded signal. The signal is encoded using the small letters of the Latin alphabet. The length of a signal is between 1 and 106 characters, inclusive.
+
+Vangelis has started the recording at the beginning of a pattern, so each line begins with the first character in the pattern. His recording lasts for at least one pattern length, but the length of the recording may not be an exact multiple of the pattern length.
+
+Output Format
+
+There must be T lines of output and each line will contain a single non-negative integer number, the length of the minimum valid pattern.
+
+Sample Input
+
+6
+abab
+abababababababababab
+abababababab
+abc
+aaaaaa
+aabaabbaabaabbaabaabbaabaab
+Sample Output
+
+2
+2
+2
+3
+1
+7
+Explanation
+
+The repeating patterns in each of the test cases are:
+
+ab
+ab
+ab
+abc
+a
+aabaabb
+
+Vangelis the bear bought a real property inside a forest where he wants to build his new corporate headquarters. The shape of the land is a strictly convex polygon. This means that the shape is a polygon with all its interior angles less than 180°. All vertices of the shape are on a plane, whose locations are given in a Cartesian coordinate system.
+
+In the plot, there are some really old trees that Vangelis wants to protect. To do so, Vangelis decided that he will separate his land into two parts. The first part, where there must not be any trees, will be used for the headquarters building. The second part, where the ancient trees reside, will be preserved as a park.
+
+Being a scientist, he decided to make the separation using a diagonal of the polygon. Your task is to help Vangelis compute the maximum possible land that he can use to build his headquarters.
+
+Note: A tree cannot appear on the border between the regions. Thus, in the image below, the maximum area for the headquarters is not equal to one half the area of the land.
+
+Explanation 3.png
+
+Input Format
+
+The input is made up of multiple test cases.
+
+The first line contains an integer T (1 <= T <= 10), the number of test cases in this file.
+
+The following repeats T times:
+
+The first line in the test case contains an integer N (4 <= N <= 300000), the number of vertices that compose the land shape.
+
+Each of the following N lines contain two single-space-separated integers X and Y (-109 <= X, Y <= 109), the coordinates of a vertex. The vertices are given in a counter-clockwise order going around the boundary of the land.
+
+The line after contains an integer M (0 <= M <= 300000), the number of trees inside the land.
+
+Each of the following M lines contain two single-space-separated integers I and J, the coordinates of a tree inside the land. None of the trees will be placed on an edge of the land.
+
+Output Format
+
+There must be T lines of output and each will contain a single non-negative real number, the maximum possible area that can be used for the headquarters in the specific test case. The numbers should always be rounded to two decimal places, and they should always display these two decimal places even if the final value is an integer. In the cases that there is no available land to be used, your program should write 0.00.
+
+Sample Input
+
+1
+6
+2 0
+6 0
+6 5
+4 7
+0 4
+0 2
+5
+2 2
+3 1
+4 2
+5 1
+5 3
+Sample Output
+
+13.00
+Explanation
+
+The image below represents the optimal division of the land resulting in clear space for headquarters of 13 m2.
+
+Explanation 1.png
+
+Note: An additional test case is available if you click on the "Run Code" button.
+
+This challenge is sponsored by the IEEE Computer Society.
+
+Topology is a branch of mathematics that examines the shapes and structures of objects. The Euler characteristic is a topological label that we can determine for an item or collection of items. For a group of two dimensional objects, one way to define the Euler characteristic is the number of connected objects minus the number of holes in the objects.
+
+The Euler characteristic has useful applications in 2D image recognition and classification. Consider the following black and white representations of three digits and a letter and their corresponding Euler characteristics.
+
+image1.png
+
+As you can see, the Euler characteristic can give a lot of information about what a given image might or might not represent. Note that, in this problem, we consider filled-in regions that touch diagonally to be part of the same connected region; however, holes that only touch diagonally are considered to be separate. Your task is to compute the Euler characteristic (connected regions minus holes) for a black and white image similar to those above.
+
+Input Format
+
+Each input contains multiple test cases. The first line of input contains an integer t, 1 <= t <= 10.
+
+Following this line are t test cases, each with the following format:
+
+The first line of the test case contains an integer n, giving the height of the image.
+
+The second line of the test case contains an integer m, giving the width of the image.
+
+The rest of the test case contains n lines of text. These n lines of text contain m characters, each of which is either the letter 'X' or the letter 'O'. An 'X' represents a black pixel, and an 'O' represents a white pixel.
+
+The possible ranges for n and m are 1 <= n <= 1,000 and 1 <= m <= 1,000. The input will always be correctly formatted.
+
+Output Format
+
+The correct output for each input is a single integer per test case (each integer on its own line) which gives the Euler characteristic for each input image.
+
+Sample Input
+
+1
+4
+4
+OOOO
+OXXO
+OXXO
+OOOO
+Sample Output
+
+1
+Explanation
+
+The sample input contains a single image. The image contains a single connected square region surrounded by empty space.
+
+Thus, 1 region - 0 holes = 1.
+
+A finite domain constraint is a linear equality or inequality over integer variables. Each variable has a known and finite domain (set of possible values). A finite domain constraint is satisfiable if each variable can be assigned a value from its domain in a way that makes the equality or inequality true. For example, given the finite domain constraint:
+
+( X + Y ) = 5
+
+with the domain of X as {1, 2, 3, 4} and the domain of Y also as {1, 2, 3, 4}, the constraint is satisfied by assigning 2 to X and 3 to Y. Note that the constraint can also be satisfied by assigning 3 to X and 2 to Y, 1 to X and 4 to Y, and 4 to X and 1 to Y. Hence, there are 4 distinct variable assignments that satisfy the constraint. If we change the constraint to the inequality:
+
+( X + Y ) < 5
+
+with the same domains, there are now 6 distinct variable assignments that satisfy the constraint: (X = 1, Y = 1), (X = 1, Y = 2), (X = 1, Y = 3), (X = 2, Y = 1), (X = 2, Y = 2), and (X = 3, Y = 1).
+
+Given a finite domain constraint and domains for each variable, your task is to determine how many distinct variable assignments satisfy the constraint.
+
+Input Format
+
+The input is made up of multiple test cases. Each test case ends with a 0 on a line by itself.
+
+The first line in each test case is an integer n, 1 <= n <= 10. n is the number of variables in the finite domain constraint.
+
+The next n lines are each of the form:
+
+[Variable_Name] [Low] [High]
+
+where:
+
+[Variable_Name] is the variable name
+
+[Low] is the lower bound of the variable's domain (inclusive)
+
+[High] is the upper bound of the variable's domain (inclusive)
+
+For example:
+
+X 1 4
+means that the domain of X is {1, 2, 3, 4}. Variable names are not repeated within the same test case.
+
+The next line of each test case is a finite domain constraint over those variable names.
+
+Notes:
+
+The lower and upper bounds are integers from 1 to 10 (inclusive).
+
+The constraint will contain exactly one occurrence of either = or <. Note that the operator <= will never appear in a constraint.
+
+The constraint can additionally contain parentheses, +, -, *, variable names and integer constants.
+
+The constraint will be fully parenthesized so that precedence (order of operations) is not needed.
+
+Each distinct symbol in the constraint will be separated from other symbols by exactly one space.
+
+Each variable occurs exactly once in the constraint.
+
+The number of integer constants is less than or equal to the number of variables plus one, and each constant is between -100 and 100 (inclusive).
+
+When the * operator is used in a constraint, one operand will be a constant and the other will be a variable.
+
+You can assume that the constraint is syntactically correct.
+
+Output Format
+
+For each test case, your program should output, on a line by itself, the number of distinct variable assignments that satisfy the finite domain constraint with the given variable domains.
+
+Sample Input
+
+2
+X 1 4
+Y 1 4
+( X + Y ) = 5
+0
+3
+X 1 3
+Y 2 4
+Z 1 4
+( ( X + Y ) - ( 2 * Z ) ) < 5
+0
+4
+W 2 5
+X 1 3
+Y 2 9
+Z 1 4
+( ( X + ( Y - 3 ) ) + ( -2 * Z ) ) = ( ( 5 * W ) - 10 )
+0
+Sample Output
+
+4
+35
+15
+Explanation
+
+The first test case in the sample input corresponds to the first example given in the problem statement.
+
+In this problem, you will solve a puzzle from the Secret Society Hidden Mystery Game by G5 Games. A typical board for this game is shown here:
+
+blocks.png
+
+Each block can only move in one dimension: vertical blocks can only move vertically and horizontal blocks can only move horizontally. The goal of the game is to slide the yellow block out of the frame through the hole in the frame on the right side. To do that, you have to slide the rest of the blocks out of the way. In addition, for this problem, you must do it in the smallest number of moves possible.
+
+Here are some details to constrain our game:
+
+Moving a block through two spaces counts as two moves.
+
+The task is just to find the minimum number of moves required to win the game – the sequence of specific moves is not important.
+
+The board is in form of a square.
+
+The yellow block is always horizontal, and it will always cover 2 spaces.
+
+Once the yellow block is located right next to the exit, you have won the game. You do not need to move the yellow block off the board.
+
+The blocks can only move inside the board, and movement of any block outside the board is not permitted.
+
+The game is always winnable, in a finite number of moves.
+
+Input Format
+
+Each run of the program will process a sequence of test cases each containing an instance of the game.
+
+The first line of input contains a number T. T specifies the number of test cases in the input.
+
+Each test case is specified as follows:
+
+On the first two lines of the test instance is an integer Y, representing the column with the leftmost side of the yellow block and N, giving the dimensions of the board. Since the board is always square, N is the number of rows and the number of columns of the board. Hence, the board coordinates can be considered as an N x N matrix (i.e. the top left corner of the board is row 0 and column 0). The yellow block is always located in the third row (i.e. it is in the row labelled 2).
+
+The third line of the test case contains an integer B representing the number of brown blocks in the problem.
+
+The next B lines give the location of each of the brown blocks in the following format:
+
+S D R C
+
+Where
+
+S is an integer give the number of spaces the block covers. A block will always fit in the board.
+
+D is either 'V' or 'H' designating whether the block is horizontal or vertical
+
+R and C are the row and column, respectively, of the top left square of the block
+
+Constraints:
+
+1 <= T <= 5
+
+0 <= Y < N - 2
+
+4 <= N <= 6
+
+1 <= B <= 12
+
+The maximum number of unique board configurations that can be reached in any test instance is 250,000.
+
+Output Format
+
+The output must be one integer for each instance of the problem on a separate line giving the minimum number of moves required to win the game.
+
+Sample Input
+
+1
+0
+6
+3
+3 V 0 2
+3 V 2 5
+2 H 5 2
+Sample Output
+
+9
+Explanation
+
+The input specification corresponds to the image below.
+
+image-0.png
+
+This game is winnable in 9 moves. For example, one possible sequence of moves that wins in the shortest number of moves is:
+
+1) Move the horizontal brown block one square to the right.
+
+image-1.png
+
+2-4) Move the left vertical block down three squares. Note that this counts as three moves.
+
+image-2.png
+
+image-3.png
+
+image-4.png
+
+5-7) Move the yellow block to the right three squares.
+
+image-5.png
+
+image-6.png
+
+image-7.png
+
+8) Move the right vertical block down one square.
+
+image-8.png
+
+9) Move the yellow block right one square so that it is next to the exit.
+
+image-9.png
+
+This challenge is sponsored by IEEE Xplore.
+
+You are given an ambiguous description of one or more binary trees. Each key value is a non-empty string of lowercase letters, and each key occurs in only one node in the collection. You must decide if the description that is given must have been derived from a single binary search tree, could have been derived from a single binary search tree, or could not have been derived from a binary search tree. Please refer to http://en.wikipedia.org/wiki/Binary_search_tree for background information on binary search trees.
+
+Note: The default time limits for all languages have been doubled for this program.
+
+Input Format
+
+The input is made up of multiple test cases. Each test case begins with an integer N, with 1 <= N <= 50,000. Next come N lines each describing an edge in the collection of binary trees:
+
+[key1] [key2]
+
+where [key1] and [key2] are strings corresponding the key values of two nodes, node1 and node2, respectively, where node1 is either the left child of node2 OR node2 is the right child of node1.
+
+The last line of input following all of the test cases consists of the number 0 on a line by itself. The total number of edges in all test cases in a single input file will be less than or equal to 500,000.
+
+Output Format
+
+For each test case, you will output a single string followed by the newline character:
+
+If the description given in the test case must correspond to a binary search tree, you should output “BST!”.
+
+If the description given in the test case corresponds to a binary search tree in some instantiations but not in others, you should output “BST?”.
+
+If the description given in the test case cannot describe a binary search tree, you should output “!BST”.
+
+Sample Input
+
+2
+alpha beta
+beta gamma
+2
+alpha delta
+alpha gamma
+2
+alpha beta
+delta gamma
+1
+beta alpha
+0
+Sample Output
+
+BST!
+BST?
+!BST
+!BST
+Explanation
+
+The first test case could have been derived from three different configurations, which are shown below. Note that all of these configurations are binary search trees.
+
+image4.png
+
+NOTE: Since each test case is a description of one or more binary trees, the description for the first test case could not have come from a configuration like the one below which is not a binary tree:
+
+image2.gif
+
+The second test case describes one of the configurations below. The tree on the right is a binary search tree because it fulfills the binary search tree property, (i.e. the key in each node of the tree is greater than all the keys stored in the left sub-tree, and smaller than all the keys in the right sub-tree). However, the configuration on the left is not a binary search tree because the key value stored at the root of the tree is not smaller than all the values stored in the left sub-tree (i.e. value "gamma" of the left subtree is greater than "delta").
+
+image3.gif
+
+The third test case describes a forest of two trees, which cannot be a BST.
+
+The last test case cannot be a BST.
+
+Rock, Paper, Scissors, Lizard, Spock is a game, invented by Sam Kass and Karen Bryla, that extends the Rock, Paper, Scissors game. It is a favorite of the character Sheldon from the TV Show, The Big Bang Theory.
+
+The rules of the game are as follows. Each player chooses a shape from the set {Rock, Paper, Scissors, Lizard, Spock}. If the two players choose the same shape, they tie. Otherwise, the winner is the one with the shape listed first in the following set of rules:
+
+Scissors cuts Paper
+Paper covers Rock
+Rock crushes Lizard
+Lizard poisons Spock
+Spock smashes Scissors
+Scissors decapitates Lizard
+Lizard eats Paper
+Paper disproves Spock
+Spock vaporizes Rock
+(and as it always has) Rock crushes scissors
+Below is a graphical representation from The Big Bang Theory's wiki:
+
+RPSLS.png
+
+Alice and Bob also enjoy this game, and they have decided to play a series of them. Each has a very specific strategy that they follow.
+
+Alice's strategy is as follows:
+
+1) If she wins a game, she keeps the same shape.
+
+2) If she ties, she chooses a shape from one of the two that would beat her current shape. Of these two, she chooses the one that beats the other. For example, if she has tied when choosing Rock, her options are Paper and Spock. Since Paper beats Spock, she chooses Paper.
+
+3) If she loses, she chooses a shape from one of the two that would beat her opponent's current shape. Of these two, she chooses the one that beats the other. For example, let's say she has lost by choosing Rock, when her opponent chose Paper. She will then choose from Scissors or Lizard. Since Scissors beats Lizard, she chooses Scissors.
+
+Bob's strategy is as follows:
+
+1) Every other turn, he chooses Spock.
+
+2) If he won the previous turn when playing Spock, he chooses Rock.
+
+3) If he tied the previous turn when playing Spock, he chooses Lizard.
+
+4) If he lost the previous turn when playing Spock, he chooses Paper.
+
+Your task is to write a program that evaluates a series of games between Alice and Bob.
+
+Input Format
+
+The first line of input contains a single integer t, 1 <= t <= 50, containing the number of test cases in the input.
+
+Then come t lines each describing a test case, made up of a series of games for you to evaluate. These lines have the following format:
+
+[AliceShape] [BobShape] [n]
+Where
+
+[AliceShape] is the shape that Alice will choose in the first game of the series.
+
+[BobShape] is the shape that Bob will choose in the first game of the series.
+
+[n] is an integer, 1 <= n <= 1018, indicating how many games Alice and Bob will play in the series.
+
+Output Format
+
+Output will consist of a single line in the appropriate one of the following forms:
+
+[Player] wins, by winning [WinGames] game(s) and tying [TieGames] game(s)
+
+Alice and Bob tie, each winning [WinGames] game(s) and tying [TieGames] game(s)
+where
+
+[Player] is the name of the player with more wins (either "Alice" or "Bob")
+
+[WinGames] is the number of games won either by the winner or, in the case of a tie, by each player
+
+[TieGames] is the number of games in which the players tied
+
+Notes:
+
+The output is case sensitive. The player names, for example, must be either "Alice" or "Bob". Neither "alice" nor "BOB" will be acceptable.
+
+The words are separated by a single space, and there are no spaces before the first word in the line, nor after the last word in the line.
+
+Sample Input
+
+2
+Rock Spock 4
+Paper Paper 1
+Sample Output
+
+Bob wins, by winning 2 game(s) and tying 1 game(s)
+Alice and Bob tie, each winning 0 game(s) and tying 1 game(s)
+Explanation
+
+There are two test cases in this input:
+
+Test Case 1
+
+In the first game, Bob wins, since Spock vaporizes Rock.
+
+Bob won when choosing Spock so he chooses Rock. Alice lost, so she chooses from Paper and Lizard, both of which beat Bob's last choice of Spock. Since Lizard beats Paper, she chooses Lizard.
+
+In the second game, then, Bob wins again, because Rock crushes Lizard.
+
+Bob did not play Spock last turn, so he chooses Spock next. Alice lost, so she chooses from Paper and Spock, both of which beat Bob's last choice of Rock. Since Paper beats Spock, she chooses Paper.
+
+In the third game, Alice wins, since Paper disproves Spock.
+
+Bob lost when choosing Spock so he chooses Paper. Alice won, so she continues playing Paper.
+
+In the fourth game, they tie by both choosing Paper.
+
+Test Case 2
+
+This test case consists of a single game in which both players play Paper.
+
+This challenge is sponsored by SyncFusion.
+
+Alice has recognized that strategy is key for success in IEEEXtreme. Your task is to help her by writing a program that will calculate the maximum score that she can earn in marathon competitions like Xtreme.
+
+Alice starts the competition with a certain energy level. She can only attempt a problem if her energy level prior to starting the problem is greater than or equal to the energy required by the problem. Furthermore, if she attempts to solve the problem, her energy level after the hour is reduced by the energy required by the problem.
+
+Alice wants you to assume that every hour a problem is released, and she can make the following decisions:
+
+Attempt to solve the problem. She is able to accurately predict how many points she will earn by attempting the problem.
+
+Skip the problem and sleep. Note that she will not come back to this problem later. She will gain a fixed amount of energy by doing so.
+
+Drink a caffeinated cola and attempt the problem, if she has drinks remaining. She will gain a fixed amount of energy immediately. She can only choose this option if her resulting current energy level would be greater than or equal to the energy level required by the problem. As usual she will expend the energy required to solve the problem. In addition, as the caffeine wears off, she will lose a certain amount of energy units exactly two hours later.
+
+Notes:
+
+It is ok for her energy level to become negative after losing the points due to the cola consumption. However, she will need to boost her energy by sleeping or drinking additional cola before she will be able to solve a problem.
+
+She can only drink one cola per hour.
+
+If she drinks a cola, she must attempt the problem.
+
+For each hour that she sleeps and skips a problem, she gains the fixed amount of energy. Thus, if she sleeps for two consecutive hours, she will gain twice as much energy as if she slept for one hour. If she sleeps for three consecutive hours, she will gain three times as much energy, etc.
+
+Input Format
+
+The first line of input contains an integer k, 1 <= k <= 20, which indicates how many test cases are present.
+
+Each test case then has the following format. The first line of the test case consists of the following:
+
+[Hours] [Energy] [Sleep] [DrinkCount] [Drink] [Crash]
+Where
+
+[Hours] gives the length of the contest in hours, 1 <= [Hours] <= 168. (Alice envisions the day when Xtreme is a week-long contest!)
+
+[Energy] is Alice’s energy level at the beginning of the contest, 0 <= [Energy] <= 107.
+
+[Sleep] is the amount of energy that Alice gains by skipping a problem and sleeping, 1 <= [Sleep] <= 106.
+
+[DrinkCount] is a count of colas that Alice has at the start of the contest, 0 <= [DrinkCount] <= 24.
+
+[Drink] is the initial boost that Alice receives from drinking a cola, 1 <= [Drink] <= 106.
+
+[Crash] is the amount of additional energy that Alice loses two hours after drinking a cola, 1 <= [Crash] <= 106.
+
+Then there follow [Hours] lines, each describing a problem, and listed in the order in which the problem is released, i.e. the problem on the first line is released at the start of the contest, the second problem is released one hour later, the third problem is released an hour after that, etc. These lines have the following format:
+
+[EnergyRequired] [Points]
+Where
+
+[EnergyRequired] is an integer equal to the amount of energy that Alice will expend in attempting to solve the problem, 1 <= [EnergyRequired] <= 107.
+
+[Points] is equal to the points that Alice will earn if she attempts the problem. [Points] will be equal to an integer chosen from the following set {10, 20, 30, 40, 50, 60, 70, 80, 90, 100}.
+
+Output Format
+
+For each test case, output on a separate line, a single integer equal to maximum amount of points Alice can earn in the contest.
+
+Sample Input
+
+1
+4 5 16 2 7 8
+10 100
+6 50
+15 20
+3 10
+Sample Output
+
+160
+Explanation
+
+There is only one test case in the sample input. For this test case, the contest lasts 4 hours, Alice’s initial energy level is 5, she gains 16 energy units by sleeping, she has 2 colas, she gains a boost of 7 energy units by drinking a cola, but then loses 8 energy units after two hours.
+
+In order to solve the first problem, she drinks a cola in order to boost her energy level to 12. She can then solve the first problem, and earns 100 points, by doing so. The first problem takes 10 energy units to solve. Note that she will be penalized by 8 energy units when the third problem is released as the caffeine wears off.
+
+At the start of the second hour, then, she has 100 points, and an energy level of 2. In order to solve the second problem, she drinks another cola. This raises her energy level to 9. She then solves the problem, earning 50 more points. She expends 6 energy units solving the problem. Note that she will lose an additional 8 energy units as the caffeine wears off prior to the release of the fourth problem.
+
+At the start of the third hour, she has 150 points. Her energy level is depleted both by solving the previous problem and as the caffeine from the first cola wears off. Thus her energy level is -5.
+
+She decides to sleep instead of solving the third problem. Her energy level is boosted to 11 by sleeping but reduced to 3 as the caffeine from the second cola wears off.
+
+She then solves the fourth problem and earns 10 more points.
+
+This sequence of decisions maximizes her point total, so your program should output 160, the total number of points that she earned.

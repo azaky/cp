@@ -1,0 +1,125 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 84: Snail Trails</title> </head><body 
+background="snail_files/bg3.jpg">
+<img src="snail_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Snail Trails</font></b><br>
+<b>All Ireland Contest</b>
+</center>
+
+<p> Sally Snail likes to stroll on a N x N square grid (1 &lt;n &lt;= 
+120).
+She always starts in the upper left corner of the grid. The grid has 
+empty
+squares (denoted below by `.') and a number (B) of barriers (denoted 
+below
+by `#'). Here is a depiction of a grid including a demonstration of the
+grid labelling algorithm: </p><pre>
+          A B C D E F G H
+        1 S . . . . . # .
+        2 . . . . # . . .
+        3 . . . . . . . .
+        4 . . . . . . . .
+        5 . . . . . # . .
+        6 # . . . . . . .
+        7 . . . . . . . .
+        8 . . . . . . . .
+</pre><br>
+Sally travels vertically (up or down) or horizontally (left or right).
+Sally can travel either down or right from her starting location, which 
+is
+always A1.
+
+<p> Sally travels as long as she can in her chosen direction.  She stops
+and turns 90 degrees whenever she encounters the edge of the board or 
+one
+of the barriers.  She can not leave the grid or enter a space with a
+barrier.  Additionally, Sally can not re-cross any square she has 
+already
+traversed.  She stops her traversal altogether any time she can no 
+longer
+make a move.
+
+</p><p>
+Here is one sample traversal on the sample grid above:
+</p><pre>          A B C D E F G H
+        1 S---------+ # .
+        2 . . . . # | . .
+        3 . . . . . | . .
+        4 . . . . . +---+
+        5 . . . . . # . |
+        6 # . . . . . . |
+        7 +-----------+ |
+        8 +-------------+
+</pre>
+
+<p> Sally traversed right, down, right, down, left, up, and right.  She
+could not continue since she encountered a square already visited.  
+Things
+might have gone differently if she had chosen to turn back toward our 
+left
+when she encountered the barrier at F5.
+
+</p><p> Your task is to determine and print the largest possible number 
+of
+squares that Sally can visit if she chooses her turns wisely.  Be sure 
+to
+count square A1 as one of the visited squares.
+
+</p><h3>PROGRAM NAME: snail</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p> The first line of the input has N, the dimension of the square, and 
+B,
+the number of barriers (1 &lt;= B &lt;= 200).  The subsequent B lines
+contain the locations of the barriers.  The sample input file below
+describes the sample grid above.  The sample output file below is 
+supposed
+to describe the traversal shown above.  Note that when N &gt; 26 then 
+the
+input file can not specify barriers to the right of column Z.
+
+</p><h3>SAMPLE INPUT (file snail.in)</h3>
+<pre>8 4
+E2
+A6
+G1
+F5
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+<p>
+The output file should consist of exactly one line, the largest possible
+number of squares that Sally can visit.
+
+</p><h3>SAMPLE OUTPUT (file snail.out)</h3>
+<pre>33
+</pre>
+Using this traversal:
+<pre>          A B C D E F G H
+        1 S . . . . . # .
+        2 | . . . # . . .
+        3 | . . . +-----+
+        4 | . . . | . . |
+        5 +-------+ # . |
+        6 # . . . . . . |
+        7 +------------ |
+        8 +-------------+
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="snail" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

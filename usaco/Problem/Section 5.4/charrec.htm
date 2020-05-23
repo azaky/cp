@@ -1,0 +1,202 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title>Problem 7: Character Recognition</title> </head><body 
+background="charrec_files/bg3.jpg">
+<img src="charrec_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Character Recognition</font></b><br>
+</center>
+
+<p>This problem requires you to write a program that performs character
+recognition.
+
+</p><p>Each ideal character image has 20 lines of 20 digits. Each digit 
+is
+a `0' or a `1'. See Figure 1a (way below) for the layout of character
+images in the file.</p>
+
+<p>The file <a href="http://ace.delos.com/usaco/font.in">font.in</a> 
+contains representations
+of 27 ideal character images in this order:</p>
+
+<p>_abcdefghijklmnopqrstuvwxyz</p>
+
+<p>where _ represents the space character.  Each ideal character is 20
+lines long.
+
+</p><p>The input file contains one or more potentially corrupted 
+character
+images. A character image might be corrupted in these ways:</p>
+
+<ul>
+<li>at most one line might be duplicated (and the duplicate immediately 
+follows)
+</li><li>at most one line might be missing
+</li><li>some 0's might be changed to 1's</li>
+<li>some 1's might be changed to 0's.</li></ul>
+
+<p>No character image will have both a duplicated line <b>and</b> a
+missing line. No more than 30% of the 0's and 1's will be changed in
+any character image in the evaluation datasets.</p>
+
+<p>In the case of a duplicated line, one or both of the resulting lines
+may have corruptions, and the corruptions may be different.</p>
+
+<p>Write a program to recognize the sequence of one or more characters
+in the image provided in the input file using the font provided in file
+font.in.
+
+</p><p>Recognize a character image by choosing the font character images
+that require the smallest number of overall changed 1's and 0's to be
+corrupted to the given font image, given the most favourable assumptions
+about duplicated or omitted lines. Count corruptions in only the least
+corrupted line in the case of a duplicated line.  You must determine
+the sequence of characters that most closely matches the input sequence
+(the one that requires the least number of corruptions).  There is a
+unique best solution for each evaluation dataset.</p>
+
+<p>A correct solution will use precisely all of the data supplied in
+the input file.</p>
+
+<h3>PROGRAM NAME: charrec</h3>
+
+<h3>INPUT FORMAT (both input files)</h3>
+
+<p>Both input files begin with an integer N (19 &lt;= N &lt; 1200) that
+specifies the number of lines that follow:</p>
+
+N<br>
+(digit1)(digit2)(digit3) ... (digit20)<br>
+(digit1)(digit2)(digit3) ... (digit20)<br>
+...<br>
+
+<p>Each line of data is 20 digits wide. There are no spaces separating
+the zeros and ones.</p>
+
+<p>The file font.in describes the font. It will always contain 541
+lines. It may differ for each evaluation dataset.</p>
+<h3>SAMPLE INPUT (file charrec.in) </h3>
+
+<table border="1" cellpadding="7" cellspacing="1">
+<tbody><tr><td valign="TOP">
+<p>Incomplete sample showing the<br><i>beginning</i> of
+<code>font.in</code><br>
+(space and <code><b>a</b></code>).</p>
+</td>
+<td valign="TOP">
+<p>Sample <code>charrec.in</code>,
+showing<br>
+an <code><b>a</b></code> corrupted</p></td>
+</tr>
+<tr><td valign="TOP">
+<b></b><p><b>font.in</b></p></td>
+<td valign="TOP">
+<b></b><p><b>charrec.in</b></p></td>
+</tr>
+<tr><td valign="TOP">
+540<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000011100000000000<br>
+00000111111011000000<br>
+00001111111001100000<br>
+00001110001100100000<br>
+00001100001100010000<br>
+00001100000100010000<br>
+00000100000100010000<br>
+00000010000000110000<br>
+00000001000001110000<br>
+00001111111111110000<br>
+00001111111111110000<br>
+00001111111111000000<br>
+00001000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000</td>
+<td valign="TOP">
+19<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000000000000000000<br>
+00000011100000000000<br>
+00100111011011000000<br>
+00001111111001100000<br>
+00001110001100100000<br>
+00001100001100010000<br>
+00001100000100010000<br>
+00000100000100010000<br>
+00000010000000110000<br>
+00001111011111110000<br>
+00001111111111110000<br>
+00001111111111000000<br>
+00001000010000000000<br>
+00000000000000000000<br>
+00000000000001000000<br>
+00000000000000000000<br>
+00000000000000000000</td>
+</tr>
+<tr align="CENTER">
+<td><font size="2">Figure 1a</font></td>
+<td><font size="2">Figure 1b</font></td>
+</tr>
+</tbody></table>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>Your program must produce an output file that contains a single
+string of the characters recognized. Its format is a single line of
+ASCII text. The output should not contain any separator characters.  If
+your program does not recognize a particular character, it must output
+a <code>?</code> in the appropriate position. </p>
+
+<h3>SAMPLE OUTPUT (file charrec.out)</h3>
+
+<pre>a
+</pre>
+
+Note that the output is a line with two characters: a blank followed by
+an `a'.
+<br><br>
+<center>
+<a href="mailto:grader@ace.delos.com">Submit Solution via Email</a>
+&nbsp;|&nbsp; <a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> 
+USACO Gateway </a>  &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="Ndba0387uwg" type="hidden">
+<input name="S" value="charrec" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=Ndba0387uwg"> USACO Gateway </a>
+ &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>

@@ -1,0 +1,78 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+ <title>Prime Cryptarithm</title> </head><body background="crypt1_files/bg3.jpg">
+<img src="crypt1_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Prime Cryptarithm</font></b><br>
+</center>
+
+<p> The following cryptarithm is a multiplication problem that can be
+solved by substituting digits from a specified set of N digits into the
+positions marked with *. If the set of prime digits {2,3,5,7} is
+selected, the cryptarithm is called a PRIME CRYPTARITHM.
+</p><pre>      * * *
+   x    * *
+    -------
+      * * *         &lt;-- partial product 1
+    * * *           &lt;-- partial product 2
+    -------
+    * * * *
+</pre>
+Digits can appear only in places marked by `*'.  Of course, leading
+zeroes are not allowed.
+
+<p>Note that the 'partial products' are as taught in USA schools.
+The first partial product is the product of the final digit of the
+second number and the top number.  The second partial product is
+the product of the first digit of the second number and the top
+number.
+
+</p><p> Write a program that will find all solutions to the cryptarithm
+above for any subset of digits from the set {1,2,3,4,5,6,7,8,9}.
+
+</p><h3>PROGRAM NAME: crypt1</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> N, the number of digits that will be used</td>
+</tr><tr> <td> Line 2: </td> <td>N space separated digits with which to solve the cryptarithm </td>
+</tr></tbody></table>
+
+<h3>SAMPLE INPUT (file crypt1.in) </h3>
+
+<pre>5
+2 3 4 6 8
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>A single line with the total number of unique solutions.  Here
+is the single solution for the sample input:
+</p><pre>      2 2 2
+    x   2 2
+     ------
+      4 4 4
+    4 4 4
+  ---------
+    4 8 8 4
+</pre>
+
+<h3>SAMPLE OUTPUT (file crypt1.out)</h3>
+
+<pre>1
+</pre>
+<br>
+<hr>
+<form action="/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input name="filename" type="file">
+<input value="Send it in!" type="submit">
+<input name="a" value="AkpRTW42B7l" type="hidden">
+<input name="S" value="crypt1" type="hidden">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=AkpRTW42B7l"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+</body></html>
