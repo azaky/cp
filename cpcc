@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# installation:
+# $ chmod +x cpcc
+# # add cpcc to path
+#
+# usage:
+# $ cpcc A < A.in
+# # compiles A.cpp to A and runs it with A.in as stdin
+g++ -std=c++11 $1.cpp -o $1 && ./$1

@@ -1,0 +1,51 @@
+{
+	"cptemplate": {
+		"prefix": ["cp"],
+		"body": [
+			"#include <bits/stdc++.h>",
+			"using namespace std;",
+			"",
+			"void solve() {",
+			"  $0",
+			"}",
+			"",
+			"int main() {",
+			"  int ntc;",
+			"  scanf(\"%d\", &ntc);",
+			"  for (int itc = 1; itc <= ntc; ++itc) {",
+			"    printf(\"Case #%d: \", itc);",
+			"    solve();",
+			"  }",
+			"}"
+		],
+		"description": "CP Template"
+	},
+	"BIT": {
+		"prefix": ["BIT"],
+		"body": [
+			"template<typename T> class BIT {",
+			"public:",
+			"  BIT(int n): v(vector<T>(n+1)), n(n) {}",
+			"  T sum(int k) {",
+			"    T s = 0;",
+			"    for (int i = k; i > 0; i -= (i & -i)) {",
+			"      s += this->v[i];",
+			"    }",
+			"    return s;",
+			"  }",
+			"  T sum(int l, int r) {",
+			"    return this->sum(r) - this->sum(l-1);",
+			"  }",
+			"  void update(int k, T v) {",
+			"    for (int i = k; i <= this->n; i += (i & -i)) {",
+			"      this->v[i] += v;",
+			"    }",
+			"  }",
+			"private:",
+			"  vector<T> v;",
+			"  int n;",
+			"};"
+		],
+		"description": "BIT (Binary Indexed Tree) / Fenwick Tree"
+	}
+}
