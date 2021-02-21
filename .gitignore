@@ -12,6 +12,7 @@
 !*.pp
 !*.java
 !*.py
+!*.ipynb
 !*.js
 # mathematica notebook (for project euler)
 !*.nb
