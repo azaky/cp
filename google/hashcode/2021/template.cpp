@@ -91,23 +91,17 @@ double rndf(double a) {
 double rndf(double a, double b) {
   return a + rndf(b - a);
 }
-void init_rnd(int argc, char** argv) {
-  int __seed = 0;
-  try {
-    if (argc > 1) {
-      __seed = atoi(argv[1]);
-    }
-  }
-  catch (exception& e) {}
-  srand(__seed);
-}
 
-// end of template
+//////////////////////////////////////
+// end of azaky's hashcode template //
+//////////////////////////////////////
+
+
 
 int main(int argc, char** argv) {
-  init_rnd(argc, argv);
+  srand(0);
 
-  // your code here
+  
 
   return 0;
 }
