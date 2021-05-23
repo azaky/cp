@@ -79,6 +79,7 @@ struct bigint {
     }
 
     void operator=(long long v) {
+        a.clear();
         sign = 1;
         if (v < 0)
             sign = -1, v = -v;
