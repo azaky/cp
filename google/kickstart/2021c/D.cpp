@@ -363,49 +363,38 @@ pair<int,int> nextTokens(char *s) { // <operator, closing>
   return make_pair(op, t - s);
 }
 
+map<pair<bigint,bigint>,int> hashm;
+set<int> hashv;
+
+bigint hashc(bigint a, bigint b) {
+  if (hashm.count({a, b})) {
+    return hashm[{a, b}];
+  }
+  int v = rand();
+  while (hashv.count(v)) v = rand();
+  hashv.insert(v);
+  hashm[{a, b}] = v;
+  return bigint(v);
+}
+
 // a very inefficient way
-vector<bigint> process(char *s) {
+bigint process(char *s) {
   char *b = s;
   int n;
 
-  vector<bigint> res(4);
+  bigint res;
   if (*s == '(') {
     auto tokens = nextTokens(s);
     n = tokens.second + 1;
     auto lhs = process(s+1);
     auto rhs = process(s+tokens.first+1);
-    assert(lhs.size() == 4 && rhs.size() == 4);
     char op = s[tokens.first];
     if (op == '+') {
-      res[0] = lhs[0] + rhs[0];
-      if (lhs[1] == 0) {
-        res[1] = rhs[1];
-        res[2] = rhs[2];
-        res[3] = rhs[3];
-      } else if (rhs[1] == 0) {
-        res[1] = lhs[1];
-        res[2] = lhs[2];
-        res[3] = lhs[3];
-      } else assert(false);
+      res = lhs + rhs;
     } else if (op == '*') {
-      res[0] = lhs[0] * rhs[0];
-      if (lhs[1] == 0) {
-        res[1] = lhs[0] * rhs[1];
-        res[2] = rhs[2];
-        res[3] = rhs[3];
-      }
-      else if (rhs[1] == 0) {
-        res[1] = rhs[0] * lhs[1];
-        res[2] = lhs[2];
-        res[3] = lhs[3];
-      }
-      else assert(false);
+      res = lhs * rhs;
     } else if (op == '#') {
-      assert(lhs[1] == 0 && rhs[1] == 0);
-      res[0] = 0;
-      res[1] = 1;
-      res[2] = lhs[0];
-      res[3] = rhs[0];
+      return hashc(lhs, rhs);
     } else assert(false);
   } else {
     string t = "";
@@ -414,15 +403,7 @@ vector<bigint> process(char *s) {
       s++;
     }
     n = s - b;
-    res[0] = bigint(t);
-    res[1] = 0;
-    res[2] = 0;
-    res[3] = 0;
-  }
-
-  if (res[1] == 0) {
-    res[2] = 0;
-    res[3] = 0;
+    res = bigint(t);
   }
 
   // string expr = "";
@@ -436,13 +417,13 @@ vector<bigint> process(char *s) {
 void solve() {
   int n;
   scanf("%d", &n);
-  map<vector<bigint>,int> v;
+  map<bigint,int> v;
   vector<int> ans;
   for (int i = 0; i < n; ++i) {
     static char s[111];
     scanf("%s", s);
 
-    vector<bigint> x = process(s);
+    bigint x = process(s);
     // cout << x[0] << " + " << x[1] << " * " << x[2] << " # " << x[3] << endl;
     if (!v.count(x)) {
       v[x] = v.size() + 1;
