@@ -6,6 +6,7 @@
 # general
 !*.md
 !*.sh
+!*.bat
 
 # source codes
 !*.c
