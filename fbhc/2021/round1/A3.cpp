@@ -152,12 +152,12 @@ void solve() {
         if (kmod2[c] == 0) {
           // double case: diff
           // puts("double: diff");
-          // ans[x] = ans[c] * 2 + t1[c] * tk1[c] + (A[c] + T[c] + tk1[c]) *
-          //   ((k[c] * (A[c] + T[c] + tk1[c]) - T[c] - tk1[c]) % MOD);
-          ans[x] = AMOD(AMOD(ans[c] * 2) + t1[c] * AMOD(k[c] * (A[c] + T[c]) - S[c]));
-          ans[x] += AMOD(k[c] * AMOD(A[c] + T[c]) - S[c]) * AMOD(A[c] + T[c] + tk1[c] - t1[c]);
-          ans[x] += AMOD(A[c] + T[c]) * AMOD((S[c] - T[c] + AMOD(k[c] * tk1[c])));
-          ans[x] += AMOD(tk1[c] * AMOD((S[c] - A[c] - T[c]*2 + AMOD((k[c] - 1) * tk1[c]) + t1[c])));
+          ans[x] = ans[c] * 2 + t1[c] * tk1[c] + (A[c] + T[c] + tk1[c]) *
+            ((k[c] * (A[c] + T[c] + tk1[c]) - T[c] - tk1[c]) % MOD);
+          // ans[x] = AMOD(AMOD(ans[c] * 2) + t1[c] * AMOD(k[c] * (A[c] + T[c]) - S[c]));
+          // ans[x] += AMOD(k[c] * AMOD(A[c] + T[c]) - S[c]) * AMOD(A[c] + T[c] + tk1[c] - t1[c]);
+          // ans[x] += AMOD(A[c] + T[c]) * AMOD((S[c] - T[c] + AMOD(k[c] * tk1[c])));
+          // ans[x] += AMOD(tk1[c] * AMOD((S[c] - A[c] - T[c]*2 + AMOD((k[c] - 1) * tk1[c]) + t1[c])));
           MMOD(ans[x]);
           k[x] = AMOD(k[c] * 2);
           kmod2[x] = 0;
