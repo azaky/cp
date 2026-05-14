@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# installation:
+# $ chmod +x cpcc
+# # add cpcc to path
+#
+# usage:
+# $ cpcc A < A.in
+# # compiles A.cpp to A and runs it with A.in as stdin
+
+case "$1" in
+    *.cpp) base=${1%.cpp} ;;
+    *) base=$1 ;;
+esac
+
+g++ -std=c++20 ${base}.cpp -O1 -o ${base} && ./${base}
